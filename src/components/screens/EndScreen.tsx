@@ -6,6 +6,7 @@ import { useGame } from '@/contexts/GameContext'
 import { PosterBackground } from '@/components/PosterBackground'
 import { GameCard } from '@/components/GameCard'
 import { Sticker } from '@/components/Sticker'
+import { SiteFooter } from '@/components/SiteFooter'
 
 const CONFETTI_COLORS = ['#FF4242', '#66FF00', '#FFB6C1', '#111111']
 
@@ -359,6 +360,8 @@ export default function EndScreen() {
             RUN IT BACK
           </motion.button>
         </motion.div>
+
+        <SiteFooter />
       </div>
     </div>
   )

@@ -3,6 +3,7 @@
 import { createContext, useContext, ReactNode } from 'react'
 import { useGameState } from '@/hooks/useGameState'
 import { GameState, Card } from '@/types/game'
+import { GlobalOverlay } from '@/components/GlobalOverlay'
 
 type GameContextType = {
   gameState: GameState
@@ -26,6 +27,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   return (
     <GameContext.Provider value={game}>
       {children}
+      <GlobalOverlay />
     </GameContext.Provider>
   )
 }

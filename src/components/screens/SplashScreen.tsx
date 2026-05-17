@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { PosterBackground } from '@/components/PosterBackground'
 import { CardIcon } from '@/components/CardIcon'
+import { SiteFooter } from '@/components/SiteFooter'
 
 export default function SplashScreen() {
   const { goToLobby } = useGame()
@@ -222,6 +223,11 @@ export default function SplashScreen() {
             v1.0 MVP
           </span>
           <CardIcon color="#AAAAAA" size={10} />
+        </motion.div>
+
+        {/* Footer */}
+        <motion.div variants={fadeUp} className="mt-4">
+          <SiteFooter />
         </motion.div>
       </motion.div>
     </div>
