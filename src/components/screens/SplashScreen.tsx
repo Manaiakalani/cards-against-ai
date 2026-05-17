@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { PosterBackground } from '@/components/PosterBackground'
 import { GameCard } from '@/components/GameCard'
@@ -16,6 +16,8 @@ export default function SplashScreen() {
   const [showStats, setShowStats] = useState(false)
   const [showAchievements, setShowAchievements] = useState(false)
   const [showFavorites, setShowFavorites] = useState(false)
+  const [showJoin, setShowJoin] = useState(false)
+  const [joinCode, setJoinCode] = useState('')
 
   const stagger = {
     hidden: {},
@@ -164,8 +166,8 @@ export default function SplashScreen() {
           189 Cards • 6 Decks • Unlimited Bad Takes
         </motion.p>
 
-        {/* Play button */}
-        <motion.div variants={fadeUp} className="mt-10">
+        {/* Host / Join buttons */}
+        <motion.div variants={fadeUp} className="mt-10 flex flex-col items-center gap-3 sm:flex-row">
           <motion.button
             onClick={goToLobby}
             whileHover={{ y: 2, boxShadow: '0px 6px 0px var(--theme-shadow)' }}
@@ -174,17 +176,37 @@ export default function SplashScreen() {
             className="cursor-pointer uppercase"
             style={{
               fontFamily: 'var(--font-archivo)',
-              fontSize: 'clamp(20px, 3.5vw, 28px)',
+              fontSize: 'clamp(18px, 3vw, 24px)',
               fontWeight: 400,
               backgroundColor: '#66FF00',
               color: 'var(--theme-text)',
               border: '4px solid var(--theme-border)',
-              padding: 'clamp(16px, 3vw, 24px) clamp(40px, 8vw, 80px)',
+              padding: 'clamp(14px, 2.5vw, 20px) clamp(36px, 7vw, 64px)',
               borderRadius: 100,
               boxShadow: '0px 8px 0px var(--theme-shadow)',
             }}
           >
-            PLAY
+            🎮 HOST GAME
+          </motion.button>
+          <motion.button
+            onClick={() => setShowJoin(true)}
+            whileHover={{ y: 2, boxShadow: '0px 6px 0px var(--theme-shadow)' }}
+            whileTap={{ y: 6, boxShadow: '0px 2px 0px var(--theme-shadow)' }}
+            transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+            className="cursor-pointer uppercase"
+            style={{
+              fontFamily: 'var(--font-archivo)',
+              fontSize: 'clamp(18px, 3vw, 24px)',
+              fontWeight: 400,
+              backgroundColor: 'var(--theme-surface)',
+              color: 'var(--theme-text)',
+              border: '4px solid var(--theme-border)',
+              padding: 'clamp(14px, 2.5vw, 20px) clamp(36px, 7vw, 64px)',
+              borderRadius: 100,
+              boxShadow: '0px 8px 0px var(--theme-shadow)',
+            }}
+          >
+            🔗 JOIN GAME
           </motion.button>
         </motion.div>
 
@@ -279,6 +301,115 @@ export default function SplashScreen() {
         onClose={() => setShowFavorites(false)}
         favoritesOnly
       />
+
+      {/* Join Game Modal */}
+      <AnimatePresence>
+        {showJoin && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[200] flex items-center justify-center p-4"
+            style={{ backgroundColor: 'rgba(0,0,0,0.6)' }}
+            onClick={() => setShowJoin(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.85, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.85, opacity: 0, y: 20 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-md rounded-lg p-8"
+              style={{
+                backgroundColor: 'var(--theme-bg)',
+                border: '4px solid var(--theme-border)',
+                boxShadow: '8px 8px 0px var(--theme-shadow)',
+              }}
+            >
+              <button
+                onClick={() => setShowJoin(false)}
+                className="absolute top-3 right-3 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full"
+                style={{
+                  backgroundColor: 'var(--theme-text)',
+                  color: 'var(--theme-bg)',
+                  border: '2px solid var(--theme-border)',
+                  fontSize: 14,
+                }}
+              >
+                ✕
+              </button>
+
+              <h2
+                className="mb-2 text-center uppercase"
+                style={{
+                  fontFamily: 'var(--font-archivo)',
+                  fontSize: 28,
+                  fontWeight: 900,
+                  color: 'var(--theme-text)',
+                }}
+              >
+                JOIN GAME
+              </h2>
+              <p
+                className="mb-6 text-center"
+                style={{
+                  fontFamily: 'var(--font-inter)',
+                  fontSize: 14,
+                  color: 'var(--theme-muted)',
+                }}
+              >
+                Enter the room code from a host
+              </p>
+
+              <input
+                type="text"
+                value={joinCode}
+                onChange={(e) => setJoinCode(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6))}
+                placeholder="ROOM CODE"
+                maxLength={6}
+                className="mb-4 w-full rounded-lg px-4 py-3 text-center tracking-[4px] uppercase"
+                style={{
+                  fontFamily: 'var(--font-archivo)',
+                  fontSize: 24,
+                  fontWeight: 900,
+                  backgroundColor: 'var(--theme-surface)',
+                  color: 'var(--theme-text)',
+                  border: '3px solid var(--theme-border)',
+                }}
+              />
+
+              <div
+                className="rounded-lg p-4 text-center"
+                style={{
+                  backgroundColor: 'var(--theme-accent)',
+                  border: '2px solid var(--theme-border)',
+                }}
+              >
+                <p
+                  style={{
+                    fontFamily: 'var(--font-inter)',
+                    fontSize: 13,
+                    fontWeight: 600,
+                    color: 'var(--theme-text)',
+                  }}
+                >
+                  🚧 Multiplayer Coming Soon
+                </p>
+                <p
+                  className="mt-1"
+                  style={{
+                    fontFamily: 'var(--font-inter)',
+                    fontSize: 12,
+                    color: 'var(--theme-muted)',
+                  }}
+                >
+                  Online multiplayer is in development. For now, host a game and play with AI bots!
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

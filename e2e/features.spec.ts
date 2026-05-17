@@ -4,7 +4,7 @@ import { test, expect } from '@playwright/test'
 
 async function goToLobby(page: import('@playwright/test').Page) {
   await page.goto('/')
-  await page.getByRole('button', { name: 'PLAY', exact: true }).click()
+  await page.getByRole('button', { name: /HOST GAME/i }).click()
   await expect(page.getByText('THE PREGAME')).toBeVisible()
 }
 

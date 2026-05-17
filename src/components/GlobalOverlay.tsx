@@ -18,6 +18,10 @@ export function GlobalOverlay() {
 
   const isInGame = !['menu', 'lobby'].includes(gameState.phase)
 
+  // In-game: shrink buttons and tuck them into the HUD bar
+  const btnSize = isInGame ? 36 : 44
+  const btnTop = isInGame ? 8 : 16
+
   return (
     <>
       {/* Sound mute toggle */}
@@ -28,20 +32,20 @@ export function GlobalOverlay() {
         aria-label={isMuted ? 'Unmute sounds' : 'Mute sounds'}
         className="fixed z-[150] flex cursor-pointer items-center justify-center rounded-full"
         style={{
-          top: isInGame ? 64 : 16,
-          right: 120,
-          width: 44,
-          height: 44,
+          top: btnTop,
+          right: isInGame ? 108 : 120,
+          width: btnSize,
+          height: btnSize,
           backgroundColor: 'var(--theme-surface)',
           color: 'var(--theme-text)',
-          border: '3px solid var(--theme-border)',
-          boxShadow: '3px 3px 0px var(--theme-shadow-soft)',
-          transition: 'top 0.3s ease',
+          border: isInGame ? '2px solid var(--theme-border)' : '3px solid var(--theme-border)',
+          boxShadow: isInGame ? 'none' : '3px 3px 0px var(--theme-shadow-soft)',
+          transition: 'top 0.3s ease, width 0.3s ease, height 0.3s ease',
         }}
       >
         {isMuted
-          ? <VolumeX className="h-5 w-5" strokeWidth={2} />
-          : <Volume2 className="h-5 w-5" strokeWidth={2} />
+          ? <VolumeX className={isInGame ? 'h-4 w-4' : 'h-5 w-5'} strokeWidth={2} />
+          : <Volume2 className={isInGame ? 'h-4 w-4' : 'h-5 w-5'} strokeWidth={2} />
         }
       </motion.button>
 
@@ -53,20 +57,20 @@ export function GlobalOverlay() {
         aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
         className="fixed z-[150] flex cursor-pointer items-center justify-center rounded-full"
         style={{
-          top: isInGame ? 64 : 16,
-          right: 68,
-          width: 44,
-          height: 44,
+          top: btnTop,
+          right: isInGame ? 66 : 68,
+          width: btnSize,
+          height: btnSize,
           backgroundColor: 'var(--theme-surface)',
           color: 'var(--theme-text)',
-          border: '3px solid var(--theme-border)',
-          boxShadow: '3px 3px 0px var(--theme-shadow-soft)',
-          transition: 'top 0.3s ease',
+          border: isInGame ? '2px solid var(--theme-border)' : '3px solid var(--theme-border)',
+          boxShadow: isInGame ? 'none' : '3px 3px 0px var(--theme-shadow-soft)',
+          transition: 'top 0.3s ease, width 0.3s ease, height 0.3s ease',
         }}
       >
         {isDark
-          ? <Sun className="h-5 w-5" strokeWidth={2} />
-          : <Moon className="h-5 w-5" strokeWidth={2} />
+          ? <Sun className={isInGame ? 'h-4 w-4' : 'h-5 w-5'} strokeWidth={2} />
+          : <Moon className={isInGame ? 'h-4 w-4' : 'h-5 w-5'} strokeWidth={2} />
         }
       </motion.button>
 
@@ -78,23 +82,23 @@ export function GlobalOverlay() {
         aria-label="How to play"
         className="fixed z-[150] flex cursor-pointer items-center justify-center rounded-full"
         style={{
-          top: isInGame ? 64 : 16,
-          right: 16,
-          width: 44,
-          height: 44,
+          top: btnTop,
+          right: isInGame ? 24 : 16,
+          width: btnSize,
+          height: btnSize,
           backgroundColor: 'var(--theme-text)',
           color: 'var(--theme-bg)',
-          border: '3px solid var(--theme-border)',
-          boxShadow: '3px 3px 0px var(--theme-shadow-soft)',
+          border: isInGame ? '2px solid var(--theme-border)' : '3px solid var(--theme-border)',
+          boxShadow: isInGame ? 'none' : '3px 3px 0px var(--theme-shadow-soft)',
           fontFamily: 'var(--font-archivo)',
-          fontSize: 22,
-          transition: 'top 0.3s ease',
+          fontSize: isInGame ? 18 : 22,
+          transition: 'top 0.3s ease, width 0.3s ease, height 0.3s ease',
         }}
       >
         ?
       </motion.button>
 
-      {/* Quit button — only during active game */}
+      {/* Quit button — only during active game, inside HUD bar */}
       <AnimatePresence>
         {isInGame && !confirmQuit && (
           <motion.button
@@ -107,16 +111,15 @@ export function GlobalOverlay() {
             aria-label="Quit game"
             className="fixed z-[150] flex cursor-pointer items-center justify-center rounded-full"
             style={{
-              top: 64,
+              top: 8,
               left: 16,
-              width: 44,
-              height: 44,
+              width: 36,
+              height: 36,
               backgroundColor: '#FF4242',
               color: 'white',
-              border: '3px solid var(--theme-border)',
-              boxShadow: '3px 3px 0px var(--theme-shadow-soft)',
+              border: '2px solid var(--theme-border)',
               fontFamily: 'var(--font-inter)',
-              fontSize: 18,
+              fontSize: 16,
             }}
           >
             ✕

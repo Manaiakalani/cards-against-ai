@@ -10,30 +10,30 @@ test.describe('Cards Against AI — Full Game Flow', () => {
   test('splash screen renders with title and play button', async ({ page }) => {
     await expect(page.getByRole('heading', { name: 'AI' })).toBeVisible()
     await expect(page.getByText('The party game for chronically online people')).toBeVisible()
-    await expect(page.getByRole('button', { name: 'PLAY', exact: true })).toBeVisible()
+    await expect(page.getByRole('button', { name: /HOST GAME/i })).toBeVisible()
   })
 
   test('navigates from splash to lobby', async ({ page }) => {
-    await page.getByRole('button', { name: 'PLAY', exact: true }).click()
+    await page.getByRole('button', { name: /HOST GAME/i }).click()
     await expect(page.getByText('THE PREGAME')).toBeVisible()
     await expect(page.getByPlaceholder(/enter your name/i)).toBeVisible()
   })
 
   test('lobby shows room code and bot selector', async ({ page }) => {
-    await page.getByRole('button', { name: 'PLAY', exact: true }).click()
+    await page.getByRole('button', { name: /HOST GAME/i }).click()
     await expect(page.getByText('Room Code')).toBeVisible()
     await expect(page.getByText('Bots:')).toBeVisible()
   })
 
   test('cannot start game without entering name', async ({ page }) => {
-    await page.getByRole('button', { name: 'PLAY', exact: true }).click()
+    await page.getByRole('button', { name: /HOST GAME/i }).click()
     const startBtn = page.getByRole('button', { name: /let.*s go/i })
     await expect(startBtn).toBeDisabled()
   })
 
   test('full game flow: lobby → play → judge → results → scoreboard', async ({ page }) => {
     // Navigate to lobby
-    await page.getByRole('button', { name: 'PLAY', exact: true }).click()
+    await page.getByRole('button', { name: /HOST GAME/i }).click()
 
     // Enter name and start
     await page.getByPlaceholder(/enter your name/i).fill('TestPlayer')
@@ -86,7 +86,7 @@ test.describe('Cards Against AI — Full Game Flow', () => {
   })
 
   test('redraw hand works and is limited to once per round', async ({ page }) => {
-    await page.getByRole('button', { name: 'PLAY', exact: true }).click()
+    await page.getByRole('button', { name: /HOST GAME/i }).click()
     await page.getByPlaceholder(/enter your name/i).fill('TestPlayer')
     await page.getByRole('button', { name: /let.*s go/i }).click()
     await expect(page.getByText('Your Hand')).toBeVisible({ timeout: 5000 })

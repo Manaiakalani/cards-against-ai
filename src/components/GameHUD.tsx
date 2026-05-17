@@ -30,8 +30,8 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode, timer }
       }}
     >
       <div
-        className="flex items-center justify-between px-5"
-        style={{ height: 52 }}
+        className="flex items-center justify-between pr-5"
+        style={{ height: 52, paddingLeft: 60 }}
       >
         {/* Left: Room code */}
         <div
