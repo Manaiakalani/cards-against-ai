@@ -48,7 +48,7 @@ export default function SplashScreen() {
 
   return (
     <div
-      className="relative flex min-h-screen items-center justify-center overflow-hidden"
+      className="relative flex h-dvh items-center justify-center overflow-hidden"
       style={{ backgroundColor: 'var(--theme-bg)' }}
     >
       <PosterBackground words={['slay', 'brainrot', 'unhinged']} opacity={0.9} />

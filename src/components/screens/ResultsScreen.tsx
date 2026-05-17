@@ -119,6 +119,7 @@ export default function ResultsScreen() {
             lineHeight: 1,
             color: 'var(--theme-text)',
             filter: 'drop-shadow(4px 4px 0px var(--theme-shadow-soft))',
+            textWrap: 'balance',
           }}
         >
           ATE & LEFT NO CRUMBS
@@ -132,7 +133,7 @@ export default function ResultsScreen() {
           className="mb-10"
           style={{
             fontFamily: 'var(--font-inter)',
-            fontSize: '18px',
+            fontSize: 'clamp(14px, 3vw, 18px)',
             textTransform: 'uppercase',
             letterSpacing: '0.1em',
             color: 'var(--theme-text-secondary)',
@@ -192,7 +193,7 @@ export default function ResultsScreen() {
               <span
                 style={{
                   fontFamily: 'var(--font-archivo)',
-                  fontSize: '28px',
+                  fontSize: 'clamp(20px, 5vw, 28px)',
                   color: 'var(--theme-text)',
                 }}
               >

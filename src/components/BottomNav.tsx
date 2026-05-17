@@ -9,7 +9,7 @@ interface BottomNavProps {
 export function BottomNav({ children }: BottomNavProps) {
   return (
     <div
-      className="fixed flex items-center gap-2 rounded-full p-2"
+      className="fixed flex flex-wrap items-center justify-center gap-2 rounded-full p-2"
       style={{
         bottom: 'max(1.5rem, env(safe-area-inset-bottom, 1.5rem))',
         left: '50%',

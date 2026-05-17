@@ -106,6 +106,7 @@ export default function LobbyScreen() {
             color: 'white',
             WebkitTextStroke: '2px #111',
             textShadow: '6px 6px 0px #111',
+            textWrap: 'balance',
           }}
         >
           THE PREGAME
@@ -139,7 +140,7 @@ export default function LobbyScreen() {
           <div
             style={{
               fontFamily: 'var(--font-archivo)',
-              fontSize: '36px',
+              fontSize: 'clamp(24px, 6vw, 36px)',
               letterSpacing: '4px',
               color: 'var(--theme-text)',
             }}

@@ -38,7 +38,7 @@ function renderCardText(text: string, isBlack: boolean) {
           className="inline-block mx-1"
           style={{
             borderBottom: `3px solid ${isBlack ? '#FFFFFF' : '#111111'}`,
-            minWidth: '80px',
+            minWidth: 'min(80px, 40%)',
           }}
         >
           &nbsp;

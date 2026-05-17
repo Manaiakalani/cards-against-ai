@@ -216,7 +216,7 @@ export default function EndScreen() {
         >
           <span
             style={{
-              fontSize: '120px',
+              fontSize: 'clamp(72px, 15vw, 120px)',
               filter: 'drop-shadow(8px 12px 0px var(--theme-shadow-soft))',
               display: 'block',
             }}
@@ -244,6 +244,7 @@ export default function EndScreen() {
             color: humanWon ? '#66FF00' : '#FF4242',
             WebkitTextStroke: '2px #111',
             textShadow: '6px 6px 0px #111',
+            textWrap: 'balance',
           }}
         >
           {headlineText}
@@ -258,7 +259,7 @@ export default function EndScreen() {
             className="mb-8 inline-block"
             style={{
               fontFamily: 'var(--font-archivo)',
-              fontSize: '32px',
+              fontSize: 'clamp(22px, 5vw, 32px)',
               fontWeight: 900,
               background: '#111',
               color: 'white',
@@ -300,7 +301,7 @@ export default function EndScreen() {
               <span
                 style={{
                   fontFamily: 'var(--font-archivo)',
-                  fontSize: '48px',
+                  fontSize: 'clamp(32px, 7vw, 48px)',
                   fontWeight: 900,
                   color: 'var(--theme-text)',
                   lineHeight: 1,
@@ -452,11 +453,11 @@ export default function EndScreen() {
                   transform: `rotate(${i % 2 === 0 ? -0.5 : 0.8}deg)${i === 0 ? ' scale(1.03)' : ''}`,
                 }}
               >
-                <div className="flex items-center gap-3">
+                <div className="flex min-w-0 items-center gap-3">
                   <span
                     style={{
                       fontFamily: 'var(--font-archivo)',
-                      fontSize: '24px',
+                      fontSize: 'clamp(18px, 3.5vw, 24px)',
                       color: i === 0 ? 'var(--theme-text)' : 'var(--theme-text-muted)',
                       width: '28px',
                     }}
@@ -475,7 +476,7 @@ export default function EndScreen() {
                   <span
                     style={{
                       fontFamily: 'var(--font-archivo)',
-                      fontSize: '18px',
+                      fontSize: 'clamp(14px, 3vw, 18px)',
                       color: 'var(--theme-text)',
                     }}
                   >
@@ -485,7 +486,7 @@ export default function EndScreen() {
                 <span
                   style={{
                     fontFamily: 'var(--font-archivo)',
-                    fontSize: '28px',
+                    fontSize: 'clamp(20px, 4vw, 28px)',
                     color: 'var(--theme-text)',
                   }}
                 >

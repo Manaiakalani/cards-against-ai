@@ -117,7 +117,7 @@ export default function JudgingScreen() {
             {gameState.currentBlackCard && (
               <GameCard
                 card={gameState.currentBlackCard}
-                size="lg"
+                size="sm"
                 rotation={-4}
               />
             )}

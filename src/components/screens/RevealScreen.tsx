@@ -97,17 +97,17 @@ export default function RevealScreen() {
                     </div>
                   ) : (
                     <div
-                      className="flex items-center justify-center"
+                      className="flex w-full items-center justify-center"
                       style={{
-                        width: 160,
-                        height: 220,
+                        maxWidth: 160,
+                        aspectRatio: '160 / 220',
                         backgroundColor: '#666',
                         borderRadius: 16,
                         border: '3px solid var(--theme-border)',
                         boxShadow: '4px 4px 0px var(--theme-shadow)',
                       }}
                     >
-                      <span style={{ fontSize: 48, opacity: 0.5 }}>🃏</span>
+                      <span style={{ fontSize: 'clamp(32px, 8vw, 48px)', opacity: 0.5 }}>🃏</span>
                     </div>
                   )}
                 </motion.div>

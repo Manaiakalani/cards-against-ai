@@ -45,14 +45,13 @@ export function GlobalOverlay() {
         className="fixed z-[150] flex cursor-pointer items-center justify-center rounded-full"
         style={{
           top: btnTop,
-          right: isInGame ? 92 : 120,
+          right: isInGame ? 80 : 120,
           width: btnSize,
           height: btnSize,
           backgroundColor: 'var(--theme-surface)',
           color: 'var(--theme-text)',
           border: isInGame ? '2px solid var(--theme-border)' : '3px solid var(--theme-border)',
           boxShadow: isInGame ? 'none' : '3px 3px 0px var(--theme-shadow-soft)',
-          transition: 'top 0.3s ease, width 0.3s ease, height 0.3s ease',
         }}
       >
         {isMuted
@@ -70,14 +69,13 @@ export function GlobalOverlay() {
         className="fixed z-[150] flex cursor-pointer items-center justify-center rounded-full"
         style={{
           top: btnTop,
-          right: isInGame ? 50 : 68,
+          right: isInGame ? 44 : 68,
           width: btnSize,
           height: btnSize,
           backgroundColor: 'var(--theme-surface)',
           color: 'var(--theme-text)',
           border: isInGame ? '2px solid var(--theme-border)' : '3px solid var(--theme-border)',
           boxShadow: isInGame ? 'none' : '3px 3px 0px var(--theme-shadow-soft)',
-          transition: 'top 0.3s ease, width 0.3s ease, height 0.3s ease',
         }}
       >
         {isDark
@@ -104,7 +102,6 @@ export function GlobalOverlay() {
           boxShadow: isInGame ? 'none' : '3px 3px 0px var(--theme-shadow-soft)',
           fontFamily: 'var(--font-archivo)',
           fontSize: isInGame ? 18 : 22,
-          transition: 'top 0.3s ease, width 0.3s ease, height 0.3s ease',
         }}
       >
         ?

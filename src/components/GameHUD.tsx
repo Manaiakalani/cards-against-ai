@@ -32,7 +32,7 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode, timer }
       {/* Row 1: Room code + Round indicator */}
       <div
         className="flex items-center gap-3"
-        style={{ height: 40, paddingLeft: 52, paddingRight: 136 }}
+        style={{ height: 40, paddingLeft: 'clamp(44px, 6vw, 52px)', paddingRight: 'clamp(100px, 18vw, 136px)' }}
       >
         {/* Room code — hidden on mobile */}
         <div
@@ -62,6 +62,7 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode, timer }
               fontFamily: 'var(--font-archivo)',
               fontSize: 11,
               color: 'var(--theme-text)',
+              textWrap: 'balance',
             }}
           >
             ROUND {round}
@@ -86,7 +87,7 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode, timer }
         </div>
 
         {/* Score pills — flow after round indicator */}
-        <div className="flex items-center gap-1 overflow-x-auto">
+        <div className="flex min-w-0 items-center gap-1 overflow-x-auto">
           {players.map((player) => {
             const isCzar = player.id === czarId
             const isLeader = player.score === leadScore && leadScore > 0

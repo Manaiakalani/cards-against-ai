@@ -196,10 +196,10 @@ export default function PlayingScreen() {
   // Czar waiting view
   if (isPlayerCzar) {
     return (
-      <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>
+      <div className="relative h-dvh overflow-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>
         <PosterBackground words={['no cap', 'fr fr', 'lowkey']} opacity={0.15} />
         <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} />
-        <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 pt-14">
+        <div className="relative z-10 flex h-full flex-col items-center justify-center overflow-y-auto px-4 pt-14">
           <motion.div
             animate={{ scale: [1, 1.05, 1] }}
             transition={{ repeat: Infinity, duration: 2 }}

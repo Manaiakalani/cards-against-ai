@@ -43,6 +43,7 @@ export default function ScoreboardScreen() {
                 fontWeight: 400,
                 lineHeight: 0.9,
                 color: 'var(--theme-text)',
+                textWrap: 'balance',
               }}
             >
               STANDINGS
@@ -128,7 +129,7 @@ export default function ScoreboardScreen() {
                   stiffness: 200,
                   damping: 20,
                 }}
-                className="flex items-center justify-between"
+                className="flex min-w-0 items-center justify-between"
                 style={{
                   padding: 'clamp(12px, 2vw, 20px) clamp(16px, 3vw, 32px)',
                   backgroundColor: isLeader ? '#66FF00' : 'var(--theme-surface)',
