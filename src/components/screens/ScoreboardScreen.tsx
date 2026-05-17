@@ -86,11 +86,10 @@ export default function ScoreboardScreen() {
                 Next Czar
               </span>
               <div
-                className="flex items-center gap-2 rounded-full px-4 py-2"
+                className="flex items-center gap-2 rounded-full px-4 py-2 shadow-hard-sm"
                 style={{
                   border: '3px solid var(--theme-border)',
                   backgroundColor: 'var(--theme-surface)',
-                  boxShadow: '4px 4px 0px var(--theme-shadow)',
                 }}
               >
                 <div
@@ -242,11 +241,10 @@ export default function ScoreboardScreen() {
               Last Round Winner
             </span>
             <div
-              className="flex w-full items-center gap-3 rounded-2xl p-4"
+              className="flex w-full items-center gap-3 rounded-2xl p-4 shadow-hard-sm"
               style={{
                 backgroundColor: 'var(--theme-surface)',
                 border: '3px solid var(--theme-border)',
-                boxShadow: '4px 4px 0px var(--theme-shadow)',
               }}
             >
               <div

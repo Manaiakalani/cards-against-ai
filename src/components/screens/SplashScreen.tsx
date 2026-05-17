@@ -114,8 +114,8 @@ export default function SplashScreen() {
               fontWeight: 400,
               lineHeight: 0.9,
               color: 'white',
-              WebkitTextStroke: '3px #111',
-              textShadow: '8px 8px 0px #111',
+              WebkitTextStroke: '3px var(--theme-shadow)',
+              textShadow: '8px 8px 0px var(--theme-shadow)',
             }}
           >
             CARDS
@@ -130,8 +130,8 @@ export default function SplashScreen() {
               fontSize: 'clamp(28px, 6vw, 48px)',
               fontWeight: 400,
               lineHeight: 1.1,
-              color: 'white',
-              backgroundColor: '#111111',
+              color: 'var(--theme-bg)',
+              backgroundColor: 'var(--theme-text)',
               transform: 'rotate(-2deg)',
             }}
           >
@@ -147,8 +147,8 @@ export default function SplashScreen() {
               fontWeight: 400,
               lineHeight: 1,
               color: '#66FF00',
-              WebkitTextStroke: '2px #111',
-              textShadow: '6px 6px 0px #111',
+              WebkitTextStroke: '2px var(--theme-shadow)',
+              textShadow: '6px 6px 0px var(--theme-shadow)',
             }}
           >
             AI
@@ -341,11 +341,10 @@ export default function SplashScreen() {
               exit={{ scale: 0.85, opacity: 0, y: 20 }}
               transition={{ type: 'spring', stiffness: 400, damping: 25 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-md rounded-lg p-8"
+              className="relative w-full max-w-md rounded-lg p-8 shadow-hard"
               style={{
                 backgroundColor: 'var(--theme-bg)',
                 border: '4px solid var(--theme-border)',
-                boxShadow: '8px 8px 0px var(--theme-shadow)',
               }}
             >
               <button

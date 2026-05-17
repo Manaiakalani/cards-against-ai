@@ -93,7 +93,7 @@ export function AchievementToast() {
               <span
                 style={{
                   fontFamily: 'var(--font-inter)',
-                  fontSize: 11,
+                  fontSize: 12,
                   fontWeight: 700,
                   textTransform: 'uppercase',
                   letterSpacing: '0.08em',

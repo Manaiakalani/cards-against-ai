@@ -128,10 +128,10 @@ const RoundEntry = memo(function RoundEntry({
           <div
             className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full"
             style={{
-              backgroundColor: '#111',
+              backgroundColor: 'var(--theme-text)',
               fontFamily: 'var(--font-archivo)',
               fontSize: 14,
-              color: 'white',
+              color: 'var(--theme-bg)',
             }}
           >
             {result.round}
@@ -281,7 +281,7 @@ export function RoundHistory({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 30 }}
             transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-            className="fixed left-1/2 top-1/2 z-[201] flex w-[calc(100vw-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col"
+            className="fixed left-1/2 top-1/2 z-[201] flex w-[calc(100vw-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col shadow-hard-lg"
             role="dialog"
             aria-modal="true"
             aria-labelledby="round-history-title"
@@ -290,7 +290,6 @@ export function RoundHistory({
               backgroundColor: 'var(--theme-bg)',
               border: '4px solid var(--theme-border)',
               borderRadius: 24,
-              boxShadow: '12px 12px 0px var(--theme-shadow)',
             }}
           >
             {/* Header */}

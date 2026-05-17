@@ -26,7 +26,7 @@ export function Sticker({
 
   return (
     <span
-      className={`inline-block px-4 py-1.5 uppercase tracking-wide ${className}`}
+      className={`inline-block px-4 py-1.5 uppercase tracking-wide shadow-hard-sm ${className}`}
       style={{
         fontFamily: 'var(--font-archivo)',
         fontSize: '14px',
@@ -34,7 +34,6 @@ export function Sticker({
         color: text,
         backgroundColor: bg,
         border: '2px solid var(--theme-border)',
-        boxShadow: '4px 4px 0px var(--theme-shadow)',
         transform: rotation ? `rotate(${rotation}deg)` : undefined,
         borderRadius: '6px',
       }}

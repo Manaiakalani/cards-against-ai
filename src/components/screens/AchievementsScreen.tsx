@@ -46,7 +46,7 @@ export function AchievementsScreen({ open, onClose }: AchievementsScreenProps) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 30 }}
             transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-            className="fixed left-1/2 top-1/2 z-[201] w-[calc(100vw-2rem)] max-w-2xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto overscroll-contain"
+            className="fixed left-1/2 top-1/2 z-[201] w-[calc(100vw-2rem)] max-w-2xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto overscroll-contain shadow-hard-lg"
             role="dialog"
             aria-modal="true"
             aria-labelledby="achievements-title"
@@ -55,7 +55,6 @@ export function AchievementsScreen({ open, onClose }: AchievementsScreenProps) {
               backgroundColor: 'var(--theme-bg)',
               border: '4px solid var(--theme-border)',
               borderRadius: 24,
-              boxShadow: '12px 12px 0px var(--theme-shadow)',
             }}
           >
             {/* Header */}
@@ -155,7 +154,7 @@ export function AchievementsScreen({ open, onClose }: AchievementsScreenProps) {
                         className="mt-1"
                         style={{
                           fontFamily: 'var(--font-inter)',
-                          fontSize: 11,
+                          fontSize: 12,
                           color: 'var(--theme-text-muted)',
                           lineHeight: 1.3,
                         }}
@@ -168,7 +167,7 @@ export function AchievementsScreen({ open, onClose }: AchievementsScreenProps) {
                         className="mt-2 inline-block"
                         style={{
                           fontFamily: 'var(--font-inter)',
-                          fontSize: 10,
+                          fontSize: 12,
                           fontWeight: 700,
                           textTransform: 'uppercase',
                           letterSpacing: '0.08em',
@@ -207,7 +206,7 @@ export function AchievementsScreen({ open, onClose }: AchievementsScreenProps) {
                             className="mt-1"
                             style={{
                               fontFamily: 'var(--font-inter)',
-                              fontSize: 10,
+                              fontSize: 12,
                               color: 'var(--theme-text-muted)',
                             }}
                           >

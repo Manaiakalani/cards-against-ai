@@ -60,7 +60,7 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode, timer }
             className="uppercase whitespace-nowrap"
             style={{
               fontFamily: 'var(--font-archivo)',
-              fontSize: 11,
+              fontSize: 12,
               color: 'var(--theme-text)',
               textWrap: 'balance',
             }}
@@ -108,14 +108,14 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode, timer }
                     height: 20,
                     backgroundColor: player.avatarBg,
                     border: '2px solid var(--theme-border)',
-                    fontSize: 10,
+                    fontSize: 12,
                   }}
                 >
                   {player.avatar}
                   {isCzar && (
                     <span
                       className="absolute"
-                      style={{ top: -8, right: -6, fontSize: 10 }}
+                      style={{ top: -8, right: -6, fontSize: 12 }}
                     >
                       👑
                     </span>

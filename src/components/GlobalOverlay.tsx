@@ -202,7 +202,7 @@ export function GlobalOverlay() {
               <div className="flex gap-3">
                 <button
                   onClick={() => setConfirmQuit(false)}
-                  className="flex-1 cursor-pointer rounded-full py-3"
+                  className="flex-1 cursor-pointer rounded-full py-3 shadow-hard-sm"
                   style={{
                     fontFamily: 'var(--font-archivo)',
                     fontSize: 16,
@@ -210,7 +210,6 @@ export function GlobalOverlay() {
                     backgroundColor: 'var(--theme-surface)',
                     color: 'var(--theme-text)',
                     border: '3px solid var(--theme-border)',
-                    boxShadow: '4px 4px 0px var(--theme-shadow)',
                   }}
                 >
                   Stay
@@ -220,7 +219,7 @@ export function GlobalOverlay() {
                     setConfirmQuit(false)
                     newGame()
                   }}
-                  className="flex-1 cursor-pointer rounded-full py-3"
+                  className="flex-1 cursor-pointer rounded-full py-3 shadow-hard-sm"
                   style={{
                     fontFamily: 'var(--font-archivo)',
                     fontSize: 16,
@@ -228,7 +227,6 @@ export function GlobalOverlay() {
                     backgroundColor: '#C62828',
                     color: 'white',
                     border: '3px solid var(--theme-border)',
-                    boxShadow: '4px 4px 0px var(--theme-shadow)',
                   }}
                 >
                   Quit

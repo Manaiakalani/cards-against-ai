@@ -97,7 +97,7 @@ export default function JudgingScreen() {
             borderRadius: '8px',
             fontFamily: 'var(--font-archivo)',
             fontSize: '14px',
-            color: 'white',
+            color: 'var(--theme-bg)',
             textTransform: 'uppercase',
             letterSpacing: '0.05em',
           }}

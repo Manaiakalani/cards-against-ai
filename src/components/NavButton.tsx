@@ -11,9 +11,9 @@ interface NavButtonProps {
 }
 
 const variantStyles = {
-  primary: { backgroundColor: '#66FF00', color: '#111111', shadow: 'var(--theme-shadow)' },
-  secondary: { backgroundColor: '#FFB6C1', color: '#111111', shadow: 'var(--theme-shadow)' },
-  dark: { backgroundColor: '#111111', color: '#FFFFFF', shadow: 'var(--theme-shadow)' },
+  primary: { backgroundColor: '#66FF00', color: 'var(--theme-text)', shadow: 'var(--theme-shadow)' },
+  secondary: { backgroundColor: '#FFB6C1', color: 'var(--theme-text)', shadow: 'var(--theme-shadow)' },
+  dark: { backgroundColor: 'var(--theme-text)', color: 'var(--theme-bg)', shadow: 'var(--theme-shadow)' },
 } as const
 
 export function NavButton({

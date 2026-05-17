@@ -12,7 +12,6 @@ import { Card } from '@/types/game'
 import { PosterBackground } from '@/components/PosterBackground'
 import { GameCard } from '@/components/GameCard'
 import { GameHUD } from '@/components/GameHUD'
-import { BottomNav } from '@/components/BottomNav'
 import { NavButton } from '@/components/NavButton'
 import { Sticker } from '@/components/Sticker'
 
@@ -316,7 +315,7 @@ export default function PlayingScreen() {
       <PosterBackground words={['no cap', 'fr fr', 'lowkey']} opacity={0.15} />
       <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} timer={timerEnabled ? { timeLeft: timer.timeLeft, progress: timer.progress, isUrgent: timer.isUrgent } : undefined} />
 
-      <div className="relative z-10 flex h-full flex-col px-4 pt-12 pb-24 sm:px-6 sm:pt-14">
+      <div className="relative z-10 flex h-full flex-col px-4 pt-12 sm:px-6 sm:pt-14">
         {/* Top Section: Title + Mini Black Card */}
         <div className="mb-3 flex flex-shrink-0 flex-col gap-2 sm:mb-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
           <div>
@@ -433,29 +432,43 @@ export default function PlayingScreen() {
             </p>
           </m.div>
         )}
-      </div>
 
-      <BottomNav>
-        <NavButton variant="secondary" onClick={handleRedraw} disabled={hasRedrawn || submitted}>
-          {hasRedrawn ? '✓ DEALT' : '🔄 NEW HAND'}
-        </NavButton>
-        {gameState.settings.rebootEnabled && (
-          <NavButton
-            variant="dark"
-            onClick={handleReboot}
-            disabled={hasRebooted || submitted || (humanPlayer?.score ?? 0) < 1}
-          >
-            {hasRebooted ? '✓ REBOOTED' : '💥 REBOOT (-1pt)'}
-          </NavButton>
-        )}
-        <NavButton
-          variant="primary"
-          onClick={handleConfirm}
-          disabled={selectedCards.length !== blanks || submitted}
+        {/* Bottom Nav — pinned at bottom of flex column */}
+        <div
+          className="flex shrink-0 items-center justify-center px-4 pt-3"
+          style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}
         >
-          LOCK IT IN
-        </NavButton>
-      </BottomNav>
+          <div
+            className="flex flex-wrap items-center justify-center gap-2 rounded-full p-2"
+            style={{
+              backgroundColor: 'var(--theme-surface)',
+              border: '4px solid var(--theme-border)',
+              boxShadow: '8px 12px 0px var(--theme-shadow-soft)',
+              maxWidth: 'calc(100vw - 2rem)',
+            }}
+          >
+            <NavButton variant="secondary" onClick={handleRedraw} disabled={hasRedrawn || submitted}>
+              {hasRedrawn ? '✓ DEALT' : '🔄 NEW HAND'}
+            </NavButton>
+            {gameState.settings.rebootEnabled && (
+              <NavButton
+                variant="dark"
+                onClick={handleReboot}
+                disabled={hasRebooted || submitted || (humanPlayer?.score ?? 0) < 1}
+              >
+                {hasRebooted ? '✓ REBOOTED' : '💥 REBOOT (-1pt)'}
+              </NavButton>
+            )}
+            <NavButton
+              variant="primary"
+              onClick={handleConfirm}
+              disabled={selectedCards.length !== blanks || submitted}
+            >
+              LOCK IT IN
+            </NavButton>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

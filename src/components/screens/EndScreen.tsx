@@ -78,7 +78,7 @@ function ConfettiPiece({ config }: { config: ConfettiConfig }) {
         repeat: Infinity,
         ease: 'easeIn',
       }}
-      className="pointer-events-none fixed z-5"
+      className="pointer-events-none fixed z-[5]"
       style={{ left: `${left}%`, top: '-30px', ...shapeStyle }}
     />
   )
@@ -242,8 +242,8 @@ export default function EndScreen() {
             lineHeight: 0.95,
             textTransform: 'uppercase',
             color: humanWon ? '#66FF00' : '#FF4242',
-            WebkitTextStroke: '2px #111',
-            textShadow: '6px 6px 0px #111',
+            WebkitTextStroke: '2px var(--theme-shadow)',
+            textShadow: '6px 6px 0px var(--theme-shadow)',
             textWrap: 'balance',
           }}
         >
@@ -261,8 +261,8 @@ export default function EndScreen() {
               fontFamily: 'var(--font-archivo)',
               fontSize: 'clamp(22px, 5vw, 32px)',
               fontWeight: 900,
-              background: '#111',
-              color: 'white',
+              background: 'var(--theme-text)',
+              color: 'var(--theme-bg)',
               padding: '10px 30px',
               transform: 'rotate(-2deg)',
             }}
@@ -366,10 +366,10 @@ export default function EndScreen() {
                 <div
                   className="flex h-8 w-8 items-center justify-center rounded-full"
                   style={{
-                    backgroundColor: '#111',
+                    backgroundColor: 'var(--theme-text)',
                     fontFamily: 'var(--font-archivo)',
                     fontSize: '14px',
-                    color: 'white',
+                    color: 'var(--theme-bg)',
                   }}
                 >
                   R{bestCombo.round}
@@ -428,10 +428,10 @@ export default function EndScreen() {
           <div
             className="mb-4 inline-block px-4 py-1"
             style={{
-              backgroundColor: '#111',
+              backgroundColor: 'var(--theme-text)',
               fontFamily: 'var(--font-archivo)',
               fontSize: '18px',
-              color: 'white',
+              color: 'var(--theme-bg)',
               textTransform: 'uppercase',
               transform: 'rotate(-1deg)',
             }}

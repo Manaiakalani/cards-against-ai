@@ -43,7 +43,7 @@ function ConfettiPiece({ index }: { index: number }) {
         width: `${width}px`,
         height: `${height}px`,
         backgroundColor: color,
-        border: '2px solid #111',
+        border: '2px solid var(--theme-border)',
       }}
     />
   )

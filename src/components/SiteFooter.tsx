@@ -54,7 +54,7 @@ export function SiteFooter() {
       <p
         style={{
           fontFamily: 'var(--font-inter)',
-          fontSize: 11,
+          fontSize: 12,
           color: 'var(--theme-text-muted)',
         }}
       >

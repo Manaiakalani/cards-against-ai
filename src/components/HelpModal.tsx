@@ -68,7 +68,7 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 30 }}
             transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-            className="fixed left-1/2 top-1/2 z-[201] w-[calc(100vw-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 overflow-y-auto overscroll-contain"
+            className="fixed left-1/2 top-1/2 z-[201] w-[calc(100vw-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 overflow-y-auto overscroll-contain shadow-hard-lg"
             role="dialog"
             aria-modal="true"
             aria-labelledby="help-modal-title"
@@ -77,7 +77,6 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
               backgroundColor: 'var(--theme-bg)',
               border: '4px solid var(--theme-border)',
               borderRadius: 24,
-              boxShadow: '12px 12px 0px var(--theme-shadow)',
             }}
           >
             {/* Header */}

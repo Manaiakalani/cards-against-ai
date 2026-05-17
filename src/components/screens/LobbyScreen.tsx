@@ -104,8 +104,8 @@ export default function LobbyScreen() {
             fontSize: 'clamp(36px, 8vw, 64px)',
             lineHeight: 1,
             color: 'white',
-            WebkitTextStroke: '2px #111',
-            textShadow: '6px 6px 0px #111',
+            WebkitTextStroke: '2px var(--theme-shadow)',
+            textShadow: '6px 6px 0px var(--theme-shadow)',
             textWrap: 'balance',
           }}
         >
@@ -354,7 +354,7 @@ export default function LobbyScreen() {
                         backgroundColor: '#66FF00',
                         border: '2px solid var(--theme-border)',
                         fontWeight: 700,
-                        color: '#111',
+                        color: 'var(--theme-text)',
                         lineHeight: 1,
                       }}
                     >
@@ -376,7 +376,7 @@ export default function LobbyScreen() {
                   <span
                     style={{
                       fontFamily: 'var(--font-inter)',
-                      fontSize: '11px',
+                      fontSize: '12px',
                       color: 'var(--theme-text-muted)',
                     }}
                   >
@@ -414,7 +414,7 @@ export default function LobbyScreen() {
                 border: '3px solid var(--theme-border)',
                 borderRadius: '10px',
                 backgroundColor: timerEnabled ? '#66FF00' : 'var(--theme-surface)',
-                color: timerEnabled ? '#111' : 'var(--theme-text)',
+                color: 'var(--theme-text)',
                 boxShadow: timerEnabled ? '3px 3px 0px var(--theme-shadow)' : 'none',
               }}
             >
@@ -435,7 +435,7 @@ export default function LobbyScreen() {
                     border: '3px solid var(--theme-border)',
                     borderRadius: '10px',
                     backgroundColor: timerSeconds === s ? '#66FF00' : 'var(--theme-surface)',
-                    color: timerSeconds === s ? '#111' : 'var(--theme-text)',
+                    color: 'var(--theme-text)',
                     boxShadow: timerSeconds === s ? '3px 3px 0px var(--theme-shadow)' : 'none',
                   }}
                 >
@@ -482,7 +482,7 @@ export default function LobbyScreen() {
                   className="mt-0.5"
                   style={{
                     fontFamily: 'var(--font-inter)',
-                    fontSize: '11px',
+                    fontSize: '12px',
                     color: 'var(--theme-text-muted)',
                   }}
                 >
@@ -498,7 +498,7 @@ export default function LobbyScreen() {
                   border: '3px solid var(--theme-border)',
                   borderRadius: '10px',
                   backgroundColor: winnersPick ? '#66FF00' : 'var(--theme-surface)',
-                  color: winnersPick ? '#111' : 'var(--theme-text)',
+                  color: 'var(--theme-text)',
                   boxShadow: winnersPick ? '3px 3px 0px var(--theme-shadow)' : 'none',
                 }}
               >
@@ -522,7 +522,7 @@ export default function LobbyScreen() {
                   className="mt-0.5"
                   style={{
                     fontFamily: 'var(--font-inter)',
-                    fontSize: '11px',
+                    fontSize: '12px',
                     color: 'var(--theme-text-muted)',
                   }}
                 >
@@ -538,7 +538,7 @@ export default function LobbyScreen() {
                   border: '3px solid var(--theme-border)',
                   borderRadius: '10px',
                   backgroundColor: rebootEnabled ? '#66FF00' : 'var(--theme-surface)',
-                  color: rebootEnabled ? '#111' : 'var(--theme-text)',
+                  color: 'var(--theme-text)',
                   boxShadow: rebootEnabled ? '3px 3px 0px var(--theme-shadow)' : 'none',
                 }}
               >

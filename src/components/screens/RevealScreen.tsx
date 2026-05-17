@@ -97,14 +97,13 @@ export default function RevealScreen() {
                     </div>
                   ) : (
                     <div
-                      className="flex w-full items-center justify-center"
+                      className="flex w-full items-center justify-center shadow-hard-sm"
                       style={{
                         maxWidth: 160,
                         aspectRatio: '160 / 220',
                         backgroundColor: '#666',
                         borderRadius: 16,
                         border: '3px solid var(--theme-border)',
-                        boxShadow: '4px 4px 0px var(--theme-shadow)',
                       }}
                     >
                       <span style={{ fontSize: 'clamp(32px, 8vw, 48px)', opacity: 0.5 }}>🃏</span>
