@@ -56,7 +56,7 @@ export default function EndScreen() {
   const winnerRounds = gameState.roundHistory.filter(r => r.winnerId === winner?.id).length
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: '#F4F4EE' }}>
+    <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>
       <PosterBackground words={['slay', 'iconic', 'legend']} opacity={0.9} />
 
       {/* Confetti */}
@@ -75,7 +75,7 @@ export default function EndScreen() {
           <span
             style={{
               fontSize: '120px',
-              filter: 'drop-shadow(8px 12px 0px rgba(0,0,0,0.15))',
+              filter: 'drop-shadow(8px 12px 0px var(--theme-shadow-soft))',
               display: 'block',
             }}
           >
@@ -144,11 +144,11 @@ export default function EndScreen() {
               key={i}
               className="flex flex-col items-center"
               style={{
-                background: 'white',
-                border: '3px solid #111',
+                background: 'var(--theme-surface)',
+                border: '3px solid var(--theme-border)',
                 padding: 'clamp(10px, 2vw, 16px) clamp(16px, 3vw, 24px)',
                 borderRadius: '12px',
-                boxShadow: '6px 6px 0px #111',
+                boxShadow: '6px 6px 0px var(--theme-shadow)',
                 minWidth: 'clamp(80px, 15vw, 120px)',
               }}
             >
@@ -156,7 +156,7 @@ export default function EndScreen() {
                 style={{
                   fontFamily: 'var(--font-archivo)',
                   fontSize: '36px',
-                  color: '#111',
+                  color: 'var(--theme-text)',
                 }}
               >
                 {stat.value}
@@ -165,7 +165,7 @@ export default function EndScreen() {
                 className="text-xs uppercase tracking-wider"
                 style={{
                   fontFamily: 'var(--font-inter)',
-                  color: '#666',
+                  color: 'var(--theme-text-secondary)',
                   fontWeight: 900,
                 }}
               >
@@ -204,9 +204,9 @@ export default function EndScreen() {
                 transition={{ delay: 0.7 + i * 0.08 }}
                 className="flex items-center justify-between px-5 py-3"
                 style={{
-                  background: i === 0 ? '#66FF00' : 'white',
-                  border: '3px solid #111',
-                  boxShadow: i === 0 ? '6px 6px 0px #111' : '4px 4px 0px rgba(0,0,0,0.1)',
+                  background: i === 0 ? '#66FF00' : 'var(--theme-surface)',
+                  border: '3px solid var(--theme-border)',
+                  boxShadow: i === 0 ? '6px 6px 0px var(--theme-shadow)' : '4px 4px 0px var(--theme-shadow-soft)',
                   transform: `rotate(${i % 2 === 0 ? -0.5 : 0.8}deg)${i === 0 ? ' scale(1.03)' : ''}`,
                 }}
               >
@@ -215,7 +215,7 @@ export default function EndScreen() {
                     style={{
                       fontFamily: 'var(--font-archivo)',
                       fontSize: '24px',
-                      color: i === 0 ? '#111' : '#ccc',
+                      color: i === 0 ? 'var(--theme-text)' : 'var(--theme-text-muted)',
                       width: '28px',
                     }}
                   >
@@ -225,7 +225,7 @@ export default function EndScreen() {
                     className="flex h-10 w-10 items-center justify-center rounded-full text-lg"
                     style={{
                       backgroundColor: player.avatarBg,
-                      border: '2px solid #111',
+                      border: '2px solid var(--theme-border)',
                     }}
                   >
                     {player.avatar}
@@ -234,7 +234,7 @@ export default function EndScreen() {
                     style={{
                       fontFamily: 'var(--font-archivo)',
                       fontSize: '18px',
-                      color: '#111',
+                      color: 'var(--theme-text)',
                     }}
                   >
                     {player.name}
@@ -244,7 +244,7 @@ export default function EndScreen() {
                   style={{
                     fontFamily: 'var(--font-archivo)',
                     fontSize: '28px',
-                    color: '#111',
+                    color: 'var(--theme-text)',
                   }}
                 >
                   {player.score}
@@ -266,10 +266,10 @@ export default function EndScreen() {
               className="mb-4 inline-block px-4 py-1"
               style={{
                 backgroundColor: '#FFB6C1',
-                border: '2px solid #111',
+                border: '2px solid var(--theme-border)',
                 fontFamily: 'var(--font-archivo)',
                 fontSize: '18px',
-                color: '#111',
+                color: 'var(--theme-text)',
                 textTransform: 'uppercase',
                 transform: 'rotate(1deg)',
               }}
@@ -288,9 +288,9 @@ export default function EndScreen() {
                     transition={{ delay: 1.0 + i * 0.08 }}
                     className="flex items-center gap-4 rounded-2xl p-4"
                     style={{
-                      backgroundColor: 'white',
-                      border: '3px solid #111',
-                      boxShadow: '4px 4px 0px #111',
+                      backgroundColor: 'var(--theme-surface)',
+                      border: '3px solid var(--theme-border)',
+                      boxShadow: '4px 4px 0px var(--theme-shadow)',
                     }}
                   >
                     <div
@@ -308,7 +308,7 @@ export default function EndScreen() {
                       <div className="flex-1">
                         <GameCard card={result.blackCard} size="sm" showFooter={false} />
                       </div>
-                      <span style={{ fontFamily: 'var(--font-archivo)', fontSize: '20px', color: '#ccc' }}>+</span>
+                      <span style={{ fontFamily: 'var(--font-archivo)', fontSize: '20px', color: 'var(--theme-text-muted)' }}>+</span>
                       <div className="flex-1">
                         <GameCard card={result.winningCard} size="sm" showFooter={false} />
                       </div>
@@ -317,11 +317,11 @@ export default function EndScreen() {
                       <div className="flex items-center gap-2">
                         <div
                           className="flex h-8 w-8 items-center justify-center rounded-full text-base"
-                          style={{ backgroundColor: roundWinner.avatarBg, border: '2px solid #111' }}
+                          style={{ backgroundColor: roundWinner.avatarBg, border: '2px solid var(--theme-border)' }}
                         >
                           {roundWinner.avatar}
                         </div>
-                        <span className="text-sm" style={{ fontFamily: 'var(--font-archivo)', color: '#111' }}>
+                        <span className="text-sm" style={{ fontFamily: 'var(--font-archivo)', color: 'var(--theme-text)' }}>
                           {roundWinner.name}
                         </span>
                       </div>
@@ -342,19 +342,19 @@ export default function EndScreen() {
         >
           <motion.button
             onClick={newGame}
-            whileHover={{ y: 2, boxShadow: '0px 6px 0px #111111' }}
-            whileTap={{ y: 6, boxShadow: '0px 2px 0px #111111' }}
+            whileHover={{ y: 2, boxShadow: '0px 6px 0px var(--theme-shadow)' }}
+            whileTap={{ y: 6, boxShadow: '0px 2px 0px var(--theme-shadow)' }}
             className="cursor-pointer"
             style={{
               fontFamily: 'var(--font-archivo)',
               fontSize: '24px',
               textTransform: 'uppercase',
               backgroundColor: '#66FF00',
-              color: '#111',
+              color: 'var(--theme-text)',
               padding: 'clamp(16px, 3vw, 24px) clamp(36px, 8vw, 60px)',
               borderRadius: '100px',
-              border: '4px solid #111',
-              boxShadow: '0px 8px 0px #111',
+              border: '4px solid var(--theme-border)',
+              boxShadow: '0px 8px 0px var(--theme-shadow)',
             }}
           >
             RUN IT BACK

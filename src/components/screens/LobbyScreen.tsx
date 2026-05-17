@@ -40,7 +40,7 @@ export default function LobbyScreen() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: '#F4F4EE' }}>
+    <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>
       <PosterBackground words={['touch', 'grass', 'never']} />
 
       <div className="relative z-10 flex flex-col items-center px-4 py-12">
@@ -69,10 +69,10 @@ export default function LobbyScreen() {
           transition={{ delay: 0.15, type: 'spring', stiffness: 300 }}
           className="mb-4 inline-block text-center"
           style={{
-            background: 'white',
-            border: '4px solid #111',
+            background: 'var(--theme-surface)',
+            border: '4px solid var(--theme-border)',
             padding: '12px 32px',
-            boxShadow: '8px 8px 0px rgba(0,0,0,0.1)',
+            boxShadow: '8px 8px 0px var(--theme-shadow-soft)',
             transform: 'rotate(-2deg)',
           }}
         >
@@ -92,7 +92,7 @@ export default function LobbyScreen() {
               fontFamily: 'var(--font-archivo)',
               fontSize: '36px',
               letterSpacing: '4px',
-              color: '#111',
+              color: 'var(--theme-text)',
             }}
           >
             {gameState.roomCode}
@@ -127,13 +127,13 @@ export default function LobbyScreen() {
                   minHeight: '180px',
                   borderRadius: '18px',
                   borderStyle: player ? 'solid' : 'dashed',
-                  borderColor: player ? '#111' : '#ccc',
+                  borderColor: player ? 'var(--theme-border)' : 'var(--theme-border-light)',
                   borderWidth: player?.isHost ? '4px' : '3px',
-                  backgroundColor: player ? 'white' : 'transparent',
+                  backgroundColor: player ? 'var(--theme-surface)' : 'transparent',
                   boxShadow: player
                     ? player.isHost
                       ? '8px 8px 0px #FFB6C1'
-                      : '5px 5px 0px #111'
+                      : '5px 5px 0px var(--theme-shadow)'
                     : 'none',
                   transform: `rotate(${rotation}deg)`,
                 }}
@@ -154,7 +154,7 @@ export default function LobbyScreen() {
                         width: '72px',
                         height: '72px',
                         backgroundColor: player.bg,
-                        border: '3px solid #111',
+                        border: '3px solid var(--theme-border)',
                         fontSize: '32px',
                       }}
                     >
@@ -164,14 +164,14 @@ export default function LobbyScreen() {
                       style={{
                         fontFamily: 'var(--font-archivo)',
                         fontSize: '20px',
-                        color: '#111',
+                        color: 'var(--theme-text)',
                       }}
                     >
                       {player.name}
                     </span>
                     <span
                       className="text-xs uppercase tracking-wider"
-                      style={{ fontFamily: 'var(--font-inter)', color: '#999' }}
+                      style={{ fontFamily: 'var(--font-inter)', color: 'var(--theme-text-muted)' }}
                     >
                       {player.role}
                     </span>
@@ -179,7 +179,7 @@ export default function LobbyScreen() {
                 ) : (
                   <span
                     className="text-sm"
-                    style={{ fontFamily: 'var(--font-inter)', color: '#ccc' }}
+                    style={{ fontFamily: 'var(--font-inter)', color: 'var(--theme-text-muted)' }}
                   >
                     Waiting for Talent...
                   </span>
@@ -208,10 +208,10 @@ export default function LobbyScreen() {
             className="w-full px-5 py-3 text-lg outline-none placeholder:text-gray-400"
             style={{
               fontFamily: 'var(--font-archivo)',
-              border: '3px solid #111',
+              border: '3px solid var(--theme-border)',
               borderRadius: '12px',
-              backgroundColor: 'white',
-              color: '#111',
+              backgroundColor: 'var(--theme-input-bg)',
+              color: 'var(--theme-text)',
             }}
           />
 
@@ -219,7 +219,7 @@ export default function LobbyScreen() {
           <div className="flex items-center justify-center gap-3">
             <span
               className="text-sm uppercase tracking-wider"
-              style={{ fontFamily: 'var(--font-archivo)', color: '#111' }}
+              style={{ fontFamily: 'var(--font-archivo)', color: 'var(--theme-text)' }}
             >
               Bots:
             </span>
@@ -231,11 +231,11 @@ export default function LobbyScreen() {
                 style={{
                   fontFamily: 'var(--font-archivo)',
                   fontSize: '18px',
-                  border: '3px solid #111',
+                  border: '3px solid var(--theme-border)',
                   borderRadius: '10px',
-                  backgroundColor: botCount === count ? '#66FF00' : 'white',
-                  color: '#111',
-                  boxShadow: botCount === count ? '3px 3px 0px #111' : 'none',
+                  backgroundColor: botCount === count ? '#66FF00' : 'var(--theme-surface)',
+                  color: 'var(--theme-text)',
+                  boxShadow: botCount === count ? '3px 3px 0px var(--theme-shadow)' : 'none',
                 }}
               >
                 {count}

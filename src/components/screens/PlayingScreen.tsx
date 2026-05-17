@@ -64,7 +64,7 @@ export default function PlayingScreen() {
   // Czar waiting view
   if (isPlayerCzar) {
     return (
-      <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: '#F4F4EE' }}>
+      <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>
         <PosterBackground words={['no cap', 'fr fr', 'lowkey']} opacity={0.15} />
         <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} />
         <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 pt-14">
@@ -74,7 +74,7 @@ export default function PlayingScreen() {
             className="mb-6 flex h-24 w-24 items-center justify-center rounded-full"
             style={{
               backgroundColor: '#FFB6C1',
-              border: '3px solid #111',
+              border: '3px solid var(--theme-border)',
               fontSize: '48px',
             }}
           >
@@ -85,7 +85,7 @@ export default function PlayingScreen() {
             style={{
               fontFamily: 'var(--font-archivo)',
               fontSize: 'clamp(28px, 5vw, 42px)',
-              color: '#111',
+              color: 'var(--theme-text)',
             }}
           >
             You&apos;re the Card Czar
@@ -95,7 +95,7 @@ export default function PlayingScreen() {
             style={{
               fontFamily: 'var(--font-inter)',
               fontSize: '18px',
-              color: '#666',
+              color: 'var(--theme-text-secondary)',
             }}
           >
             Waiting for everyone to lock in...
@@ -119,7 +119,7 @@ export default function PlayingScreen() {
                     className="flex h-10 w-10 items-center justify-center rounded-full text-lg"
                     style={{
                       backgroundColor: p.avatarBg,
-                      border: '2px solid #111',
+                      border: '2px solid var(--theme-border)',
                     }}
                   >
                     {p.avatar}
@@ -133,7 +133,7 @@ export default function PlayingScreen() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: '#F4F4EE' }}>
+    <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>
       <PosterBackground words={['no cap', 'fr fr', 'lowkey']} opacity={0.15} />
       <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} />
 
@@ -145,7 +145,7 @@ export default function PlayingScreen() {
               style={{
                 fontFamily: 'var(--font-archivo)',
                 fontSize: 'clamp(28px, 5vw, 42px)',
-                color: '#111',
+                color: 'var(--theme-text)',
                 lineHeight: 1.1,
               }}
             >
@@ -156,7 +156,7 @@ export default function PlayingScreen() {
               style={{
                 fontFamily: 'var(--font-inter)',
                 fontSize: '16px',
-                color: '#888',
+                color: 'var(--theme-text-muted)',
               }}
             >
               {humanPlayer?.hand.length ?? 0} Cards Remaining
@@ -173,8 +173,8 @@ export default function PlayingScreen() {
                 maxWidth: '260px',
                 backgroundColor: '#111',
                 borderRadius: '16px',
-                border: '3px solid #111',
-                boxShadow: '4px 4px 0px rgba(0,0,0,0.3)',
+                border: '3px solid var(--theme-border)',
+                boxShadow: '4px 4px 0px var(--theme-shadow-soft)',
               }}
             >
               <p
@@ -210,7 +210,7 @@ export default function PlayingScreen() {
                   style={{
                     filter: isSelected ? 'none' : undefined,
                     boxShadow: isSelected
-                      ? '0 0 0 3px #66FF00, 6px 6px 0px #111'
+                      ? '0 0 0 3px #66FF00, 6px 6px 0px var(--theme-shadow)'
                       : undefined,
                     borderRadius: '16px',
                   }}
@@ -250,7 +250,7 @@ export default function PlayingScreen() {
               style={{
                 fontFamily: 'var(--font-archivo)',
                 fontSize: '24px',
-                color: '#111',
+                color: 'var(--theme-text)',
               }}
             >
               Card Submitted! Waiting for others...

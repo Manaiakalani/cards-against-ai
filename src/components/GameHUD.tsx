@@ -18,17 +18,17 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode }: GameH
       className="fixed left-0 right-0 top-0 z-50 flex items-center justify-between px-5"
       style={{
         height: 52,
-        backgroundColor: 'rgba(244, 244, 238, 0.85)',
+        backgroundColor: 'var(--theme-backdrop)',
         backdropFilter: 'blur(8px)',
-        borderBottom: '3px solid #111111',
+        borderBottom: '3px solid var(--theme-border)',
       }}
     >
       {/* Left: Room code */}
       <div
         className="flex items-center rounded px-3 py-1"
         style={{
-          border: '2px solid #111111',
-          backgroundColor: '#FFFFFF',
+          border: '2px solid var(--theme-border)',
+          backgroundColor: 'var(--theme-surface)',
         }}
       >
         <span
@@ -36,7 +36,7 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode }: GameH
             fontFamily: 'var(--font-archivo)',
             fontSize: 14,
             letterSpacing: 2,
-            color: '#111111',
+            color: 'var(--theme-text)',
           }}
         >
           {roomCode}
@@ -49,7 +49,7 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode }: GameH
         style={{
           fontFamily: 'var(--font-archivo)',
           fontSize: 18,
-          color: '#111111',
+          color: 'var(--theme-text)',
         }}
       >
         ROUND {round}
@@ -67,8 +67,8 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode }: GameH
               key={player.id}
               className="flex flex-shrink-0 items-center gap-1 rounded-full px-1.5 py-0.5 sm:gap-1.5 sm:px-2 sm:py-1"
               style={{
-                backgroundColor: isLeader ? '#66FF00' : '#FFFFFF',
-                border: '2px solid #111111',
+                backgroundColor: isLeader ? '#66FF00' : 'var(--theme-surface)',
+                border: '2px solid var(--theme-border)',
               }}
             >
               <div
@@ -77,7 +77,7 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode }: GameH
                   width: 24,
                   height: 24,
                   backgroundColor: player.avatarBg,
-                  border: '2px solid #111',
+                  border: '2px solid var(--theme-border)',
                   fontSize: 12,
                 }}
               >
@@ -96,7 +96,7 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode }: GameH
                   fontFamily: 'var(--font-archivo)',
                   fontSize: 14,
                   fontWeight: 400,
-                  color: '#111111',
+                  color: 'var(--theme-text)',
                 }}
               >
                 {player.score}

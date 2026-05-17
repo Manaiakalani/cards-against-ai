@@ -33,8 +33,8 @@ export function Sticker({
         fontWeight: 400,
         color: text,
         backgroundColor: bg,
-        border: '2px solid #111111',
-        boxShadow: '4px 4px 0px #111111',
+        border: '2px solid var(--theme-border)',
+        boxShadow: '4px 4px 0px var(--theme-shadow)',
         transform: rotation ? `rotate(${rotation}deg)` : undefined,
         borderRadius: '6px',
       }}

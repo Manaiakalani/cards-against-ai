@@ -38,7 +38,7 @@ export default function JudgingScreen() {
   // Bot czar deliberating view
   if (!isHumanCzar) {
     return (
-      <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: '#F4F4EE' }}>
+      <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>
         <PosterBackground words={['slay', 'ate', 'period']} />
         <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} />
         <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 pt-14">
@@ -48,7 +48,7 @@ export default function JudgingScreen() {
             className="mb-6 flex h-24 w-24 items-center justify-center rounded-full text-5xl"
             style={{
               backgroundColor: czar?.avatarBg ?? '#DDA0DD',
-              border: '3px solid #111',
+              border: '3px solid var(--theme-border)',
             }}
           >
             {czar?.avatar ?? '🤔'}
@@ -58,7 +58,7 @@ export default function JudgingScreen() {
             style={{
               fontFamily: 'var(--font-archivo)',
               fontSize: 'clamp(24px, 5vw, 36px)',
-              color: '#111',
+              color: 'var(--theme-text)',
             }}
           >
             The Czar is Deliberating...
@@ -67,7 +67,7 @@ export default function JudgingScreen() {
             style={{
               fontFamily: 'var(--font-inter)',
               fontSize: '16px',
-              color: '#888',
+              color: 'var(--theme-text-muted)',
             }}
           >
             {czar?.name ?? 'Bot'} is choosing a winner
@@ -79,7 +79,7 @@ export default function JudgingScreen() {
 
   // Human czar judging view
   return (
-    <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: '#F4F4EE' }}>
+    <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>
       <PosterBackground words={['slay', 'ate', 'period']} />
       <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} />
 
@@ -90,7 +90,7 @@ export default function JudgingScreen() {
           animate={{ y: 0, opacity: 1 }}
           className="mb-8 inline-block px-5 py-2"
           style={{
-            backgroundColor: '#111',
+            backgroundColor: 'var(--theme-text)',
             borderRadius: '8px',
             fontFamily: 'var(--font-archivo)',
             fontSize: '14px',
@@ -145,7 +145,7 @@ export default function JudgingScreen() {
                   style={{
                     zIndex: isSelected ? 20 : 10,
                     boxShadow: isSelected
-                      ? '0 0 0 3px #66FF00, 6px 6px 0px #111'
+                      ? '0 0 0 3px #66FF00, 6px 6px 0px var(--theme-shadow)'
                       : undefined,
                     borderRadius: '16px',
                   }}

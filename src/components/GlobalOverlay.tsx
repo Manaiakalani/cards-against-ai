@@ -2,11 +2,14 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Sun, Moon } from 'lucide-react'
 import { useGame } from '@/contexts/GameContext'
+import { useTheme } from '@/contexts/ThemeContext'
 import { HelpModal } from '@/components/HelpModal'
 
 export function GlobalOverlay() {
   const { gameState, newGame } = useGame()
+  const { isDark, toggleTheme } = useTheme()
   const [helpOpen, setHelpOpen] = useState(false)
   const [confirmQuit, setConfirmQuit] = useState(false)
 
@@ -14,6 +17,31 @@ export function GlobalOverlay() {
 
   return (
     <>
+      {/* Theme toggle — always visible, next to help */}
+      <motion.button
+        onClick={toggleTheme}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+        className="fixed z-[150] flex cursor-pointer items-center justify-center rounded-full"
+        style={{
+          top: isInGame ? 64 : 16,
+          right: 68,
+          width: 44,
+          height: 44,
+          backgroundColor: 'var(--theme-surface)',
+          color: 'var(--theme-text)',
+          border: '3px solid var(--theme-border)',
+          boxShadow: '3px 3px 0px var(--theme-shadow-soft)',
+          transition: 'top 0.3s ease',
+        }}
+      >
+        {isDark
+          ? <Sun className="h-5 w-5" strokeWidth={2} />
+          : <Moon className="h-5 w-5" strokeWidth={2} />
+        }
+      </motion.button>
+
       {/* Help "?" button — always visible */}
       <motion.button
         onClick={() => setHelpOpen(true)}
@@ -26,10 +54,10 @@ export function GlobalOverlay() {
           right: 16,
           width: 44,
           height: 44,
-          backgroundColor: '#111',
-          color: 'white',
-          border: '3px solid #111',
-          boxShadow: '3px 3px 0px rgba(0,0,0,0.2)',
+          backgroundColor: 'var(--theme-text)',
+          color: 'var(--theme-bg)',
+          border: '3px solid var(--theme-border)',
+          boxShadow: '3px 3px 0px var(--theme-shadow-soft)',
           fontFamily: 'var(--font-archivo)',
           fontSize: 22,
           transition: 'top 0.3s ease',
@@ -57,8 +85,8 @@ export function GlobalOverlay() {
               height: 44,
               backgroundColor: '#FF4242',
               color: 'white',
-              border: '3px solid #111',
-              boxShadow: '3px 3px 0px rgba(0,0,0,0.2)',
+              border: '3px solid var(--theme-border)',
+              boxShadow: '3px 3px 0px var(--theme-shadow-soft)',
               fontFamily: 'var(--font-inter)',
               fontSize: 18,
             }}
@@ -78,7 +106,7 @@ export function GlobalOverlay() {
               exit={{ opacity: 0 }}
               onClick={() => setConfirmQuit(false)}
               className="fixed inset-0 z-[200]"
-              style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }}
+              style={{ backgroundColor: 'var(--theme-overlay)' }}
             />
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -92,10 +120,10 @@ export function GlobalOverlay() {
               style={{
                 width: 'calc(100vw - 3rem)',
                 maxWidth: 340,
-                backgroundColor: '#F4F4EE',
-                border: '4px solid #111',
+                backgroundColor: 'var(--theme-bg)',
+                border: '4px solid var(--theme-border)',
                 borderRadius: 24,
-                boxShadow: '10px 10px 0px #111',
+                boxShadow: '10px 10px 0px var(--theme-shadow)',
                 padding: '32px 28px',
                 textAlign: 'center',
               }}
@@ -105,7 +133,7 @@ export function GlobalOverlay() {
                 style={{
                   fontFamily: 'var(--font-archivo)',
                   fontSize: 24,
-                  color: '#111',
+                  color: 'var(--theme-text)',
                   marginBottom: 8,
                   textTransform: 'uppercase',
                 }}
@@ -116,7 +144,7 @@ export function GlobalOverlay() {
                 style={{
                   fontFamily: 'var(--font-inter)',
                   fontSize: 14,
-                  color: '#666',
+                  color: 'var(--theme-text-secondary)',
                   marginBottom: 24,
                   lineHeight: 1.5,
                 }}
@@ -131,10 +159,10 @@ export function GlobalOverlay() {
                     fontFamily: 'var(--font-archivo)',
                     fontSize: 16,
                     textTransform: 'uppercase',
-                    backgroundColor: 'white',
-                    color: '#111',
-                    border: '3px solid #111',
-                    boxShadow: '4px 4px 0px #111',
+                    backgroundColor: 'var(--theme-surface)',
+                    color: 'var(--theme-text)',
+                    border: '3px solid var(--theme-border)',
+                    boxShadow: '4px 4px 0px var(--theme-shadow)',
                   }}
                 >
                   Stay
@@ -151,8 +179,8 @@ export function GlobalOverlay() {
                     textTransform: 'uppercase',
                     backgroundColor: '#FF4242',
                     color: 'white',
-                    border: '3px solid #111',
-                    boxShadow: '4px 4px 0px #111',
+                    border: '3px solid var(--theme-border)',
+                    boxShadow: '4px 4px 0px var(--theme-shadow)',
                   }}
                 >
                   Quit

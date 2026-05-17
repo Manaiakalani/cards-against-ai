@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo_Black, Inter } from "next/font/google";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 import { GameProvider } from "@/contexts/GameContext";
 import "./globals.css";
 
@@ -38,7 +39,9 @@ export default function RootLayout({
       className={`${archivoBlack.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <GameProvider>{children}</GameProvider>
+        <ThemeProvider>
+          <GameProvider>{children}</GameProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

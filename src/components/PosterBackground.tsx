@@ -5,7 +5,7 @@ interface PosterBackgroundProps {
   opacity?: number
 }
 
-export function PosterBackground({ words, opacity = 0.9 }: PosterBackgroundProps) {
+export function PosterBackground({ words, opacity }: PosterBackgroundProps) {
   // Repeat words enough times to fill the viewport vertically
   const rows = Array.from({ length: 12 }, (_, i) => ({
     word: words[i % words.length],
@@ -15,7 +15,7 @@ export function PosterBackground({ words, opacity = 0.9 }: PosterBackgroundProps
   return (
     <div
       className="fixed inset-0 overflow-hidden pointer-events-none select-none"
-      style={{ zIndex: 0, opacity }}
+      style={{ zIndex: 0, opacity: opacity ?? 'var(--theme-poster-opacity)' }}
     >
       <div
         className="flex flex-col justify-start"
@@ -39,8 +39,8 @@ export function PosterBackground({ words, opacity = 0.9 }: PosterBackgroundProps
               lineHeight: 0.75,
               textTransform: 'lowercase',
               letterSpacing: '-0.04em',
-              color: row.isOutline ? 'transparent' : '#FF4242',
-              WebkitTextStroke: row.isOutline ? '3px #FF4242' : undefined,
+              color: row.isOutline ? 'transparent' : 'var(--theme-poster-color)',
+              WebkitTextStroke: row.isOutline ? '3px var(--theme-poster-color)' : undefined,
               paddingRight: '2vw',
             }}
           >

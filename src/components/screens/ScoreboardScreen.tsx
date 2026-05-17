@@ -22,7 +22,7 @@ export default function ScoreboardScreen() {
   return (
     <div
       className="relative min-h-screen overflow-x-hidden"
-      style={{ backgroundColor: '#F4F4EE' }}
+      style={{ backgroundColor: 'var(--theme-bg)' }}
     >
       <PosterBackground words={['main', 'character', 'energy']} opacity={0.4} />
 
@@ -39,8 +39,7 @@ export default function ScoreboardScreen() {
                 fontSize: 'clamp(48px, 10vw, 84px)',
                 fontWeight: 400,
                 lineHeight: 0.9,
-                color: '#111111',
-                textTransform: 'uppercase',
+                color: 'var(--theme-text)',
               }}
             >
               STANDINGS
@@ -70,7 +69,7 @@ export default function ScoreboardScreen() {
                 style={{
                   fontFamily: 'var(--font-inter)',
                   fontSize: 11,
-                  color: '#888888',
+                  color: 'var(--theme-text-muted)',
                 }}
               >
                 Next Czar
@@ -78,9 +77,9 @@ export default function ScoreboardScreen() {
               <div
                 className="flex items-center gap-2 rounded-full px-4 py-2"
                 style={{
-                  border: '3px solid #111111',
-                  backgroundColor: '#FFFFFF',
-                  boxShadow: '4px 4px 0px #111111',
+                  border: '3px solid var(--theme-border)',
+                  backgroundColor: 'var(--theme-surface)',
+                  boxShadow: '4px 4px 0px var(--theme-shadow)',
                 }}
               >
                 <div
@@ -89,7 +88,7 @@ export default function ScoreboardScreen() {
                     width: 32,
                     height: 32,
                     backgroundColor: nextCzar.avatarBg,
-                    border: '2px solid #111',
+                    border: '2px solid var(--theme-border)',
                     fontSize: 16,
                   }}
                 >
@@ -99,7 +98,7 @@ export default function ScoreboardScreen() {
                   style={{
                     fontFamily: 'var(--font-archivo)',
                     fontSize: 16,
-                    color: '#111111',
+                    color: 'var(--theme-text)',
                   }}
                 >
                   {nextCzar.name}
@@ -129,10 +128,10 @@ export default function ScoreboardScreen() {
                 className="flex items-center justify-between"
                 style={{
                   padding: 'clamp(12px, 2vw, 20px) clamp(16px, 3vw, 32px)',
-                  backgroundColor: isLeader ? '#66FF00' : '#FFFFFF',
-                  border: '4px solid #111111',
+                  backgroundColor: isLeader ? '#66FF00' : 'var(--theme-surface)',
+                  border: '4px solid var(--theme-border)',
                   borderRadius: 12,
-                  boxShadow: '6px 6px 0px rgba(0,0,0,0.1)',
+                  boxShadow: '6px 6px 0px var(--theme-shadow-soft)',
                   transform: `rotate(${rotation}deg)${isLeader ? ' scale(1.05)' : ''}`,
                   zIndex: isLeader ? 10 : 1,
                   position: 'relative',
@@ -144,7 +143,7 @@ export default function ScoreboardScreen() {
                     style={{
                       fontFamily: 'var(--font-archivo)',
                       fontSize: 'clamp(20px, 3vw, 32px)',
-                      color: '#111111',
+                      color: 'var(--theme-text)',
                       minWidth: 28,
                     }}
                   >
@@ -156,7 +155,7 @@ export default function ScoreboardScreen() {
                       width: 40,
                       height: 40,
                       backgroundColor: player.avatarBg,
-                      border: '3px solid #111',
+                      border: '3px solid var(--theme-border)',
                       fontSize: 20,
                     }}
                   >
@@ -167,7 +166,7 @@ export default function ScoreboardScreen() {
                     style={{
                       fontFamily: 'var(--font-archivo)',
                       fontSize: 'clamp(16px, 2.5vw, 22px)',
-                      color: '#111111',
+                      color: 'var(--theme-text)',
                     }}
                   >
                     {player.name}
@@ -177,9 +176,9 @@ export default function ScoreboardScreen() {
                       className="hidden rounded px-2 py-0.5 text-xs uppercase sm:inline"
                       style={{
                         fontFamily: 'var(--font-inter)',
-                        backgroundColor: '#EEE',
-                        color: '#888',
-                        border: '1px solid #CCC',
+                        backgroundColor: 'var(--theme-surface-alt)',
+                        color: 'var(--theme-text-muted)',
+                        border: '1px solid var(--theme-border-light)',
                       }}
                     >
                       Bot
@@ -193,7 +192,7 @@ export default function ScoreboardScreen() {
                     style={{
                       fontFamily: 'var(--font-archivo)',
                       fontSize: 'clamp(22px, 4vw, 42px)',
-                      color: '#111111',
+                      color: 'var(--theme-text)',
                     }}
                   >
                     {player.score}
@@ -202,7 +201,7 @@ export default function ScoreboardScreen() {
                     style={{
                       fontFamily: 'var(--font-inter)',
                       fontSize: 14,
-                      color: '#666666',
+                      color: 'var(--theme-text-secondary)',
                     }}
                   >
                     pts
@@ -226,7 +225,7 @@ export default function ScoreboardScreen() {
               style={{
                 fontFamily: 'var(--font-inter)',
                 fontSize: 14,
-                color: '#888888',
+                color: 'var(--theme-text-muted)',
               }}
             >
               Last Round Winner
@@ -234,16 +233,16 @@ export default function ScoreboardScreen() {
             <div
               className="flex w-full items-center gap-3 rounded-2xl p-4"
               style={{
-                backgroundColor: 'white',
-                border: '3px solid #111',
-                boxShadow: '4px 4px 0px #111',
+                backgroundColor: 'var(--theme-surface)',
+                border: '3px solid var(--theme-border)',
+                boxShadow: '4px 4px 0px var(--theme-shadow)',
               }}
             >
               <div
                 className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-lg"
                 style={{
                   backgroundColor: players.find((p) => p.id === lastResult.winnerId)?.avatarBg ?? '#DDA0DD',
-                  border: '2px solid #111',
+                  border: '2px solid var(--theme-border)',
                 }}
               >
                 {players.find((p) => p.id === lastResult.winnerId)?.avatar ?? '?'}
@@ -255,7 +254,7 @@ export default function ScoreboardScreen() {
                     fontFamily: 'var(--font-inter)',
                     fontSize: 14,
                     fontWeight: 700,
-                    color: '#111',
+                    color: 'var(--theme-text)',
                   }}
                 >
                   {lastResult.blackCard.text.replace(/_+/g, '____')}
@@ -276,7 +275,7 @@ export default function ScoreboardScreen() {
                 className="flex-shrink-0 text-sm"
                 style={{
                   fontFamily: 'var(--font-archivo)',
-                  color: '#111',
+                  color: 'var(--theme-text)',
                 }}
               >
                 {players.find((p) => p.id === lastResult.winnerId)?.name ?? 'Unknown'}

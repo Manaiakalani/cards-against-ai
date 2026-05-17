@@ -85,11 +85,11 @@ export function GameCard({
         border: isSelected
           ? '3px solid #66FF00'
           : isBlack
-            ? '3px solid #333333'
-            : '3px solid #111111',
+            ? '3px solid var(--theme-border-light)'
+            : '3px solid var(--theme-border)',
         boxShadow: isSelected
-          ? '0 0 30px rgba(102, 255, 0, 0.3), 15px 25px 45px rgba(0,0,0,0.25)'
-          : '15px 25px 45px rgba(0,0,0,0.25)',
+          ? '0 0 30px rgba(102, 255, 0, 0.3), 15px 25px 45px var(--theme-shadow-soft)'
+          : '15px 25px 45px var(--theme-shadow-soft)',
         transform: `rotate(${rotation}deg)${isSelected ? ' translateY(-8px)' : ''}`,
         userSelect: 'none',
       }}

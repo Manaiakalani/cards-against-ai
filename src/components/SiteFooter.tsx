@@ -7,7 +7,7 @@ export function SiteFooter() {
     <footer
       className="flex flex-col items-center gap-2 px-4 py-6"
       style={{
-        backgroundColor: 'rgba(244, 244, 238, 0.9)',
+        backgroundColor: 'var(--theme-backdrop)',
         borderRadius: 12,
       }}
     >
@@ -22,30 +22,30 @@ export function SiteFooter() {
           href="https://github.com/Manaiakalani/Cards"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 underline transition-colors hover:text-[#111]"
-          style={{ color: '#444' }}
+          className="inline-flex items-center gap-1.5 underline transition-colors hover:text-[var(--theme-text)]"
+          style={{ color: 'var(--theme-text-secondary)' }}
         >
           <Code2 className="h-3.5 w-3.5" strokeWidth={1.75} />
           GitHub ↗
         </a>
-        <span style={{ color: '#999' }}>•</span>
+        <span style={{ color: 'var(--theme-text-muted)' }}>•</span>
         <a
           href="https://github.com/Manaiakalani/Cards/issues/new?labels=new-deck&template=deck_submission.md&title=%5BDeck%5D+"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 underline transition-colors hover:text-[#111]"
-          style={{ color: '#444' }}
+          className="inline-flex items-center gap-1.5 underline transition-colors hover:text-[var(--theme-text)]"
+          style={{ color: 'var(--theme-text-secondary)' }}
         >
           <MessageSquarePlus className="h-3.5 w-3.5" strokeWidth={1.75} />
           Submit a Deck ↗
         </a>
-        <span style={{ color: '#999' }}>•</span>
+        <span style={{ color: 'var(--theme-text-muted)' }}>•</span>
         <a
           href="https://github.com/Manaiakalani/Cards/pulls"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 underline transition-colors hover:text-[#111]"
-          style={{ color: '#444' }}
+          className="inline-flex items-center gap-1.5 underline transition-colors hover:text-[var(--theme-text)]"
+          style={{ color: 'var(--theme-text-secondary)' }}
         >
           <GitPullRequestArrow className="h-3.5 w-3.5" strokeWidth={1.75} />
           Contribute ↗
@@ -55,7 +55,7 @@ export function SiteFooter() {
         style={{
           fontFamily: 'var(--font-inter)',
           fontSize: 11,
-          color: '#777',
+          color: 'var(--theme-text-muted)',
         }}
       >
         Open source — submit new card decks via GitHub Issues or PR

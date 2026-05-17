@@ -57,7 +57,7 @@ export default function ResultsScreen() {
   if (!latestResult) return null
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: '#F4F4EE' }}>
+    <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>
       <PosterBackground words={['ate', 'left no', 'crumbs']} opacity={0.9} />
 
       {/* Confetti */}
@@ -76,8 +76,8 @@ export default function ResultsScreen() {
             fontFamily: 'var(--font-archivo)',
             fontSize: 'clamp(36px, 8vw, 64px)',
             lineHeight: 1,
-            color: '#111',
-            filter: 'drop-shadow(4px 4px 0px rgba(0,0,0,0.3))',
+            color: 'var(--theme-text)',
+            filter: 'drop-shadow(4px 4px 0px var(--theme-shadow-soft))',
           }}
         >
           ATE & LEFT NO CRUMBS
@@ -94,7 +94,7 @@ export default function ResultsScreen() {
             fontSize: '18px',
             textTransform: 'uppercase',
             letterSpacing: '0.1em',
-            color: '#555',
+            color: 'var(--theme-text-secondary)',
           }}
         >
           Round {latestResult.round} &bull; The Main Event
@@ -141,7 +141,7 @@ export default function ResultsScreen() {
                 className="flex h-12 w-12 items-center justify-center rounded-full text-2xl"
                 style={{
                   backgroundColor: winner.avatarBg,
-                  border: '3px solid #111',
+                  border: '3px solid var(--theme-border)',
                 }}
               >
                 {winner.avatar}
@@ -150,7 +150,7 @@ export default function ResultsScreen() {
                 style={{
                   fontFamily: 'var(--font-archivo)',
                   fontSize: '28px',
-                  color: '#111',
+                  color: 'var(--theme-text)',
                 }}
               >
                 {winner.name}
@@ -172,7 +172,7 @@ export default function ResultsScreen() {
                 className="flex h-8 w-8 items-center justify-center rounded-full text-base"
                 style={{
                   backgroundColor: czar.avatarBg,
-                  border: '2px solid #111',
+                  border: '2px solid var(--theme-border)',
                 }}
               >
                 {czar.avatar}
@@ -181,7 +181,7 @@ export default function ResultsScreen() {
                 className="text-sm uppercase tracking-wide"
                 style={{
                   fontFamily: 'var(--font-inter)',
-                  color: '#888',
+                  color: 'var(--theme-text-muted)',
                 }}
               >
                 Judged by
@@ -190,7 +190,7 @@ export default function ResultsScreen() {
                 className="text-sm"
                 style={{
                   fontFamily: 'var(--font-archivo)',
-                  color: '#555',
+                  color: 'var(--theme-text-secondary)',
                 }}
               >
                 {czar.name}

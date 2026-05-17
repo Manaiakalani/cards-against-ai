@@ -47,7 +47,7 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
             exit={{ opacity: 0 }}
             onClick={onClose}
             className="fixed inset-0 z-[200]"
-            style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }}
+            style={{ backgroundColor: 'var(--theme-overlay)' }}
           />
 
           {/* Modal */}
@@ -62,24 +62,23 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
             aria-labelledby="help-modal-title"
             style={{
               maxHeight: 'calc(100vh - 4rem)',
-              backgroundColor: '#F4F4EE',
-              border: '4px solid #111',
+              backgroundColor: 'var(--theme-bg)',
+              border: '4px solid var(--theme-border)',
               borderRadius: 24,
-              boxShadow: '12px 12px 0px #111',
+              boxShadow: '12px 12px 0px var(--theme-shadow)',
             }}
           >
             {/* Header */}
             <div
               className="flex items-center justify-between px-6 py-4"
-              style={{ borderBottom: '3px solid #111' }}
+              style={{ borderBottom: '3px solid var(--theme-border)' }}
             >
               <h2
                 id="help-modal-title"
                 style={{
                   fontFamily: 'var(--font-archivo)',
                   fontSize: 28,
-                  color: '#111',
-                  textTransform: 'uppercase',
+                  color: 'var(--theme-text)',
                 }}
               >
                 How to Play
@@ -89,8 +88,7 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
                 aria-label="Close help"
                 className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full"
                 style={{
-                  backgroundColor: '#111',
-                  color: 'white',
+                  backgroundColor: 'var(--theme-text)',
                   border: 'none',
                   fontFamily: 'var(--font-archivo)',
                   fontSize: 20,
@@ -110,8 +108,7 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
                       style={{
                         fontFamily: 'var(--font-archivo)',
                         fontSize: 16,
-                        color: '#111',
-                        marginBottom: 2,
+                        color: 'var(--theme-text)',
                       }}
                     >
                       {rule.title}
@@ -120,7 +117,7 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
                       style={{
                         fontFamily: 'var(--font-inter)',
                         fontSize: 14,
-                        color: '#555',
+                        color: 'var(--theme-text-secondary)',
                         lineHeight: 1.5,
                       }}
                     >
@@ -134,13 +131,13 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
             {/* Footer */}
             <div
               className="px-6 py-4 text-center"
-              style={{ borderTop: '3px solid #111' }}
+              style={{ borderTop: '3px solid var(--theme-border)' }}
             >
               <p
                 style={{
                   fontFamily: 'var(--font-inter)',
                   fontSize: 13,
-                  color: '#888',
+                  color: 'var(--theme-text-muted)',
                 }}
               >
                 189 cards • 6 decks • infinite chaos

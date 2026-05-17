@@ -29,7 +29,7 @@ export default function SplashScreen() {
   return (
     <div
       className="relative flex min-h-screen items-center justify-center overflow-hidden"
-      style={{ backgroundColor: '#F4F4EE' }}
+      style={{ backgroundColor: 'var(--theme-bg)' }}
     >
       <PosterBackground words={['slay', 'brainrot', 'unhinged']} opacity={0.9} />
 
@@ -131,9 +131,9 @@ export default function SplashScreen() {
           style={{
             fontFamily: 'var(--font-inter)',
             fontSize: 18,
-            color: '#111111',
+            color: 'var(--theme-text)',
             fontWeight: 700,
-            backgroundColor: 'rgba(244, 244, 238, 0.85)',
+            backgroundColor: 'var(--theme-backdrop)',
             padding: '6px 16px',
             borderRadius: 6,
           }}
@@ -148,8 +148,8 @@ export default function SplashScreen() {
           style={{
             fontFamily: 'var(--font-inter)',
             fontSize: 14,
-            color: '#666666',
-            backgroundColor: 'rgba(244, 244, 238, 0.85)',
+            color: 'var(--theme-text-secondary)',
+            backgroundColor: 'var(--theme-backdrop)',
             padding: '4px 12px',
             borderRadius: 4,
           }}
@@ -161,8 +161,8 @@ export default function SplashScreen() {
         <motion.div variants={fadeUp} className="mt-10">
           <motion.button
             onClick={goToLobby}
-            whileHover={{ y: 2, boxShadow: '0px 6px 0px #111111' }}
-            whileTap={{ y: 6, boxShadow: '0px 2px 0px #111111' }}
+            whileHover={{ y: 2, boxShadow: '0px 6px 0px var(--theme-shadow)' }}
+            whileTap={{ y: 6, boxShadow: '0px 2px 0px var(--theme-shadow)' }}
             transition={{ type: 'spring', stiffness: 500, damping: 30 }}
             className="cursor-pointer uppercase"
             style={{
@@ -170,11 +170,11 @@ export default function SplashScreen() {
               fontSize: 'clamp(20px, 3.5vw, 28px)',
               fontWeight: 400,
               backgroundColor: '#66FF00',
-              color: '#111111',
-              border: '4px solid #111111',
+              color: 'var(--theme-text)',
+              border: '4px solid var(--theme-border)',
               padding: 'clamp(16px, 3vw, 24px) clamp(40px, 8vw, 80px)',
               borderRadius: 100,
-              boxShadow: '0px 8px 0px #111111',
+              boxShadow: '0px 8px 0px var(--theme-shadow)',
             }}
           >
             PLAY
@@ -185,19 +185,19 @@ export default function SplashScreen() {
         <motion.div
           variants={fadeUp}
           className="mt-6 flex items-center gap-3"
-          style={{ color: '#AAAAAA' }}
+          style={{ color: 'var(--theme-text-muted)' }}
         >
-          <CardIcon color="#AAAAAA" size={10} />
+          <CardIcon color="var(--theme-text-muted)" size={10} />
           <span
             style={{
               fontFamily: 'var(--font-inter)',
               fontSize: 12,
-              color: '#AAAAAA',
+              color: 'var(--theme-text-muted)',
             }}
           >
             v1.0 MVP
           </span>
-          <CardIcon color="#AAAAAA" size={10} />
+          <CardIcon color="var(--theme-text-muted)" size={10} />
         </motion.div>
 
         {/* Footer */}

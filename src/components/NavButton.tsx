@@ -11,9 +11,9 @@ interface NavButtonProps {
 }
 
 const variantStyles = {
-  primary: { backgroundColor: '#66FF00', color: '#111111', shadow: '#111111' },
-  secondary: { backgroundColor: '#FFB6C1', color: '#111111', shadow: '#111111' },
-  dark: { backgroundColor: '#111111', color: '#FFFFFF', shadow: '#333333' },
+  primary: { backgroundColor: '#66FF00', color: '#111111', shadow: 'var(--theme-shadow)' },
+  secondary: { backgroundColor: '#FFB6C1', color: '#111111', shadow: 'var(--theme-shadow)' },
+  dark: { backgroundColor: '#111111', color: '#FFFFFF', shadow: 'var(--theme-shadow)' },
 } as const
 
 export function NavButton({
@@ -39,7 +39,7 @@ export function NavButton({
         fontSize: 'clamp(14px, 2vw, 18px)',
         fontWeight: 400,
         letterSpacing: '0.02em',
-        border: '3px solid #111111',
+        border: '3px solid var(--theme-border)',
         boxShadow: `0px 6px 0px ${shadow}`,
         transition: 'filter 0.1s',
         ...bg,

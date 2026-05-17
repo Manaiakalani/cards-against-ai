@@ -1,17 +1,53 @@
 @import "tailwindcss";
 
 :root {
-  --background: #F4F4EE;
-  --foreground: #111111;
+  /* Theme tokens — light mode (default) */
+  --theme-bg: #F4F4EE;
+  --theme-surface: #FFFFFF;
+  --theme-surface-alt: #EEEEEE;
+  --theme-text: #111111;
+  --theme-text-secondary: #666666;
+  --theme-text-muted: #999999;
+  --theme-border: #111111;
+  --theme-border-light: #CCCCCC;
+  --theme-shadow: #111111;
+  --theme-shadow-soft: rgba(0, 0, 0, 0.25);
+  --theme-overlay: rgba(0, 0, 0, 0.6);
+  --theme-backdrop: rgba(244, 244, 238, 0.85);
+  --theme-input-bg: #FFFFFF;
+  --theme-poster-color: #FF4242;
+  --theme-poster-opacity: 0.9;
+
+  /* Legacy aliases */
+  --background: var(--theme-bg);
+  --foreground: var(--theme-text);
   --red: #FF4242;
   --green: #66FF00;
   --pink: #FFB6C1;
-  --black: #111111;
+  --black: var(--theme-shadow);
+}
+
+[data-theme="dark"] {
+  --theme-bg: #1A1A1A;
+  --theme-surface: #2A2A2A;
+  --theme-surface-alt: #333333;
+  --theme-text: #E8E8E2;
+  --theme-text-secondary: #AAAAAA;
+  --theme-text-muted: #777777;
+  --theme-border: #555555;
+  --theme-border-light: #444444;
+  --theme-shadow: #000000;
+  --theme-shadow-soft: rgba(0, 0, 0, 0.5);
+  --theme-overlay: rgba(0, 0, 0, 0.75);
+  --theme-backdrop: rgba(26, 26, 26, 0.88);
+  --theme-input-bg: #333333;
+  --theme-poster-color: #FF4242;
+  --theme-poster-opacity: 0.25;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--theme-bg);
+  --color-foreground: var(--theme-text);
   --color-cream: #F4F4EE;
   --color-red: #FF4242;
   --color-green: #66FF00;
@@ -22,12 +58,13 @@
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--theme-bg);
+  color: var(--theme-text);
   font-family: var(--font-inter), Arial, Helvetica, sans-serif;
   overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Prevent double-tap zoom on interactive elements */

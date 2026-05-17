@@ -15,9 +15,9 @@ export function BottomNav({ children }: BottomNavProps) {
         left: '50%',
         transform: 'translateX(-50%)',
         zIndex: 100,
-        backgroundColor: '#FFFFFF',
-        border: '4px solid #111111',
-        boxShadow: '8px 12px 0px rgba(0,0,0,0.15)',
+        backgroundColor: 'var(--theme-surface)',
+        border: '4px solid var(--theme-border)',
+        boxShadow: '8px 12px 0px var(--theme-shadow-soft)',
         maxWidth: 'calc(100vw - 2rem)',
       }}
     >
