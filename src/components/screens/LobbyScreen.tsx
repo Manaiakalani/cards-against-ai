@@ -19,7 +19,7 @@ const BOT_PREVIEWS = [
 ]
 
 export default function LobbyScreen() {
-  const { gameState, startGame, updateSettings } = useGame()
+  const { gameState, startGame, updateSettings, newGame } = useGame()
   const [playerName, setPlayerName] = useState('')
   const [botCount, setBotCount] = useState(3)
   const [selectedDecks, setSelectedDecks] = useState<string[]>(
@@ -553,6 +553,12 @@ export default function LobbyScreen() {
       </div>
 
       <BottomNav>
+        <NavButton
+          variant="secondary"
+          onClick={newGame}
+        >
+          ← BACK
+        </NavButton>
         <NavButton
           variant="primary"
           onClick={handleStart}
