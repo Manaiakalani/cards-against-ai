@@ -358,7 +358,7 @@ export default function PlayingScreen() {
                     scale: isSelected ? 1.03 : 1,
                     rotate: 0,
                   } : undefined}
-                  whileHover={{ scale: submitted ? 1 : 1.05, y: submitted ? 0 : -4 }}
+                  whileHover={{ scale: submitted ? 1 : 1.05 }}
                   transition={isDealt ? { type: 'spring', stiffness: 400, damping: 30 } : undefined}
                   className="relative"
                   style={{
