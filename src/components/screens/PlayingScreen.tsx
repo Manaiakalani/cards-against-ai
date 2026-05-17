@@ -16,6 +16,36 @@ import { BottomNav } from '@/components/BottomNav'
 import { NavButton } from '@/components/NavButton'
 import { Sticker } from '@/components/Sticker'
 
+// Stagger container for card dealing animation
+const containerVariants = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.06,
+    },
+  },
+}
+
+const cardDealVariants = {
+  hidden: (rotate: number) => ({
+    opacity: 0,
+    y: 60,
+    scale: 0.8,
+    rotate,
+  }),
+  show: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    rotate: 0,
+    transition: {
+      type: 'spring' as const,
+      stiffness: 300,
+      damping: 25,
+    },
+  },
+}
+
 export default function PlayingScreen() {
   const { gameState, submitCard, submitCards, botSubmit, redrawHand, rebootHand } = useGame()
   const { play } = useSound()
@@ -27,6 +57,8 @@ export default function PlayingScreen() {
   const [hasRedrawn, setHasRedrawn] = useState(false)
   const botTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const roundStartRef = useRef(Date.now())
+  const [isDealt, setIsDealt] = useState(false)
+  const dealRotationsRef = useRef<number[]>([])
 
   const humanPlayer = gameState.players.find((p) => p.id === 'player-1')
   const isPlayerCzar = humanPlayer?.isCardCzar ?? false
@@ -74,6 +106,18 @@ export default function PlayingScreen() {
       if (botTimerRef.current) clearTimeout(botTimerRef.current)
     }
   }, [])
+
+  // Generate random rotations for deal animation; mark dealt after stagger completes
+  useEffect(() => {
+    const handSize = humanPlayer?.hand.length ?? 0
+    dealRotationsRef.current = Array.from(
+      { length: handSize },
+      () => (Math.random() - 0.5) * 16,
+    )
+    const dealDuration = handSize * 60 + 500
+    const t = setTimeout(() => setIsDealt(true), dealDuration)
+    return () => clearTimeout(t)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // When human is czar, auto-trigger bot submissions
   useEffect(() => {
@@ -291,7 +335,12 @@ export default function PlayingScreen() {
         </div>
 
         {/* Card Grid */}
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        <motion.div
+          className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4"
+          variants={containerVariants}
+          initial="hidden"
+          animate="show"
+        >
           <AnimatePresence>
             {humanPlayer?.hand.map((card, i) => {
               const selectionIndex = selectedCards.findIndex(c => c.id === card.id)
@@ -299,14 +348,17 @@ export default function PlayingScreen() {
               return (
                 <motion.div
                   key={card.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{
+                  custom={dealRotationsRef.current[i] ?? 0}
+                  variants={cardDealVariants}
+                  initial={isDealt ? false : undefined}
+                  animate={isDealt ? {
                     opacity: 1,
                     y: isSelected ? -8 : 0,
                     scale: isSelected ? 1.03 : 1,
-                  }}
+                    rotate: 0,
+                  } : undefined}
                   whileHover={{ scale: submitted ? 1 : 1.05, y: submitted ? 0 : -4 }}
-                  transition={{ delay: i * 0.05 }}
+                  transition={isDealt ? { type: 'spring', stiffness: 400, damping: 30 } : undefined}
                   className="relative"
                   style={{
                     filter: isSelected ? 'none' : undefined,
@@ -337,7 +389,7 @@ export default function PlayingScreen() {
               )
             })}
           </AnimatePresence>
-        </div>
+        </motion.div>
 
         {/* Submitted overlay */}
         {submitted && (

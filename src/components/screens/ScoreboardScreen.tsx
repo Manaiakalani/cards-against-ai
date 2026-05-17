@@ -1,14 +1,17 @@
 'use client'
 
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { PosterBackground } from '@/components/PosterBackground'
 import { NavButton } from '@/components/NavButton'
 import { Sticker } from '@/components/Sticker'
+import { RoundHistory } from '@/components/RoundHistory'
 
 export default function ScoreboardScreen() {
   const { gameState, continueFromScoreboard } = useGame()
   const { players, currentRound, roundHistory, czarId } = gameState
+  const [showHistory, setShowHistory] = useState(false)
 
   const sortedPlayers = [...players].sort((a, b) => b.score - a.score)
   const leadScore = sortedPlayers[0]?.score ?? 0
@@ -284,13 +287,39 @@ export default function ScoreboardScreen() {
           </motion.div>
         )}
 
-        {/* Inline Next Round button */}
-        <div className="mt-8 mb-12 flex justify-center">
+        {/* Action buttons */}
+        <div className="mt-8 mb-12 flex flex-col items-center gap-4">
           <NavButton variant="primary" onClick={continueFromScoreboard}>
             KEEP GOING →
           </NavButton>
+          <motion.button
+            onClick={() => setShowHistory(true)}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="cursor-pointer uppercase"
+            style={{
+              fontFamily: 'var(--font-archivo)',
+              fontSize: '14px',
+              backgroundColor: 'var(--theme-surface)',
+              color: 'var(--theme-text)',
+              border: '3px solid var(--theme-border)',
+              padding: '10px 20px',
+              borderRadius: 12,
+              boxShadow: '4px 4px 0px var(--theme-shadow-soft)',
+            }}
+          >
+            📜 History
+          </motion.button>
         </div>
       </div>
+
+      {/* Round History Modal */}
+      <RoundHistory
+        open={showHistory}
+        onClose={() => setShowHistory(false)}
+        roundHistory={roundHistory}
+        players={players}
+      />
     </div>
   )
 }

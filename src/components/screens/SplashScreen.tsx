@@ -9,11 +9,13 @@ import { CardIcon } from '@/components/CardIcon'
 import { SiteFooter } from '@/components/SiteFooter'
 import { StatsScreen } from '@/components/screens/StatsScreen'
 import { AchievementsScreen } from '@/components/screens/AchievementsScreen'
+import { RoundHistory } from '@/components/RoundHistory'
 
 export default function SplashScreen() {
   const { goToLobby } = useGame()
   const [showStats, setShowStats] = useState(false)
   const [showAchievements, setShowAchievements] = useState(false)
+  const [showFavorites, setShowFavorites] = useState(false)
 
   const stagger = {
     hidden: {},
@@ -224,6 +226,24 @@ export default function SplashScreen() {
           >
             🏆 Achievements
           </motion.button>
+          <motion.button
+            onClick={() => setShowFavorites(true)}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="cursor-pointer uppercase"
+            style={{
+              fontFamily: 'var(--font-archivo)',
+              fontSize: '14px',
+              backgroundColor: 'var(--theme-surface)',
+              color: 'var(--theme-text)',
+              border: '3px solid var(--theme-border)',
+              padding: '10px 20px',
+              borderRadius: 12,
+              boxShadow: '4px 4px 0px var(--theme-shadow-soft)',
+            }}
+          >
+            ⭐ Favorites
+          </motion.button>
         </motion.div>
 
         {/* Version footer */}
@@ -254,6 +274,11 @@ export default function SplashScreen() {
       {/* Modals */}
       <StatsScreen open={showStats} onClose={() => setShowStats(false)} />
       <AchievementsScreen open={showAchievements} onClose={() => setShowAchievements(false)} />
+      <RoundHistory
+        open={showFavorites}
+        onClose={() => setShowFavorites(false)}
+        favoritesOnly
+      />
     </div>
   )
 }
