@@ -4,7 +4,7 @@ import { test, expect, type Page } from '@playwright/test'
 
 async function navigateToPlaying(page: Page) {
   await page.goto('/')
-  await page.getByRole('button', { name: /play/i }).click()
+  await page.getByRole('button', { name: 'PLAY', exact: true }).click()
   await page.getByPlaceholder(/enter your name/i).fill('vibecheck')
   await page.getByRole('button', { name: /let.*s go/i }).click()
   await expect(page.getByText('Your Hand')).toBeVisible({ timeout: 5000 })
@@ -76,7 +76,7 @@ test.describe('Visual Audit — Fonts & Colors', () => {
   })
 
   test('fonts load on lobby screen', async ({ page }) => {
-    await page.getByRole('button', { name: /play/i }).click()
+    await page.getByRole('button', { name: 'PLAY', exact: true }).click()
     const title = page.getByText('THE PREGAME')
     await expect(title).toBeVisible()
     const fontFamily = await title.evaluate((el) => getComputedStyle(el).fontFamily)
@@ -92,7 +92,7 @@ test.describe('Visual Audit — Fonts & Colors', () => {
   test('splash title has sufficient contrast against background', async ({ page }) => {
     // The title uses text-stroke and text-shadow on cream background
     // Check that the PLAY button text has enough contrast
-    const btn = page.getByRole('button', { name: /play/i })
+    const btn = page.getByRole('button', { name: 'PLAY', exact: true })
     const btnColor = await btn.evaluate((el) => getComputedStyle(el).color)
     const btnBg = await btn.evaluate((el) => getComputedStyle(el).backgroundColor)
     const ratio = contrastRatio(btnColor, btnBg)
@@ -101,7 +101,7 @@ test.describe('Visual Audit — Fonts & Colors', () => {
   })
 
   test('lobby text has proper contrast', async ({ page }) => {
-    await page.getByRole('button', { name: /play/i }).click()
+    await page.getByRole('button', { name: 'PLAY', exact: true }).click()
     // Bot selector label
     const botsLabel = page.getByText('Bots:')
     await expect(botsLabel).toBeVisible()
@@ -155,7 +155,7 @@ test.describe('Visual Audit — Fonts & Colors', () => {
 
   test('buttons meet minimum touch target size (44px)', async ({ page }) => {
     // PLAY button
-    const playBtn = page.getByRole('button', { name: /play/i })
+    const playBtn = page.getByRole('button', { name: 'PLAY', exact: true })
     const box = await playBtn.boundingBox()
     expect(box).toBeTruthy()
     expect(box!.height).toBeGreaterThanOrEqual(44)
@@ -171,7 +171,7 @@ test.describe('Visual Audit — Fonts & Colors', () => {
   })
 
   test('bot selector buttons are tappable', async ({ page }) => {
-    await page.getByRole('button', { name: /play/i }).click()
+    await page.getByRole('button', { name: 'PLAY', exact: true }).click()
     const botBtns = page.locator('button:has-text("3")')
     const box = await botBtns.first().boundingBox()
     expect(box).toBeTruthy()
@@ -193,7 +193,7 @@ test.describe('Visual Audit — Fonts & Colors', () => {
   })
 
   test('borders use the design-system black (#111)', async ({ page }) => {
-    await page.getByRole('button', { name: /play/i }).click()
+    await page.getByRole('button', { name: 'PLAY', exact: true }).click()
     const input = page.getByPlaceholder(/enter your name/i)
     const borderColor = await input.evaluate((el) => getComputedStyle(el).borderColor)
     const rgb = parseRGB(borderColor)
@@ -205,7 +205,7 @@ test.describe('Visual Audit — Fonts & Colors', () => {
   })
 
   test('primary action buttons use green (#66FF00)', async ({ page }) => {
-    const playBtn = page.getByRole('button', { name: /play/i })
+    const playBtn = page.getByRole('button', { name: 'PLAY', exact: true })
     const bg = await playBtn.evaluate((el) => getComputedStyle(el).backgroundColor)
     const rgb = parseRGB(bg)
     expect(rgb).toBeTruthy()
@@ -253,7 +253,7 @@ test.describe('Visual Audit — Fonts & Colors', () => {
   })
 
   test('capture lobby screen', async ({ page }) => {
-    await page.getByRole('button', { name: /play/i }).click()
+    await page.getByRole('button', { name: 'PLAY', exact: true }).click()
     await page.getByPlaceholder(/enter your name/i).fill('vibecheck')
     await expect(page.getByText('THE PREGAME')).toBeVisible()
     await page.waitForTimeout(800)

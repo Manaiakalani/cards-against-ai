@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { Card } from '@/types/game'
@@ -16,9 +16,17 @@ export default function PlayingScreen() {
   const [selectedCard, setSelectedCard] = useState<Card | null>(null)
   const [submitted, setSubmitted] = useState(false)
   const [hasRedrawn, setHasRedrawn] = useState(false)
+  const botTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const humanPlayer = gameState.players.find((p) => p.id === 'player-1')
   const isPlayerCzar = humanPlayer?.isCardCzar ?? false
+
+  // Cleanup bot timer on unmount
+  useEffect(() => {
+    return () => {
+      if (botTimerRef.current) clearTimeout(botTimerRef.current)
+    }
+  }, [])
 
   // When human is czar, auto-trigger bot submissions
   useEffect(() => {
@@ -41,7 +49,7 @@ export default function PlayingScreen() {
 
     // Bots submit after a short random delay
     const delay = 500 + Math.random() * 1000
-    setTimeout(() => {
+    botTimerRef.current = setTimeout(() => {
       botSubmit()
     }, delay)
   }, [selectedCard, humanPlayer, submitCard, botSubmit])

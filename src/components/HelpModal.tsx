@@ -57,6 +57,9 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
             exit={{ opacity: 0, scale: 0.9, y: 30 }}
             transition={{ type: 'spring', stiffness: 300, damping: 25 }}
             className="fixed left-1/2 top-1/2 z-[201] w-[calc(100vw-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 overflow-y-auto"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="help-modal-title"
             style={{
               maxHeight: 'calc(100vh - 4rem)',
               backgroundColor: '#F4F4EE',
@@ -71,6 +74,7 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
               style={{ borderBottom: '3px solid #111' }}
             >
               <h2
+                id="help-modal-title"
                 style={{
                   fontFamily: 'var(--font-archivo)',
                   fontSize: 28,
@@ -82,6 +86,7 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
               </h2>
               <button
                 onClick={onClose}
+                aria-label="Close help"
                 className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full"
                 style={{
                   backgroundColor: '#111',

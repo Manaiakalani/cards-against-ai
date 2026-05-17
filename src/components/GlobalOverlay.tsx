@@ -19,6 +19,7 @@ export function GlobalOverlay() {
         onClick={() => setHelpOpen(true)}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
+        aria-label="How to play"
         className="fixed z-[150] flex cursor-pointer items-center justify-center rounded-full"
         style={{
           top: isInGame ? 64 : 16,
@@ -47,6 +48,7 @@ export function GlobalOverlay() {
             onClick={() => setConfirmQuit(true)}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
+            aria-label="Quit game"
             className="fixed z-[150] flex cursor-pointer items-center justify-center rounded-full"
             style={{
               top: 64,
@@ -84,6 +86,9 @@ export function GlobalOverlay() {
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
               transition={{ type: 'spring', stiffness: 300, damping: 25 }}
               className="fixed left-1/2 top-1/2 z-[201] -translate-x-1/2 -translate-y-1/2"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Quit game confirmation"
               style={{
                 width: 'calc(100vw - 3rem)',
                 maxWidth: 340,

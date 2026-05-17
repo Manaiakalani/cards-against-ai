@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import { GameState, Player, Card } from '@/types/game'
 import { getAllCards, shuffle, drawCards } from '@/data/cards'
 
@@ -60,7 +60,7 @@ export function useGameState() {
       maxPlayers: 6,
       roundTime: 90,
       winningScore: 7,
-      selectedDecks: ['silicon-valley', 'tech-culture', 'gen-z', 'millennial', 'ai-crypto', 'gaming'],
+      selectedDecks: ['brainrot', 'terminally-online', 'gen-z', 'millennial', 'ai-fever', 'gaming'],
     },
     roomCode: generateRoomCode(),
     czarId: '',
@@ -69,12 +69,21 @@ export function useGameState() {
   const [blackCardPool, setBlackCardPool] = useState<Card[]>([])
   const [whiteCardPool, setWhiteCardPool] = useState<Card[]>([])
 
+  // Refs for latest pool values to avoid stale closures in callbacks
+  const blackPoolRef = useRef(blackCardPool)
+  const whitePoolRef = useRef(whiteCardPool)
+
+  // Sync refs in effect (not during render) per React rules
+  useEffect(() => { blackPoolRef.current = blackCardPool }, [blackCardPool])
+  useEffect(() => { whitePoolRef.current = whiteCardPool }, [whiteCardPool])
   const goToLobby = useCallback(() => {
     setGameState(prev => ({ ...prev, phase: 'lobby' }))
   }, [])
 
   const startGame = useCallback((playerName: string, botCount: number = 3) => {
     const { blackCards, whiteCards } = getAllCards(gameState.settings.selectedDecks)
+    if (blackCards.length === 0 || whiteCards.length === 0) return
+
     let shuffledWhite = shuffle(whiteCards)
     const shuffledBlack = shuffle(blackCards)
 
@@ -111,14 +120,13 @@ export function useGameState() {
   const redrawHand = useCallback((playerId: string) => {
     setGameState(prev => {
       if (prev.phase !== 'playing') return prev
-      // Can't redraw if already submitted
       if (prev.submissions.some(s => s.playerId === playerId)) return prev
 
       const player = prev.players.find(p => p.id === playerId)
       if (!player) return prev
 
-      // Return current hand to the pool, draw fresh cards
-      let pool = [...whiteCardPool, ...player.hand]
+      // Use ref for latest pool value to avoid stale closure
+      let pool = [...whitePoolRef.current, ...player.hand]
       pool = shuffle(pool)
       const { drawn, remaining } = drawCards(pool, HAND_SIZE)
       setWhiteCardPool(remaining)
@@ -131,7 +139,7 @@ export function useGameState() {
 
       return { ...prev, players: newPlayers }
     })
-  }, [whiteCardPool])
+  }, [])
 
   const submitCard = useCallback((playerId: string, card: Card) => {
     setGameState(prev => {
@@ -197,69 +205,44 @@ export function useGameState() {
     })
   }, [])
 
+  function resolveWinner(prev: GameState, winnerId: string): GameState {
+    const winningSubmission = prev.submissions.find(s => s.playerId === winnerId)
+    if (!winningSubmission || !prev.currentBlackCard) return prev
+
+    const newPlayers = prev.players.map(p =>
+      p.id === winnerId ? { ...p, score: p.score + 1 } : p
+    )
+
+    const roundResult = {
+      blackCard: prev.currentBlackCard,
+      winningCard: winningSubmission.card,
+      winnerId,
+      czarId: prev.czarId,
+      round: prev.currentRound,
+    }
+
+    const winner = newPlayers.find(p => p.id === winnerId)
+    const gameOver = winner && winner.score >= prev.settings.winningScore
+
+    return {
+      ...prev,
+      players: newPlayers,
+      roundWinner: winnerId,
+      roundHistory: [...prev.roundHistory, roundResult],
+      phase: gameOver ? 'ended' : 'results',
+    }
+  }
+
   const pickWinner = useCallback((winnerId: string) => {
-    setGameState(prev => {
-      const winningSubmission = prev.submissions.find(s => s.playerId === winnerId)
-      if (!winningSubmission || !prev.currentBlackCard) return prev
-
-      const newPlayers = prev.players.map(p =>
-        p.id === winnerId ? { ...p, score: p.score + 1 } : p
-      )
-
-      const roundResult = {
-        blackCard: prev.currentBlackCard,
-        winningCard: winningSubmission.card,
-        winnerId,
-        czarId: prev.czarId,
-        round: prev.currentRound,
-      }
-
-      const winner = newPlayers.find(p => p.id === winnerId)
-      const gameOver = winner && winner.score >= prev.settings.winningScore
-
-      return {
-        ...prev,
-        players: newPlayers,
-        roundWinner: winnerId,
-        roundHistory: [...prev.roundHistory, roundResult],
-        phase: gameOver ? 'ended' : 'results',
-      }
-    })
+    setGameState(prev => resolveWinner(prev, winnerId))
   }, [])
 
   const botPickWinner = useCallback(() => {
     setGameState(prev => {
       if (prev.phase !== 'judging') return prev
       if (prev.submissions.length === 0) return prev
-
       const randomIdx = Math.floor(Math.random() * prev.submissions.length)
-      const winnerId = prev.submissions[randomIdx].playerId
-
-      const winningSubmission = prev.submissions[randomIdx]
-      if (!prev.currentBlackCard) return prev
-
-      const newPlayers = prev.players.map(p =>
-        p.id === winnerId ? { ...p, score: p.score + 1 } : p
-      )
-
-      const roundResult = {
-        blackCard: prev.currentBlackCard,
-        winningCard: winningSubmission.card,
-        winnerId,
-        czarId: prev.czarId,
-        round: prev.currentRound,
-      }
-
-      const winner = newPlayers.find(p => p.id === winnerId)
-      const gameOver = winner && winner.score >= prev.settings.winningScore
-
-      return {
-        ...prev,
-        players: newPlayers,
-        roundWinner: winnerId,
-        roundHistory: [...prev.roundHistory, roundResult],
-        phase: gameOver ? 'ended' : 'results',
-      }
+      return resolveWinner(prev, prev.submissions[randomIdx].playerId)
     })
   }, [])
 
@@ -278,13 +261,12 @@ export function useGameState() {
       const currentCzarIndex = prev.players.findIndex(p => p.id === prev.czarId)
       const nextCzarIndex = (currentCzarIndex + 1) % playerCount
 
-      // Draw new black card
-      if (blackCardPool.length === 0) return prev
-      const nextBlack = blackCardPool[0]
-      setBlackCardPool(pool => pool.slice(1))
+      // Use refs for latest pool values to avoid stale closure
+      if (blackPoolRef.current.length === 0) return prev
+      const nextBlack = blackPoolRef.current[0]
+      setBlackCardPool(blackPoolRef.current.slice(1))
 
-      // Replenish hands
-      let pool = [...whiteCardPool]
+      let pool = [...whitePoolRef.current]
       const newPlayers = prev.players.map((p, i) => {
         const cardsNeeded = HAND_SIZE - p.hand.length
         const { drawn, remaining } = drawCards(pool, cardsNeeded)
@@ -309,7 +291,7 @@ export function useGameState() {
         czarId: newPlayers[nextCzarIndex].id,
       }
     })
-  }, [blackCardPool, whiteCardPool])
+  }, [])
 
   const newGame = useCallback(() => {
     setGameState(prev => ({
