@@ -36,13 +36,20 @@ export interface GameSettings {
   roundTime: number
   winningScore: number
   selectedDecks: string[]
+  timerEnabled: boolean
+  timerSeconds: number
 }
 
-export type GamePhase = 'menu' | 'lobby' | 'playing' | 'judging' | 'results' | 'scoreboard' | 'ended'
+export type GamePhase = 'menu' | 'lobby' | 'playing' | 'revealing' | 'judging' | 'results' | 'scoreboard' | 'ended'
+
+export interface Submission {
+  playerId: string
+  cards: Card[]
+}
 
 export interface RoundResult {
   blackCard: Card
-  winningCard: Card
+  winningCards: Card[]
   winnerId: string
   czarId: string
   round: number
@@ -53,7 +60,7 @@ export interface GameState {
   currentRound: number
   currentBlackCard: Card | null
   players: Player[]
-  submissions: { playerId: string; card: Card }[]
+  submissions: Submission[]
   roundWinner: string | null
   roundHistory: RoundResult[]
   settings: GameSettings

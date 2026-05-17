@@ -3,6 +3,8 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
+import { useSound } from '@/hooks/useSound'
+import { useTimer } from '@/hooks/useTimer'
 import { Card } from '@/types/game'
 import { PosterBackground } from '@/components/PosterBackground'
 import { GameCard } from '@/components/GameCard'
@@ -12,14 +14,52 @@ import { NavButton } from '@/components/NavButton'
 import { Sticker } from '@/components/Sticker'
 
 export default function PlayingScreen() {
-  const { gameState, submitCard, botSubmit, redrawHand } = useGame()
-  const [selectedCard, setSelectedCard] = useState<Card | null>(null)
+  const { gameState, submitCard, submitCards, botSubmit, redrawHand } = useGame()
+  const { play } = useSound()
+  const [selectedCards, setSelectedCards] = useState<Card[]>([])
   const [submitted, setSubmitted] = useState(false)
   const [hasRedrawn, setHasRedrawn] = useState(false)
   const botTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const humanPlayer = gameState.players.find((p) => p.id === 'player-1')
   const isPlayerCzar = humanPlayer?.isCardCzar ?? false
+  const blanks = gameState.currentBlackCard?.blanks ?? 1
+  const { timerEnabled, timerSeconds } = gameState.settings
+
+  // Timer: auto-submit random card(s) when time expires
+  const handleTimerExpire = useCallback(() => {
+    if (submitted || isPlayerCzar || !humanPlayer) return
+    const hand = humanPlayer.hand
+    if (hand.length === 0) return
+
+    play('tick')
+    if (blanks === 1) {
+      const randomCard = hand[Math.floor(Math.random() * hand.length)]
+      setSubmitted(true)
+      submitCard('player-1', randomCard)
+    } else {
+      const shuffled = [...hand].sort(() => Math.random() - 0.5)
+      const picks = shuffled.slice(0, Math.min(blanks, hand.length))
+      setSubmitted(true)
+      submitCards('player-1', picks)
+    }
+
+    const delay = 500 + Math.random() * 1000
+    botTimerRef.current = setTimeout(() => { botSubmit() }, delay)
+  }, [submitted, isPlayerCzar, humanPlayer, blanks, submitCard, submitCards, botSubmit, play])
+
+  const timer = useTimer({
+    seconds: timerSeconds,
+    enabled: timerEnabled && !isPlayerCzar,
+    onExpire: handleTimerExpire,
+  })
+
+  // Start timer when playing phase begins
+  useEffect(() => {
+    if (timerEnabled && !isPlayerCzar) {
+      timer.start()
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Cleanup bot timer on unmount
   useEffect(() => {
@@ -31,33 +71,54 @@ export default function PlayingScreen() {
   // When human is czar, auto-trigger bot submissions
   useEffect(() => {
     if (!isPlayerCzar) return
-    const timer = setTimeout(() => {
-      botSubmit()
-    }, 1000)
-    return () => clearTimeout(timer)
+    const t = setTimeout(() => { botSubmit() }, 1000)
+    return () => clearTimeout(t)
   }, [isPlayerCzar, botSubmit])
+
+  // Play tick sound when timer is urgent
+  useEffect(() => {
+    if (timer.isUrgent && timer.isRunning) {
+      play('tick')
+    }
+  }, [timer.timeLeft, timer.isUrgent, timer.isRunning, play])
 
   const handleSelectCard = useCallback((card: Card) => {
     if (submitted) return
-    setSelectedCard((prev) => (prev?.id === card.id ? null : card))
-  }, [submitted])
+    play('select')
+    setSelectedCards(prev => {
+      const isAlreadySelected = prev.some(c => c.id === card.id)
+      if (isAlreadySelected) {
+        return prev.filter(c => c.id !== card.id)
+      }
+      if (prev.length >= blanks) {
+        // Replace the oldest selection
+        return [...prev.slice(1), card]
+      }
+      return [...prev, card]
+    })
+  }, [submitted, blanks, play])
 
   const handleConfirm = useCallback(() => {
-    if (!selectedCard || !humanPlayer) return
+    if (selectedCards.length !== blanks || !humanPlayer) return
     setSubmitted(true)
-    submitCard('player-1', selectedCard)
+    timer.stop()
+    play('submit')
+
+    if (blanks === 1) {
+      submitCard('player-1', selectedCards[0])
+    } else {
+      submitCards('player-1', selectedCards)
+    }
 
     // Bots submit after a short random delay
     const delay = 500 + Math.random() * 1000
-    botTimerRef.current = setTimeout(() => {
-      botSubmit()
-    }, delay)
-  }, [selectedCard, humanPlayer, submitCard, botSubmit])
+    botTimerRef.current = setTimeout(() => { botSubmit() }, delay)
+  }, [selectedCards, blanks, humanPlayer, submitCard, submitCards, botSubmit, timer, play])
 
   const handleRedraw = useCallback(() => {
     if (hasRedrawn || submitted) return
     redrawHand('player-1')
-    setSelectedCard(null)
+    setSelectedCards([])
     setHasRedrawn(true)
   }, [hasRedrawn, submitted, redrawHand])
 
@@ -135,7 +196,7 @@ export default function PlayingScreen() {
   return (
     <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>
       <PosterBackground words={['no cap', 'fr fr', 'lowkey']} opacity={0.15} />
-      <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} />
+      <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} timer={timerEnabled ? { timeLeft: timer.timeLeft, progress: timer.progress, isUrgent: timer.isUrgent } : undefined} />
 
       <div className="relative z-10 flex flex-col px-6 pt-16 pb-8">
         {/* Top Section: Title + Mini Black Card */}
@@ -159,7 +220,7 @@ export default function PlayingScreen() {
                 color: 'var(--theme-text-muted)',
               }}
             >
-              {humanPlayer?.hand.length ?? 0} Cards Remaining
+              {blanks > 1 ? `Pick ${blanks} cards` : `${humanPlayer?.hand.length ?? 0} Cards Remaining`}
             </p>
           </div>
 
@@ -186,6 +247,18 @@ export default function PlayingScreen() {
               >
                 {gameState.currentBlackCard.text.replace(/_+/g, '_____')}
               </p>
+              {blanks > 1 && (
+                <span
+                  className="mt-2 inline-block rounded-full px-2 py-0.5 text-xs"
+                  style={{
+                    backgroundColor: '#FF4242',
+                    color: 'white',
+                    fontFamily: 'var(--font-archivo)',
+                  }}
+                >
+                  PICK {blanks}
+                </span>
+              )}
             </motion.div>
           )}
         </div>
@@ -194,7 +267,8 @@ export default function PlayingScreen() {
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           <AnimatePresence>
             {humanPlayer?.hand.map((card, i) => {
-              const isSelected = selectedCard?.id === card.id
+              const selectionIndex = selectedCards.findIndex(c => c.id === card.id)
+              const isSelected = selectionIndex >= 0
               return (
                 <motion.div
                   key={card.id}
@@ -228,7 +302,7 @@ export default function PlayingScreen() {
                       className="absolute -right-2 -top-3 z-20"
                     >
                       <Sticker color="green" rotation={-6}>
-                        THIS ONE
+                        {blanks > 1 ? `#${selectionIndex + 1}` : 'THIS ONE'}
                       </Sticker>
                     </motion.div>
                   )}
@@ -253,7 +327,7 @@ export default function PlayingScreen() {
                 color: 'var(--theme-text)',
               }}
             >
-              Card Submitted! Waiting for others...
+              Card{blanks > 1 ? 's' : ''} Submitted! Waiting for others...
             </p>
           </motion.div>
         )}
@@ -269,7 +343,7 @@ export default function PlayingScreen() {
         <NavButton
           variant="primary"
           onClick={handleConfirm}
-          disabled={!selectedCard || submitted}
+          disabled={selectedCards.length !== blanks || submitted}
         >
           LOCK IT IN
         </NavButton>

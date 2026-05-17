@@ -309,8 +309,10 @@ export default function EndScreen() {
                         <GameCard card={result.blackCard} size="sm" showFooter={false} />
                       </div>
                       <span style={{ fontFamily: 'var(--font-archivo)', fontSize: '20px', color: 'var(--theme-text-muted)' }}>+</span>
-                      <div className="flex-1">
-                        <GameCard card={result.winningCard} size="sm" showFooter={false} />
+                      <div className="flex flex-1 flex-col gap-1">
+                        {result.winningCards.map(card => (
+                          <GameCard key={card.id} card={card} size="sm" showFooter={false} />
+                        ))}
                       </div>
                     </div>
                     {roundWinner && (

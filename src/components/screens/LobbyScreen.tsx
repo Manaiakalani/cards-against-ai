@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
+import { allDecks } from '@/data/cards'
 import { PosterBackground } from '@/components/PosterBackground'
 import { BottomNav } from '@/components/BottomNav'
 import { NavButton } from '@/components/NavButton'
@@ -18,9 +19,18 @@ const BOT_PREVIEWS = [
 ]
 
 export default function LobbyScreen() {
-  const { gameState, startGame } = useGame()
+  const { gameState, startGame, updateSettings } = useGame()
   const [playerName, setPlayerName] = useState('')
   const [botCount, setBotCount] = useState(3)
+  const [selectedDecks, setSelectedDecks] = useState<string[]>(
+    gameState.settings.selectedDecks
+  )
+  const [timerEnabled, setTimerEnabled] = useState(
+    gameState.settings.timerEnabled ?? false
+  )
+  const [timerSeconds, setTimerSeconds] = useState(
+    gameState.settings.timerSeconds ?? 60
+  )
 
   const totalPlayers = 1 + botCount
   const slots = Array.from({ length: MAX_PLAYERS })
@@ -38,6 +48,29 @@ export default function LobbyScreen() {
     if (!playerName.trim()) return
     startGame(playerName.trim(), botCount)
   }
+
+  function toggleDeck(deckId: string) {
+    const next = selectedDecks.includes(deckId)
+      ? selectedDecks.filter((d) => d !== deckId)
+      : [...selectedDecks, deckId]
+    if (next.length === 0) return
+    setSelectedDecks(next)
+    updateSettings({ selectedDecks: next })
+  }
+
+  function handleTimerToggle(enabled: boolean) {
+    setTimerEnabled(enabled)
+    updateSettings({ timerEnabled: enabled, timerSeconds })
+  }
+
+  function handleTimerSeconds(seconds: number) {
+    setTimerSeconds(seconds)
+    updateSettings({ timerEnabled, timerSeconds: seconds })
+  }
+
+  const totalCardsInPlay = allDecks
+    .filter((d) => selectedDecks.includes(d.id))
+    .reduce((sum, d) => sum + d.cards.blackCards.length + d.cards.whiteCards.length, 0)
 
   return (
     <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>
@@ -242,6 +275,155 @@ export default function LobbyScreen() {
               </button>
             ))}
           </div>
+        </motion.div>
+
+        {/* Deck Selector */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7 }}
+          className="mt-8 w-full max-w-2xl"
+        >
+          <div className="mb-3 flex items-center justify-between">
+            <h2
+              style={{
+                fontFamily: 'var(--font-archivo)',
+                fontSize: '20px',
+                color: 'var(--theme-text)',
+                letterSpacing: '2px',
+                textTransform: 'uppercase',
+              }}
+            >
+              DECKS
+            </h2>
+            <span
+              style={{
+                fontFamily: 'var(--font-inter)',
+                fontSize: '14px',
+                color: '#66FF00',
+                fontWeight: 600,
+              }}
+            >
+              {totalCardsInPlay} cards in play
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {allDecks.map((deck) => {
+              const isSelected = selectedDecks.includes(deck.id)
+              const cardCount = deck.cards.blackCards.length + deck.cards.whiteCards.length
+              return (
+                <button
+                  key={deck.id}
+                  onClick={() => toggleDeck(deck.id)}
+                  className="relative flex flex-col items-center gap-1 px-3 py-4 transition-transform hover:scale-[1.03] cursor-pointer"
+                  style={{
+                    border: isSelected
+                      ? '3px solid #66FF00'
+                      : '3px dashed var(--theme-border-light)',
+                    borderRadius: '14px',
+                    backgroundColor: 'var(--theme-surface)',
+                    opacity: isSelected ? 1 : 0.55,
+                    boxShadow: isSelected ? '4px 4px 0px var(--theme-shadow)' : 'none',
+                  }}
+                >
+                  {isSelected && (
+                    <span
+                      className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full text-xs"
+                      style={{
+                        backgroundColor: '#66FF00',
+                        border: '2px solid var(--theme-border)',
+                        fontWeight: 700,
+                        color: '#111',
+                        lineHeight: 1,
+                      }}
+                    >
+                      ✓
+                    </span>
+                  )}
+                  <span style={{ fontSize: '28px' }}>{deck.icon}</span>
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-archivo)',
+                      fontSize: '13px',
+                      color: 'var(--theme-text)',
+                      textAlign: 'center',
+                      lineHeight: 1.2,
+                    }}
+                  >
+                    {deck.name}
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-inter)',
+                      fontSize: '11px',
+                      color: 'var(--theme-text-muted)',
+                    }}
+                  >
+                    {cardCount} cards
+                  </span>
+                </button>
+              )
+            })}
+          </div>
+        </motion.div>
+
+        {/* Timer Toggle */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8 }}
+          className="mt-6 w-full max-w-md"
+        >
+          <div className="flex items-center justify-between">
+            <span
+              style={{
+                fontFamily: 'var(--font-archivo)',
+                fontSize: '16px',
+                color: 'var(--theme-text)',
+              }}
+            >
+              ⏱️ Round Timer
+            </span>
+            <button
+              onClick={() => handleTimerToggle(!timerEnabled)}
+              className="cursor-pointer px-4 py-1 transition-transform hover:scale-105"
+              style={{
+                fontFamily: 'var(--font-archivo)',
+                fontSize: '14px',
+                border: '3px solid var(--theme-border)',
+                borderRadius: '10px',
+                backgroundColor: timerEnabled ? '#66FF00' : 'var(--theme-surface)',
+                color: timerEnabled ? '#111' : 'var(--theme-text)',
+                boxShadow: timerEnabled ? '3px 3px 0px var(--theme-shadow)' : 'none',
+              }}
+            >
+              {timerEnabled ? 'ON' : 'OFF'}
+            </button>
+          </div>
+
+          {timerEnabled && (
+            <div className="mt-3 flex items-center justify-center gap-3">
+              {[30, 60, 90].map((s) => (
+                <button
+                  key={s}
+                  onClick={() => handleTimerSeconds(s)}
+                  className="flex h-10 items-center justify-center px-4 transition-transform hover:scale-110 cursor-pointer"
+                  style={{
+                    fontFamily: 'var(--font-archivo)',
+                    fontSize: '16px',
+                    border: '3px solid var(--theme-border)',
+                    borderRadius: '10px',
+                    backgroundColor: timerSeconds === s ? '#66FF00' : 'var(--theme-surface)',
+                    color: timerSeconds === s ? '#111' : 'var(--theme-text)',
+                    boxShadow: timerSeconds === s ? '3px 3px 0px var(--theme-shadow)' : 'none',
+                  }}
+                >
+                  {s}s
+                </button>
+              ))}
+            </div>
+          )}
         </motion.div>
 
         {/* Spacer for bottom nav */}

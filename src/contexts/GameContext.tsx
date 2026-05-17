@@ -8,10 +8,13 @@ import { GlobalOverlay } from '@/components/GlobalOverlay'
 type GameContextType = {
   gameState: GameState
   goToLobby: () => void
+  updateSettings: (updates: Partial<GameState['settings']>) => void
   startGame: (playerName: string, botCount?: number) => void
   redrawHand: (playerId: string) => void
   submitCard: (playerId: string, card: Card) => void
+  submitCards: (playerId: string, cards: Card[]) => void
   botSubmit: () => void
+  finishReveal: () => void
   pickWinner: (winnerId: string) => void
   botPickWinner: () => void
   nextRound: () => void

@@ -110,8 +110,10 @@ export default function ResultsScreen() {
           <div style={{ transform: 'rotate(-4deg)' }} className="sm:translate-x-5">
             <GameCard card={latestResult.blackCard} size="sm" rotation={-4} />
           </div>
-          <div className="relative sm:-translate-x-5" style={{ transform: 'rotate(4deg)' }}>
-            <GameCard card={latestResult.winningCard} size="sm" rotation={4} />
+          <div className="relative flex flex-col gap-2 sm:-translate-x-5" style={{ transform: 'rotate(4deg)' }}>
+            {latestResult.winningCards.map((card, ci) => (
+              <GameCard key={card.id} card={card} size="sm" rotation={ci === 0 ? 4 : 6} />
+            ))}
             {/* Winner Ticket Sticker */}
             <div className="absolute -right-3 -top-3 z-20">
               <motion.div

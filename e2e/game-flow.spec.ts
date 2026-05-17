@@ -43,7 +43,7 @@ test.describe('Cards Against AI — Full Game Flow', () => {
 
     // Should be in playing phase
     await expect(page.getByText('Your Hand')).toBeVisible({ timeout: 5000 })
-    await expect(page.getByText(/cards remaining/i)).toBeVisible()
+    await expect(page.getByText(/cards remaining|pick \d+ cards/i)).toBeVisible()
 
     // Should see the HUD with round info
     await expect(page.getByText('ROUND 1')).toBeVisible()
@@ -53,18 +53,23 @@ test.describe('Cards Against AI — Full Game Flow', () => {
     await expect(confirmBtn).toBeDisabled()
 
     const cardGrid = page.locator('.grid')
-    const firstCard = cardGrid.locator('> div').first()
-    await firstCard.click()
+    await cardGrid.locator('> div').first().click()
+
+    // If button is still disabled, this is a Pick-2 card — select another
+    const isEnabled = await confirmBtn.isEnabled().catch(() => false)
+    if (!isEnabled) {
+      await cardGrid.locator('> div').nth(1).click()
+    }
 
     // Confirm should now be enabled
-    await expect(confirmBtn).toBeEnabled({ timeout: 2000 })
+    await expect(confirmBtn).toBeEnabled({ timeout: 3000 })
     await confirmBtn.click()
 
     // Should show "Card Submitted!" then transition to judging
     await expect(page.getByText(/submitted/i)).toBeVisible({ timeout: 3000 })
 
-    // Bot czar should auto-judge — wait for results screen
-    await expect(page.getByText('ATE & LEFT NO CRUMBS')).toBeVisible({ timeout: 10000 })
+    // Bot czar should auto-judge — wait for results screen (includes reveal phase)
+    await expect(page.getByText('ATE & LEFT NO CRUMBS')).toBeVisible({ timeout: 20000 })
 
     // Click keep going
     await page.getByRole('button', { name: /keep going/i }).click()

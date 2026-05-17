@@ -13,9 +13,20 @@ async function navigateToPlaying(page: Page) {
 async function playToResults(page: Page) {
   await navigateToPlaying(page)
   const cardGrid = page.locator('.grid')
+  const confirmBtn = page.getByRole('button', { name: /lock it in/i })
+
+  // Select first card
   await cardGrid.locator('> div').first().click()
-  await page.getByRole('button', { name: /lock it in/i }).click()
-  await expect(page.getByText('ATE & LEFT NO CRUMBS')).toBeVisible({ timeout: 10000 })
+
+  // If button is still disabled, this is a Pick-2 card — select another
+  const isEnabled = await confirmBtn.isEnabled().catch(() => false)
+  if (!isEnabled) {
+    await cardGrid.locator('> div').nth(1).click()
+  }
+
+  await expect(confirmBtn).toBeEnabled({ timeout: 3000 })
+  await confirmBtn.click()
+  await expect(page.getByText('ATE & LEFT NO CRUMBS')).toBeVisible({ timeout: 20000 })
 }
 
 /** Get computed CSS property from an element */

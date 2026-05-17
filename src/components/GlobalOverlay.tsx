@@ -2,14 +2,16 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sun, Moon } from 'lucide-react'
+import { Sun, Moon, Volume2, VolumeX } from 'lucide-react'
 import { useGame } from '@/contexts/GameContext'
 import { useTheme } from '@/contexts/ThemeContext'
+import { useSound } from '@/hooks/useSound'
 import { HelpModal } from '@/components/HelpModal'
 
 export function GlobalOverlay() {
   const { gameState, newGame } = useGame()
   const { isDark, toggleTheme } = useTheme()
+  const { isMuted, toggleMute } = useSound()
   const [helpOpen, setHelpOpen] = useState(false)
   const [confirmQuit, setConfirmQuit] = useState(false)
 
@@ -17,6 +19,31 @@ export function GlobalOverlay() {
 
   return (
     <>
+      {/* Sound mute toggle */}
+      <motion.button
+        onClick={toggleMute}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        aria-label={isMuted ? 'Unmute sounds' : 'Mute sounds'}
+        className="fixed z-[150] flex cursor-pointer items-center justify-center rounded-full"
+        style={{
+          top: isInGame ? 64 : 16,
+          right: 120,
+          width: 44,
+          height: 44,
+          backgroundColor: 'var(--theme-surface)',
+          color: 'var(--theme-text)',
+          border: '3px solid var(--theme-border)',
+          boxShadow: '3px 3px 0px var(--theme-shadow-soft)',
+          transition: 'top 0.3s ease',
+        }}
+      >
+        {isMuted
+          ? <VolumeX className="h-5 w-5" strokeWidth={2} />
+          : <Volume2 className="h-5 w-5" strokeWidth={2} />
+        }
+      </motion.button>
+
       {/* Theme toggle — always visible, next to help */}
       <motion.button
         onClick={toggleTheme}

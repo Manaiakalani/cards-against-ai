@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
+import { useSound } from '@/hooks/useSound'
 import { PosterBackground } from '@/components/PosterBackground'
 import { GameCard } from '@/components/GameCard'
 import { GameHUD } from '@/components/GameHUD'
@@ -12,6 +13,7 @@ import { Sticker } from '@/components/Sticker'
 
 export default function JudgingScreen() {
   const { gameState, pickWinner, botPickWinner } = useGame()
+  const { play } = useSound()
   const [selectedSubmissionIdx, setSelectedSubmissionIdx] = useState<number | null>(null)
 
   const humanPlayer = gameState.players.find((p) => p.id === 'player-1')
@@ -31,6 +33,7 @@ export default function JudgingScreen() {
     if (selectedSubmissionIdx === null) return
     const submission = gameState.submissions[selectedSubmissionIdx]
     if (submission) {
+      play('winner')
       pickWinner(submission.playerId)
     }
   }
@@ -149,9 +152,16 @@ export default function JudgingScreen() {
                       : undefined,
                     borderRadius: '16px',
                   }}
-                  onClick={() => setSelectedSubmissionIdx(i)}
+                  onClick={() => {
+                    play('select')
+                    setSelectedSubmissionIdx(i)
+                  }}
                 >
-                  <GameCard card={sub.card} size="sm" isSelected={isSelected} />
+                  <div className="flex flex-col gap-2">
+                    {sub.cards.map((card, ci) => (
+                      <GameCard key={card.id} card={card} size="sm" isSelected={isSelected} rotation={ci === 1 ? 2 : 0} />
+                    ))}
+                  </div>
                 </motion.div>
               )
             })}

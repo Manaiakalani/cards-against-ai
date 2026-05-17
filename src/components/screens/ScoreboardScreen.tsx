@@ -268,7 +268,7 @@ export default function ScoreboardScreen() {
                     fontWeight: 700,
                   }}
                 >
-                  → {lastResult.winningCard.text}
+                  → {lastResult.winningCards.map(c => c.text).join(' + ')}
                 </p>
               </div>
               <span

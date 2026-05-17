@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback, useRef, useEffect } from 'react'
-import { GameState, Player, Card } from '@/types/game'
+import { GameState, Player, Card, Submission } from '@/types/game'
 import { getAllCards, shuffle, drawCards } from '@/data/cards'
 
 const BOT_NAMES = [
@@ -61,6 +61,8 @@ export function useGameState() {
       roundTime: 90,
       winningScore: 7,
       selectedDecks: ['brainrot', 'terminally-online', 'gen-z', 'millennial', 'ai-fever', 'gaming'],
+      timerEnabled: false,
+      timerSeconds: 60,
     },
     roomCode: generateRoomCode(),
     czarId: '',
@@ -76,8 +78,16 @@ export function useGameState() {
   // Sync refs in effect (not during render) per React rules
   useEffect(() => { blackPoolRef.current = blackCardPool }, [blackCardPool])
   useEffect(() => { whitePoolRef.current = whiteCardPool }, [whiteCardPool])
+
   const goToLobby = useCallback(() => {
     setGameState(prev => ({ ...prev, phase: 'lobby' }))
+  }, [])
+
+  const updateSettings = useCallback((updates: Partial<GameState['settings']>) => {
+    setGameState(prev => ({
+      ...prev,
+      settings: { ...prev.settings, ...updates },
+    }))
   }, [])
 
   const startGame = useCallback((playerName: string, botCount: number = 3) => {
@@ -141,17 +151,18 @@ export function useGameState() {
     })
   }, [])
 
-  const submitCard = useCallback((playerId: string, card: Card) => {
+  const submitCards = useCallback((playerId: string, cards: Card[]) => {
     setGameState(prev => {
       const alreadySubmitted = prev.submissions.some(s => s.playerId === playerId)
       if (alreadySubmitted) return prev
 
-      const newSubmissions = [...prev.submissions, { playerId, card }]
+      const newSubmissions: Submission[] = [...prev.submissions, { playerId, cards }]
 
-      // Remove card from player's hand
+      // Remove cards from player's hand
+      const cardIds = new Set(cards.map(c => c.id))
       const newPlayers = prev.players.map(p =>
         p.id === playerId
-          ? { ...p, hand: p.hand.filter(c => c.id !== card.id), selectedCard: card }
+          ? { ...p, hand: p.hand.filter(c => !cardIds.has(c.id)), selectedCard: cards[0] }
           : p
       )
 
@@ -165,28 +176,38 @@ export function useGameState() {
         ...prev,
         players: newPlayers,
         submissions: newSubmissions,
-        phase: allSubmitted ? 'judging' : prev.phase,
+        phase: allSubmitted ? 'revealing' : prev.phase,
       }
     })
   }, [])
+
+  // Backward-compatible single-card submit
+  const submitCard = useCallback((playerId: string, card: Card) => {
+    submitCards(playerId, [card])
+  }, [submitCards])
 
   const botSubmit = useCallback(() => {
     setGameState(prev => {
       if (prev.phase !== 'playing') return prev
 
+      const blanks = prev.currentBlackCard?.blanks ?? 1
       const botPlayers = prev.players.filter(p => p.isBot && !p.isCardCzar)
-      const newSubmissions = [...prev.submissions]
+      const newSubmissions: Submission[] = [...prev.submissions]
       let newPlayers = [...prev.players]
 
       for (const bot of botPlayers) {
         if (newSubmissions.some(s => s.playerId === bot.id)) continue
-        if (bot.hand.length === 0) continue
+        if (bot.hand.length < blanks) continue
 
-        const randomCard = bot.hand[Math.floor(Math.random() * bot.hand.length)]
-        newSubmissions.push({ playerId: bot.id, card: randomCard })
+        // Pick random cards for the number of blanks
+        const shuffledHand = shuffle(bot.hand)
+        const selectedCards = shuffledHand.slice(0, blanks)
+        const selectedIds = new Set(selectedCards.map(c => c.id))
+
+        newSubmissions.push({ playerId: bot.id, cards: selectedCards })
         newPlayers = newPlayers.map(p =>
           p.id === bot.id
-            ? { ...p, hand: p.hand.filter(c => c.id !== randomCard.id), selectedCard: randomCard }
+            ? { ...p, hand: p.hand.filter(c => !selectedIds.has(c.id)), selectedCard: selectedCards[0] }
             : p
         )
       }
@@ -200,8 +221,16 @@ export function useGameState() {
         ...prev,
         players: newPlayers,
         submissions: newSubmissions,
-        phase: allSubmitted ? 'judging' : prev.phase,
+        phase: allSubmitted ? 'revealing' : prev.phase,
       }
+    })
+  }, [])
+
+  // Move from revealing to judging
+  const finishReveal = useCallback(() => {
+    setGameState(prev => {
+      if (prev.phase !== 'revealing') return prev
+      return { ...prev, phase: 'judging' }
     })
   }, [])
 
@@ -215,7 +244,7 @@ export function useGameState() {
 
     const roundResult = {
       blackCard: prev.currentBlackCard,
-      winningCard: winningSubmission.card,
+      winningCards: winningSubmission.cards,
       winnerId,
       czarId: prev.czarId,
       round: prev.currentRound,
@@ -313,10 +342,13 @@ export function useGameState() {
   return {
     gameState,
     goToLobby,
+    updateSettings,
     startGame,
     redrawHand,
     submitCard,
+    submitCards,
     botSubmit,
+    finishReveal,
     pickWinner,
     botPickWinner,
     nextRound,

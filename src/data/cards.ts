@@ -20,6 +20,8 @@ const brainrotBlack: Card[] = [
   { id: 'br-b16', text: "Delulu is the solulu for _____.", type: 'black', blanks: 1, category: 'slang' },
   { id: 'br-b17', text: "Touch grass? I'd rather touch _____.", type: 'black', blanks: 1, category: 'internet' },
   { id: 'br-b18', text: "The board fired the CEO for _____.", type: 'black', blanks: 1, category: 'startup' },
+  { id: 'br-b19', text: "Step 1: _____. Step 2: _____. Step 3: IPO.", type: 'black', blanks: 2, category: 'startup' },
+  { id: 'br-b20', text: "_____ is just _____ for people with trust funds.", type: 'black', blanks: 2, category: 'culture' },
 ]
 
 const brainrotWhite: Card[] = [
@@ -67,6 +69,8 @@ const onlineBlack: Card[] = [
   { id: 'on-b10', text: "My screen time report is just _____.", type: 'black', blanks: 1, category: 'internet' },
   { id: 'on-b11', text: "I'm in my _____ era.", type: 'black', blanks: 1, category: 'slang' },
   { id: 'on-b12', text: "The group chat just imploded over _____.", type: 'black', blanks: 1, category: 'social' },
+  { id: 'on-b13', text: "I showed _____ to my therapist and she showed me _____.", type: 'black', blanks: 2, category: 'internet' },
+  { id: 'on-b14', text: "_____ is the new _____.", type: 'black', blanks: 2, category: 'culture' },
 ]
 
 const onlineWhite: Card[] = [
@@ -111,6 +115,7 @@ const genZBlack: Card[] = [
   { id: 'gz-b10', text: "Understood the assignment? Bestie, I turned in _____.", type: 'black', blanks: 1, category: 'slang' },
   { id: 'gz-b11', text: "My toxic trait is _____.", type: 'black', blanks: 1, category: 'culture' },
   { id: 'gz-b12', text: "This is my 13th reason: _____.", type: 'black', blanks: 1, category: 'culture' },
+  { id: 'gz-b13', text: "My _____ era ended and my _____ era began.", type: 'black', blanks: 2, category: 'slang' },
 ]
 
 const genZWhite: Card[] = [
@@ -154,6 +159,7 @@ const milBlack: Card[] = [
   { id: 'mil-b10', text: "My therapist says I have trauma from _____.", type: 'black', blanks: 1, category: 'culture' },
   { id: 'mil-b11', text: "Adulting is just _____ but every single day.", type: 'black', blanks: 1, category: 'lifestyle' },
   { id: 'mil-b12', text: "The most millennial thing I've ever done is _____.", type: 'black', blanks: 1, category: 'generational' },
+  { id: 'mil-b13', text: "Kids these days have _____, we had _____.", type: 'black', blanks: 2, category: 'generational' },
 ]
 
 const milWhite: Card[] = [
@@ -191,6 +197,8 @@ const aiFeverBlack: Card[] = [
   { id: 'ai-b6', text: "I lost my life savings on _____.", type: 'black', blanks: 1, category: 'crypto' },
   { id: 'ai-b7', text: "Every startup in 2026 is just _____.", type: 'black', blanks: 1, category: 'startup' },
   { id: 'ai-b8', text: "The AI hallucinated _____ and now it's company policy.", type: 'black', blanks: 1, category: 'ai' },
+  { id: 'ai-b9', text: "Investors said we need both _____ and _____ to achieve AGI.", type: 'black', blanks: 2, category: 'ai' },
+  { id: 'ai-b10', text: "The AI replaced _____ with _____ and nobody noticed.", type: 'black', blanks: 2, category: 'ai' },
 ]
 
 const aiFeverWhite: Card[] = [
@@ -213,6 +221,7 @@ const gamingBlack: Card[] = [
   { id: 'gm-b3', text: "Streamers nowadays only talk about _____.", type: 'black', blanks: 1, category: 'gaming' },
   { id: 'gm-b4', text: "The real lore is _____.", type: 'black', blanks: 1, category: 'gaming' },
   { id: 'gm-b5', text: "NPC behavior is when someone _____.", type: 'black', blanks: 1, category: 'internet' },
+  { id: 'gm-b6', text: "The boss fight was _____ but the real boss was _____.", type: 'black', blanks: 2, category: 'gaming' },
 ]
 
 const gamingWhite: Card[] = [

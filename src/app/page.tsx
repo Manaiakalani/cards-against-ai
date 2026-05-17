@@ -4,6 +4,7 @@ import { useGame } from '@/contexts/GameContext'
 import SplashScreen from '@/components/screens/SplashScreen'
 import LobbyScreen from '@/components/screens/LobbyScreen'
 import PlayingScreen from '@/components/screens/PlayingScreen'
+import RevealScreen from '@/components/screens/RevealScreen'
 import JudgingScreen from '@/components/screens/JudgingScreen'
 import ResultsScreen from '@/components/screens/ResultsScreen'
 import ScoreboardScreen from '@/components/screens/ScoreboardScreen'
@@ -19,6 +20,8 @@ export default function Home() {
       return <LobbyScreen />
     case 'playing':
       return <PlayingScreen key={`playing-${gameState.currentRound}`} />
+    case 'revealing':
+      return <RevealScreen key={`reveal-${gameState.currentRound}`} />
     case 'judging':
       return <JudgingScreen key={`judging-${gameState.currentRound}`} />
     case 'results':
