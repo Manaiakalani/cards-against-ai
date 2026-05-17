@@ -166,6 +166,7 @@ export function StatsScreen({ open, onClose }: StatsScreenProps) {
                 className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full"
                 style={{
                   backgroundColor: 'var(--theme-text)',
+                  color: 'var(--theme-bg)',
                   border: 'none',
                   fontFamily: 'var(--font-archivo)',
                   fontSize: 20,
