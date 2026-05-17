@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { PosterBackground } from '@/components/PosterBackground'
@@ -18,6 +18,17 @@ export default function SplashScreen() {
   const [showFavorites, setShowFavorites] = useState(false)
   const [showJoin, setShowJoin] = useState(false)
   const [joinCode, setJoinCode] = useState('')
+
+  const handleEsc = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Escape' && showJoin) setShowJoin(false)
+  }, [showJoin])
+
+  useEffect(() => {
+    if (showJoin) {
+      document.addEventListener('keydown', handleEsc)
+      return () => document.removeEventListener('keydown', handleEsc)
+    }
+  }, [showJoin, handleEsc])
 
   const stagger = {
     hidden: {},

@@ -229,9 +229,9 @@ test.describe('Visual Audit — Fonts & Colors', () => {
 
   test('HUD renders correctly during gameplay', async ({ page }) => {
     await navigateToPlaying(page)
-    // HUD should show round info
-    await expect(page.getByText('ROUND 1')).toBeVisible()
-    // HUD is the fixed bar at top — verify it exists with room code
+    // HUD should show round info — "ROUND 1" on desktop, "R1" on mobile
+    await expect(page.getByText(/R(OUND )?1/)).toBeVisible()
+    // HUD is the fixed bar at top — verify it exists
     const hud = page.locator('.fixed').first()
     await expect(hud).toBeVisible()
   })

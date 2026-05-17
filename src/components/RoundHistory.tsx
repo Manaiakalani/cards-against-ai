@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useSyncExternalStore } from 'react'
+import { useCallback, useEffect, useSyncExternalStore } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { RoundResult, Player } from '@/types/game'
 
@@ -225,6 +225,17 @@ export function RoundHistory({
   favoritesOnly = false,
 }: RoundHistoryProps) {
   const { favs, toggle, isFav } = useFavorites()
+
+  const handleEsc = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Escape') onClose()
+  }, [onClose])
+
+  useEffect(() => {
+    if (open) {
+      document.addEventListener('keydown', handleEsc)
+      return () => document.removeEventListener('keydown', handleEsc)
+    }
+  }, [open, handleEsc])
 
   const title = favoritesOnly ? 'FAVORITES' : 'ROUND HISTORY'
   const emptyMessage = favoritesOnly

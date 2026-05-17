@@ -46,7 +46,7 @@ test.describe('Cards Against AI — Full Game Flow', () => {
     await expect(page.getByText(/cards remaining|pick \d+ cards/i)).toBeVisible()
 
     // Should see the HUD with round info
-    await expect(page.getByText('ROUND 1')).toBeVisible()
+    await expect(page.getByText(/R(OUND )?1/)).toBeVisible()
 
     // Click on the first card in the grid
     const confirmBtn = page.getByRole('button', { name: /lock it in/i })
@@ -82,7 +82,7 @@ test.describe('Cards Against AI — Full Game Flow', () => {
     await page.getByRole('button', { name: /keep going/i }).click()
 
     // Should be back in playing for round 2
-    await expect(page.getByText('ROUND 2')).toBeVisible({ timeout: 5000 })
+    await expect(page.getByText(/R(OUND )?2/)).toBeVisible({ timeout: 5000 })
   })
 
   test('redraw hand works and is limited to once per round', async ({ page }) => {

@@ -30,12 +30,12 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode, timer }
       }}
     >
       <div
-        className="flex items-center justify-between pr-5"
-        style={{ height: 52, paddingLeft: 60 }}
+        className="flex items-center justify-between pr-3 sm:pr-5"
+        style={{ height: 52, paddingLeft: 52 }}
       >
-        {/* Left: Room code */}
+        {/* Left: Room code — hidden on mobile to save space */}
         <div
-          className="flex items-center rounded px-3 py-1"
+          className="hidden items-center rounded px-3 py-1 sm:flex"
           style={{
             border: '2px solid var(--theme-border)',
             backgroundColor: 'var(--theme-surface)',
@@ -59,11 +59,13 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode, timer }
             className="uppercase"
             style={{
               fontFamily: 'var(--font-archivo)',
-              fontSize: 18,
+              fontSize: 14,
               color: 'var(--theme-text)',
             }}
           >
-            ROUND {round}
+            <span className="hidden sm:inline">ROUND </span>
+            <span className="sm:hidden">R</span>
+            {round}
             {totalRounds ? ` of ${totalRounds}` : ''}
           </span>
           {timer && (

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useStats, type GameStats } from '@/hooks/useStats'
 import { allDecks } from '@/data/cards'
@@ -99,6 +99,17 @@ interface StatsScreenProps {
 export function StatsScreen({ open, onClose }: StatsScreenProps) {
   const { stats, resetStats } = useStats()
   const [confirmReset, setConfirmReset] = useState(false)
+
+  const handleEsc = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Escape') onClose()
+  }, [onClose])
+
+  useEffect(() => {
+    if (open) {
+      document.addEventListener('keydown', handleEsc)
+      return () => document.removeEventListener('keydown', handleEsc)
+    }
+  }, [open, handleEsc])
 
   const cards = buildCards(stats)
 

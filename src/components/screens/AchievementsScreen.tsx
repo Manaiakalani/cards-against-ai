@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ACHIEVEMENTS, RARITY_COLORS, ACHIEVEMENT_TARGETS } from '@/data/achievements'
 import { useAchievements } from '@/hooks/useAchievements'
@@ -13,6 +14,17 @@ export function AchievementsScreen({ open, onClose }: AchievementsScreenProps) {
   const { unlockedAchievements, getProgress } = useAchievements()
   const totalUnlocked = unlockedAchievements.size
   const totalAchievements = ACHIEVEMENTS.length
+
+  const handleEsc = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Escape') onClose()
+  }, [onClose])
+
+  useEffect(() => {
+    if (open) {
+      document.addEventListener('keydown', handleEsc)
+      return () => document.removeEventListener('keydown', handleEsc)
+    }
+  }, [open, handleEsc])
 
   return (
     <AnimatePresence>

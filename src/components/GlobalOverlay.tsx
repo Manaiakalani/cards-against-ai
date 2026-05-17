@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Sun, Moon, Volume2, VolumeX } from 'lucide-react'
 import { useGame } from '@/contexts/GameContext'
@@ -15,6 +15,18 @@ export function GlobalOverlay() {
   const { isMuted, toggleMute } = useSound()
   const [helpOpen, setHelpOpen] = useState(false)
   const [confirmQuit, setConfirmQuit] = useState(false)
+
+  // Escape key closes quit confirmation
+  const handleEsc = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Escape' && confirmQuit) setConfirmQuit(false)
+  }, [confirmQuit])
+
+  useEffect(() => {
+    if (confirmQuit) {
+      document.addEventListener('keydown', handleEsc)
+      return () => document.removeEventListener('keydown', handleEsc)
+    }
+  }, [confirmQuit, handleEsc])
 
   const isInGame = !['menu', 'lobby'].includes(gameState.phase)
 

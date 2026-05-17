@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface HelpModalProps {
@@ -36,6 +37,17 @@ const RULES = [
 ]
 
 export function HelpModal({ open, onClose }: HelpModalProps) {
+  const handleEsc = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Escape') onClose()
+  }, [onClose])
+
+  useEffect(() => {
+    if (open) {
+      document.addEventListener('keydown', handleEsc)
+      return () => document.removeEventListener('keydown', handleEsc)
+    }
+  }, [open, handleEsc])
+
   return (
     <AnimatePresence>
       {open && (
