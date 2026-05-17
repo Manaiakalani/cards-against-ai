@@ -1,15 +1,26 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { PosterBackground } from '@/components/PosterBackground'
 import { GameCard } from '@/components/GameCard'
 import { CardIcon } from '@/components/CardIcon'
 import { SiteFooter } from '@/components/SiteFooter'
-import { StatsScreen } from '@/components/screens/StatsScreen'
-import { AchievementsScreen } from '@/components/screens/AchievementsScreen'
-import { RoundHistory } from '@/components/RoundHistory'
+import dynamic from 'next/dynamic'
+
+const StatsScreen = dynamic(
+  () => import('@/components/screens/StatsScreen').then((mod) => mod.StatsScreen),
+  { ssr: false }
+)
+const AchievementsScreen = dynamic(
+  () => import('@/components/screens/AchievementsScreen').then((mod) => mod.AchievementsScreen),
+  { ssr: false }
+)
+const RoundHistory = dynamic(
+  () => import('@/components/RoundHistory').then((mod) => mod.RoundHistory),
+  { ssr: false }
+)
 
 export default function SplashScreen() {
   const { goToLobby } = useGame()
@@ -88,14 +99,14 @@ export default function SplashScreen() {
       </div>
 
       {/* Main content */}
-      <motion.div
+      <m.div
         className="relative z-10 flex flex-col items-center text-center"
         variants={stagger}
         initial="hidden"
         animate="show"
       >
         {/* Title block */}
-        <motion.div variants={fadeUp}>
+        <m.div variants={fadeUp}>
           <h1
             style={{
               fontFamily: 'var(--font-archivo)',
@@ -109,9 +120,9 @@ export default function SplashScreen() {
           >
             CARDS
           </h1>
-        </motion.div>
+        </m.div>
 
-        <motion.div variants={fadeUp} className="mt-2">
+        <m.div variants={fadeUp} className="mt-2">
           <span
             className="inline-block px-5 py-1"
             style={{
@@ -126,9 +137,9 @@ export default function SplashScreen() {
           >
             AGAINST
           </span>
-        </motion.div>
+        </m.div>
 
-        <motion.div variants={fadeUp} className="mt-2">
+        <m.div variants={fadeUp} className="mt-2">
           <h2
             style={{
               fontFamily: 'var(--font-archivo)',
@@ -142,10 +153,10 @@ export default function SplashScreen() {
           >
             AI
           </h2>
-        </motion.div>
+        </m.div>
 
         {/* Tagline */}
-        <motion.p
+        <m.p
           variants={fadeUp}
           className="mt-6 uppercase tracking-wider"
           style={{
@@ -159,10 +170,10 @@ export default function SplashScreen() {
           }}
         >
           The party game for chronically online people
-        </motion.p>
+        </m.p>
 
         {/* Deck info */}
-        <motion.p
+        <m.p
           variants={fadeUp}
           className="mt-2"
           style={{
@@ -175,11 +186,11 @@ export default function SplashScreen() {
           }}
         >
           189 Cards • 6 Decks • Unlimited Bad Takes
-        </motion.p>
+        </m.p>
 
         {/* Host / Join buttons */}
-        <motion.div variants={fadeUp} className="mt-10 flex flex-col items-center gap-3 sm:flex-row">
-          <motion.button
+        <m.div variants={fadeUp} className="mt-10 flex flex-col items-center gap-3 sm:flex-row">
+          <m.button
             onClick={goToLobby}
             whileHover={{ y: 2, boxShadow: '0px 6px 0px var(--theme-shadow)' }}
             whileTap={{ y: 6, boxShadow: '0px 2px 0px var(--theme-shadow)' }}
@@ -198,8 +209,8 @@ export default function SplashScreen() {
             }}
           >
             🎮 HOST GAME
-          </motion.button>
-          <motion.button
+          </m.button>
+          <m.button
             onClick={() => setShowJoin(true)}
             whileHover={{ y: 2, boxShadow: '0px 6px 0px var(--theme-shadow)' }}
             whileTap={{ y: 6, boxShadow: '0px 2px 0px var(--theme-shadow)' }}
@@ -218,12 +229,12 @@ export default function SplashScreen() {
             }}
           >
             🔗 JOIN GAME
-          </motion.button>
-        </motion.div>
+          </m.button>
+        </m.div>
 
         {/* Menu buttons row */}
-        <motion.div variants={fadeUp} className="mt-4 flex flex-wrap justify-center gap-3">
-          <motion.button
+        <m.div variants={fadeUp} className="mt-4 flex flex-wrap justify-center gap-3">
+          <m.button
             onClick={() => setShowStats(true)}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -240,8 +251,8 @@ export default function SplashScreen() {
             }}
           >
             📊 Stats
-          </motion.button>
-          <motion.button
+          </m.button>
+          <m.button
             onClick={() => setShowAchievements(true)}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -258,8 +269,8 @@ export default function SplashScreen() {
             }}
           >
             🏆 Achievements
-          </motion.button>
-          <motion.button
+          </m.button>
+          <m.button
             onClick={() => setShowFavorites(true)}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -276,11 +287,11 @@ export default function SplashScreen() {
             }}
           >
             ⭐ Favorites
-          </motion.button>
-        </motion.div>
+          </m.button>
+        </m.div>
 
         {/* Version footer */}
-        <motion.div
+        <m.div
           variants={fadeUp}
           className="mt-6 flex items-center gap-3"
           style={{ color: 'var(--theme-text-muted)' }}
@@ -296,13 +307,13 @@ export default function SplashScreen() {
             v1.0 MVP
           </span>
           <CardIcon color="var(--theme-text-muted)" size={10} />
-        </motion.div>
+        </m.div>
 
         {/* Footer */}
-        <motion.div variants={fadeUp} className="mt-4">
+        <m.div variants={fadeUp} className="mt-4">
           <SiteFooter />
-        </motion.div>
-      </motion.div>
+        </m.div>
+      </m.div>
 
       {/* Modals */}
       <StatsScreen open={showStats} onClose={() => setShowStats(false)} />
@@ -316,7 +327,7 @@ export default function SplashScreen() {
       {/* Join Game Modal */}
       <AnimatePresence>
         {showJoin && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -324,7 +335,7 @@ export default function SplashScreen() {
             style={{ backgroundColor: 'rgba(0,0,0,0.6)' }}
             onClick={() => setShowJoin(false)}
           >
-            <motion.div
+            <m.div
               initial={{ scale: 0.85, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.85, opacity: 0, y: 20 }}
@@ -339,7 +350,7 @@ export default function SplashScreen() {
             >
               <button
                 onClick={() => setShowJoin(false)}
-                className="absolute top-3 right-3 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full"
+                className="absolute top-2 right-2 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full"
                 style={{
                   backgroundColor: 'var(--theme-text)',
                   color: 'var(--theme-bg)',
@@ -417,8 +428,8 @@ export default function SplashScreen() {
                   Online multiplayer is in development. For now, host a game and play with AI bots!
                 </p>
               </div>
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
         )}
       </AnimatePresence>
     </div>

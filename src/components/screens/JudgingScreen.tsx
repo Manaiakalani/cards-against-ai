@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { useSound } from '@/hooks/useSound'
 import { PosterBackground } from '@/components/PosterBackground'
@@ -45,7 +45,7 @@ export default function JudgingScreen() {
         <PosterBackground words={['slay', 'ate', 'period']} />
         <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} />
         <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 pt-12">
-          <motion.div
+          <m.div
             animate={{ rotate: [0, 5, -5, 0] }}
             transition={{ repeat: Infinity, duration: 1.5 }}
             className="mb-6 flex h-24 w-24 items-center justify-center rounded-full text-5xl"
@@ -55,7 +55,7 @@ export default function JudgingScreen() {
             }}
           >
             {czar?.avatar ?? '🤔'}
-          </motion.div>
+          </m.div>
           <h2
             className="mb-2 text-center"
             style={{
@@ -88,7 +88,7 @@ export default function JudgingScreen() {
 
       <div className="relative z-10 flex h-full flex-col items-center overflow-y-auto px-4 pt-12 pb-8">
         {/* Status Badge */}
-        <motion.div
+        <m.div
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           className="mb-8 inline-block px-5 py-2"
@@ -103,12 +103,12 @@ export default function JudgingScreen() {
           }}
         >
           Pick the Winner
-        </motion.div>
+        </m.div>
 
         {/* Game Board */}
         <div className="flex w-full max-w-5xl flex-col items-center gap-6 lg:flex-row lg:items-start lg:justify-center lg:gap-16">
           {/* Black Card */}
-          <motion.div
+          <m.div
             initial={{ x: -40, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             className="relative flex-shrink-0"
@@ -126,7 +126,7 @@ export default function JudgingScreen() {
                 MAIN JUDGE
               </Sticker>
             </div>
-          </motion.div>
+          </m.div>
 
           {/* Submitted Cards — Grid on mobile, spread on desktop */}
           <div className="grid w-full max-w-lg grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-4">
@@ -134,7 +134,7 @@ export default function JudgingScreen() {
               const isSelected = selectedSubmissionIdx === i
 
               return (
-                <motion.div
+                <m.div
                   key={sub.playerId}
                   role="button"
                   tabIndex={0}
@@ -172,7 +172,7 @@ export default function JudgingScreen() {
                       <GameCard key={card.id} card={card} size="sm" isSelected={isSelected} rotation={ci === 1 ? 2 : 0} />
                     ))}
                   </div>
-                </motion.div>
+                </m.div>
               )
             })}
           </div>

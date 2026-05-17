@@ -92,8 +92,12 @@ export function useGameState() {
     }))
   }, [])
 
+  // Ref for selectedDecks to keep startGame callback stable
+  const selectedDecksRef = useRef(gameState.settings.selectedDecks)
+  useEffect(() => { selectedDecksRef.current = gameState.settings.selectedDecks }, [gameState.settings.selectedDecks])
+
   const startGame = useCallback((playerName: string, botCount: number = 3) => {
-    const { blackCards, whiteCards } = getAllCards(gameState.settings.selectedDecks)
+    const { blackCards, whiteCards } = getAllCards(selectedDecksRef.current)
     if (blackCards.length === 0 || whiteCards.length === 0) return
 
     let shuffledWhite = shuffle(whiteCards)
@@ -127,7 +131,7 @@ export function useGameState() {
       roundWinner: null,
       czarId: allPlayers[1].id,
     }))
-  }, [gameState.settings.selectedDecks])
+  }, [])
 
   const redrawHand = useCallback((playerId: string) => {
     setGameState(prev => {

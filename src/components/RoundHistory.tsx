@@ -1,7 +1,7 @@
 'use client'
 
-import { useCallback, useEffect, useSyncExternalStore } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { memo, useCallback, useEffect, useMemo, useSyncExternalStore } from 'react'
+import { m, AnimatePresence } from 'framer-motion'
 import type { RoundResult, Player } from '@/types/game'
 
 // ─── Favorites localStorage via useSyncExternalStore ─────────────────
@@ -92,7 +92,7 @@ export { useFavorites, type FavEntry }
 
 // ─── Round entry (shared between game + favorites views) ─────────────
 
-function RoundEntry({
+const RoundEntry = memo(function RoundEntry({
   result,
   winnerName,
   winnerAvatar,
@@ -110,7 +110,7 @@ function RoundEntry({
   index: number
 }) {
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, x: -16 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.04 }}
@@ -159,7 +159,7 @@ function RoundEntry({
         </div>
 
         {/* Star toggle */}
-        <motion.button
+        <m.button
           onClick={onToggle}
           whileHover={{ scale: 1.2 }}
           whileTap={{ scale: 0.85 }}
@@ -175,7 +175,7 @@ function RoundEntry({
           }}
         >
           ⭐
-        </motion.button>
+        </m.button>
       </div>
 
       {/* Black card text */}
@@ -203,11 +203,9 @@ function RoundEntry({
       >
         → {result.winningCards.map((c) => c.text).join(' + ')}
       </p>
-    </motion.div>
+    </m.div>
   )
-}
-
-// ─── Component ───────────────────────────────────────────────────────
+})
 
 interface RoundHistoryProps {
   open: boolean
@@ -242,35 +240,33 @@ export function RoundHistory({
     ? 'No favorites yet — star your best combos!'
     : 'No rounds played yet. Start a game!'
 
-  // Build display entries
-  const entries: {
-    result: RoundResult
-    winnerName: string
-    winnerAvatar: string
-    winnerAvatarBg: string
-  }[] = favoritesOnly
-    ? favs.map((f) => ({
+  // Build display entries (memoized to avoid recomputing on unrelated re-renders)
+  const entries = useMemo(() => {
+    if (favoritesOnly) {
+      return favs.map((f) => ({
         result: f.result,
         winnerName: f.winnerName,
         winnerAvatar: f.winnerAvatar,
         winnerAvatarBg: f.winnerAvatarBg,
       }))
-    : roundHistory.map((r) => {
-        const winner = players.find((p) => p.id === r.winnerId)
-        return {
-          result: r,
-          winnerName: winner?.name ?? 'Unknown',
-          winnerAvatar: winner?.avatar ?? '?',
-          winnerAvatarBg: winner?.avatarBg ?? '#DDA0DD',
-        }
-      })
+    }
+    return roundHistory.map((r) => {
+      const winner = players.find((p) => p.id === r.winnerId)
+      return {
+        result: r,
+        winnerName: winner?.name ?? 'Unknown',
+        winnerAvatar: winner?.avatar ?? '?',
+        winnerAvatarBg: winner?.avatarBg ?? '#DDA0DD',
+      }
+    })
+  }, [favoritesOnly, favs, roundHistory, players])
 
   return (
     <AnimatePresence>
       {open && (
         <>
           {/* Backdrop */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -280,7 +276,7 @@ export function RoundHistory({
           />
 
           {/* Modal */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, scale: 0.9, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 30 }}
@@ -386,7 +382,7 @@ export function RoundHistory({
                   : `${entries.length} round${entries.length !== 1 ? 's' : ''} played`}
               </p>
             </div>
-          </motion.div>
+          </m.div>
         </>
       )}
     </AnimatePresence>

@@ -1,13 +1,21 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { Sun, Moon, Volume2, VolumeX } from 'lucide-react'
 import { useGame } from '@/contexts/GameContext'
 import { useTheme } from '@/contexts/ThemeContext'
 import { useSound } from '@/hooks/useSound'
-import { HelpModal } from '@/components/HelpModal'
-import { AchievementToast } from '@/components/AchievementToast'
+import dynamic from 'next/dynamic'
+
+const HelpModal = dynamic(
+  () => import('@/components/HelpModal').then((mod) => mod.HelpModal),
+  { ssr: false }
+)
+const AchievementToast = dynamic(
+  () => import('@/components/AchievementToast').then((mod) => mod.AchievementToast),
+  { ssr: false }
+)
 
 export function GlobalOverlay() {
   const { gameState, newGame } = useGame()
@@ -30,14 +38,14 @@ export function GlobalOverlay() {
 
   const isInGame = !['menu', 'lobby'].includes(gameState.phase)
 
-  // In-game: shrink buttons and tuck them into the HUD bar (40px tall)
-  const btnSize = isInGame ? 36 : 44
-  const btnTop = isInGame ? 2 : 16
+  // Always 44px for WCAG touch-target minimum; center in 40px HUD bar when in-game
+  const btnSize = 44
+  const btnTop = isInGame ? -2 : 16
 
   return (
     <>
       {/* Sound mute toggle */}
-      <motion.button
+      <m.button
         onClick={toggleMute}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
@@ -45,7 +53,7 @@ export function GlobalOverlay() {
         className="fixed z-[150] flex cursor-pointer items-center justify-center rounded-full"
         style={{
           top: btnTop,
-          right: isInGame ? 80 : 120,
+          right: isInGame ? 104 : 120,
           width: btnSize,
           height: btnSize,
           backgroundColor: 'var(--theme-surface)',
@@ -58,10 +66,10 @@ export function GlobalOverlay() {
           ? <VolumeX className={isInGame ? 'h-4 w-4' : 'h-5 w-5'} strokeWidth={2} />
           : <Volume2 className={isInGame ? 'h-4 w-4' : 'h-5 w-5'} strokeWidth={2} />
         }
-      </motion.button>
+      </m.button>
 
       {/* Theme toggle — always visible, next to help */}
-      <motion.button
+      <m.button
         onClick={toggleTheme}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
@@ -69,7 +77,7 @@ export function GlobalOverlay() {
         className="fixed z-[150] flex cursor-pointer items-center justify-center rounded-full"
         style={{
           top: btnTop,
-          right: isInGame ? 44 : 68,
+          right: isInGame ? 56 : 68,
           width: btnSize,
           height: btnSize,
           backgroundColor: 'var(--theme-surface)',
@@ -82,10 +90,10 @@ export function GlobalOverlay() {
           ? <Sun className={isInGame ? 'h-4 w-4' : 'h-5 w-5'} strokeWidth={2} />
           : <Moon className={isInGame ? 'h-4 w-4' : 'h-5 w-5'} strokeWidth={2} />
         }
-      </motion.button>
+      </m.button>
 
       {/* Help "?" button — always visible */}
-      <motion.button
+      <m.button
         onClick={() => setHelpOpen(true)}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
@@ -105,12 +113,12 @@ export function GlobalOverlay() {
         }}
       >
         ?
-      </motion.button>
+      </m.button>
 
       {/* Quit button — only during active game, inside HUD bar */}
       <AnimatePresence>
         {isInGame && !confirmQuit && (
-          <motion.button
+          <m.button
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
@@ -120,11 +128,11 @@ export function GlobalOverlay() {
             aria-label="Quit game"
             className="fixed z-[150] flex cursor-pointer items-center justify-center rounded-full"
             style={{
-              top: 2,
+              top: -2,
               left: 10,
-              width: 36,
-              height: 36,
-              backgroundColor: '#FF4242',
+              width: 44,
+              height: 44,
+              backgroundColor: '#C62828',
               color: 'white',
               border: '2px solid var(--theme-border)',
               fontFamily: 'var(--font-inter)',
@@ -132,7 +140,7 @@ export function GlobalOverlay() {
             }}
           >
             ✕
-          </motion.button>
+          </m.button>
         )}
       </AnimatePresence>
 
@@ -140,7 +148,7 @@ export function GlobalOverlay() {
       <AnimatePresence>
         {confirmQuit && (
           <>
-            <motion.div
+            <m.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -148,7 +156,7 @@ export function GlobalOverlay() {
               className="fixed inset-0 z-[200]"
               style={{ backgroundColor: 'var(--theme-overlay)' }}
             />
-            <motion.div
+            <m.div
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -217,7 +225,7 @@ export function GlobalOverlay() {
                     fontFamily: 'var(--font-archivo)',
                     fontSize: 16,
                     textTransform: 'uppercase',
-                    backgroundColor: '#FF4242',
+                    backgroundColor: '#C62828',
                     color: 'white',
                     border: '3px solid var(--theme-border)',
                     boxShadow: '4px 4px 0px var(--theme-shadow)',
@@ -226,7 +234,7 @@ export function GlobalOverlay() {
                   Quit
                 </button>
               </div>
-            </motion.div>
+            </m.div>
           </>
         )}
       </AnimatePresence>

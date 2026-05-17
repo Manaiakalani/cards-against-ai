@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { allDecks } from '@/data/cards'
 import { PosterBackground } from '@/components/PosterBackground'
@@ -94,7 +94,7 @@ export default function LobbyScreen() {
 
       <div className="relative z-10 flex flex-col items-center px-4 py-12">
         {/* Title */}
-        <motion.h1
+        <m.h1
           initial={{ y: -40, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5, ease: 'easeOut' }}
@@ -110,10 +110,10 @@ export default function LobbyScreen() {
           }}
         >
           THE PREGAME
-        </motion.h1>
+        </m.h1>
 
         {/* Room Code Card */}
-        <motion.div
+        <m.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.15, type: 'spring', stiffness: 300 }}
@@ -147,10 +147,10 @@ export default function LobbyScreen() {
           >
             {gameState.roomCode}
           </div>
-        </motion.div>
+        </m.div>
 
         {/* Player Count Sticker */}
-        <motion.div
+        <m.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.25 }}
@@ -158,7 +158,7 @@ export default function LobbyScreen() {
           <Sticker color="pink" rotation={-2}>
             {totalPlayers} / {MAX_PLAYERS} Players Joined
           </Sticker>
-        </motion.div>
+        </m.div>
 
         {/* Player Grid */}
         <div className="mt-8 grid w-full max-w-5xl grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5">
@@ -167,7 +167,7 @@ export default function LobbyScreen() {
             const rotation = i % 2 === 0 ? -1.5 : 1.5
 
             return (
-              <motion.div
+              <m.div
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -235,13 +235,13 @@ export default function LobbyScreen() {
                     Waiting for Talent…
                   </span>
                 )}
-              </motion.div>
+              </m.div>
             )
           })}
         </div>
 
         {/* Name Input + Bot Selector */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
@@ -295,10 +295,10 @@ export default function LobbyScreen() {
               </button>
             ))}
           </div>
-        </motion.div>
+        </m.div>
 
         {/* Deck Selector */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
@@ -386,10 +386,10 @@ export default function LobbyScreen() {
               )
             })}
           </div>
-        </motion.div>
+        </m.div>
 
         {/* Timer Toggle */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8 }}
@@ -444,10 +444,10 @@ export default function LobbyScreen() {
               ))}
             </div>
           )}
-        </motion.div>
+        </m.div>
 
         {/* House Rules */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.9 }}
@@ -546,7 +546,7 @@ export default function LobbyScreen() {
               </button>
             </div>
           </div>
-        </motion.div>
+        </m.div>
 
         {/* Spacer for bottom nav */}
         <div className="h-36" />

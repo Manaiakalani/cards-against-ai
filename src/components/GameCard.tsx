@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { CardIcon } from './CardIcon'
 
 interface CardData {
@@ -64,7 +64,7 @@ export function GameCard({
   const dims = sizeMap[size]
 
   return (
-    <motion.div
+    <m.div
       role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}
       onClick={onClick}
@@ -131,6 +131,6 @@ export function GameCard({
           <span>Cards Against AI</span>
         </div>
       )}
-    </motion.div>
+    </m.div>
   )
 }

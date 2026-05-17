@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback, useEffect, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { useSound } from '@/hooks/useSound'
 import { useTimer } from '@/hooks/useTimer'
@@ -45,6 +45,65 @@ const cardDealVariants = {
     },
   },
 }
+
+// Extracted static inline styles to module-level constants
+const czarIconStyle = {
+  backgroundColor: '#FFB6C1',
+  border: '3px solid var(--theme-border)',
+  fontSize: '48px',
+} as const
+
+const czarTitleStyle = {
+  fontFamily: 'var(--font-archivo)',
+  fontSize: 'clamp(28px, 5vw, 42px)',
+  color: 'var(--theme-text)',
+} as const
+
+const czarSubtitleStyle = {
+  fontFamily: 'var(--font-inter)',
+  fontSize: '18px',
+  color: 'var(--theme-text-secondary)',
+} as const
+
+const handTitleStyle = {
+  fontFamily: 'var(--font-archivo)',
+  fontSize: 'clamp(22px, 4vw, 36px)',
+  color: 'var(--theme-text)',
+  lineHeight: 1.1,
+} as const
+
+const handSubtitleStyle = {
+  fontFamily: 'var(--font-inter)',
+  fontSize: '13px',
+  color: 'var(--theme-text-muted)',
+} as const
+
+const miniBlackCardStyle = {
+  maxWidth: '240px',
+  backgroundColor: '#111',
+  borderRadius: '12px',
+  border: '2px solid var(--theme-border)',
+  boxShadow: '3px 3px 0px var(--theme-shadow-soft)',
+} as const
+
+const miniBlackCardTextStyle = {
+  fontFamily: 'var(--font-inter)',
+  color: 'white',
+} as const
+
+const pickBadgeStyle = {
+  backgroundColor: '#C62828',
+  color: 'white',
+  fontFamily: 'var(--font-archivo)',
+} as const
+
+const submittedTextStyle = {
+  fontFamily: 'var(--font-archivo)',
+  fontSize: '20px',
+  color: 'var(--theme-text)',
+} as const
+
+const bgStyle = { backgroundColor: 'var(--theme-bg)' } as const
 
 export default function PlayingScreen() {
   const { gameState, submitCard, submitCards, botSubmit, redrawHand, rebootHand } = useGame()
@@ -196,43 +255,31 @@ export default function PlayingScreen() {
   // Czar waiting view
   if (isPlayerCzar) {
     return (
-      <div className="relative h-dvh overflow-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>
+      <div className="relative h-dvh overflow-hidden" style={bgStyle}>
         <PosterBackground words={['no cap', 'fr fr', 'lowkey']} opacity={0.15} />
         <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} />
         <div className="relative z-10 flex h-full flex-col items-center justify-center overflow-y-auto px-4 pt-14">
-          <motion.div
+          <m.div
             animate={{ scale: [1, 1.05, 1] }}
             transition={{ repeat: Infinity, duration: 2 }}
             className="mb-6 flex h-24 w-24 items-center justify-center rounded-full"
-            style={{
-              backgroundColor: '#FFB6C1',
-              border: '3px solid var(--theme-border)',
-              fontSize: '48px',
-            }}
+            style={czarIconStyle}
           >
             👑
-          </motion.div>
+          </m.div>
           <h2
             className="mb-3 text-center"
-            style={{
-              fontFamily: 'var(--font-archivo)',
-              fontSize: 'clamp(28px, 5vw, 42px)',
-              color: 'var(--theme-text)',
-            }}
+            style={czarTitleStyle}
           >
             You&apos;re the Card Czar
           </h2>
           <p
             className="text-center"
-            style={{
-              fontFamily: 'var(--font-inter)',
-              fontSize: '18px',
-              color: 'var(--theme-text-secondary)',
-            }}
+            style={czarSubtitleStyle}
           >
             Waiting for everyone to lock in…
           </p>
-          <motion.div
+          <m.div
             className="mt-6 flex gap-2"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -245,7 +292,7 @@ export default function PlayingScreen() {
                   (s) => s.playerId === p.id
                 )
                 return (
-                  <motion.div
+                  <m.div
                     key={p.id}
                     animate={{ opacity: hasSubmitted ? 1 : 0.4 }}
                     className="flex h-10 w-10 items-center justify-center rounded-full text-lg"
@@ -255,17 +302,17 @@ export default function PlayingScreen() {
                     }}
                   >
                     {p.avatar}
-                  </motion.div>
+                  </m.div>
                 )
               })}
-          </motion.div>
+          </m.div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="relative h-dvh overflow-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>
+    <div className="relative h-dvh overflow-hidden" style={bgStyle}>
       <PosterBackground words={['no cap', 'fr fr', 'lowkey']} opacity={0.15} />
       <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} timer={timerEnabled ? { timeLeft: timer.timeLeft, progress: timer.progress, isUrgent: timer.isUrgent } : undefined} />
 
@@ -274,22 +321,13 @@ export default function PlayingScreen() {
         <div className="mb-3 flex flex-shrink-0 flex-col gap-2 sm:mb-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
           <div>
             <h2
-              style={{
-                fontFamily: 'var(--font-archivo)',
-                fontSize: 'clamp(22px, 4vw, 36px)',
-                color: 'var(--theme-text)',
-                lineHeight: 1.1,
-              }}
+              style={handTitleStyle}
             >
               Your Hand
             </h2>
             <p
               className="mt-0.5"
-              style={{
-                fontFamily: 'var(--font-inter)',
-                fontSize: '13px',
-                color: 'var(--theme-text-muted)',
-              }}
+              style={handSubtitleStyle}
             >
               {blanks > 1 ? `Pick ${blanks} cards` : `${humanPlayer?.hand.length ?? 0} Cards Remaining`}
             </p>
@@ -297,46 +335,33 @@ export default function PlayingScreen() {
 
           {/* Mini Black Card */}
           {gameState.currentBlackCard && (
-            <motion.div
+            <m.div
               initial={{ x: 30, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               className="flex-shrink-0 px-3 py-2"
-              style={{
-                maxWidth: '240px',
-                backgroundColor: '#111',
-                borderRadius: '12px',
-                border: '2px solid var(--theme-border)',
-                boxShadow: '3px 3px 0px var(--theme-shadow-soft)',
-              }}
+              style={miniBlackCardStyle}
             >
               <p
                 className="text-xs leading-snug sm:text-sm"
-                style={{
-                  fontFamily: 'var(--font-inter)',
-                  color: 'white',
-                }}
+                style={miniBlackCardTextStyle}
               >
                 {gameState.currentBlackCard.text.replace(/_+/g, '_____')}
               </p>
               {blanks > 1 && (
                 <span
                   className="mt-2 inline-block rounded-full px-2 py-0.5 text-xs"
-                  style={{
-                    backgroundColor: '#FF4242',
-                    color: 'white',
-                    fontFamily: 'var(--font-archivo)',
-                  }}
+                  style={pickBadgeStyle}
                 >
                   PICK {blanks}
                 </span>
               )}
-            </motion.div>
+            </m.div>
           )}
         </div>
 
         {/* Card Grid — scrollable area */}
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain" style={{ WebkitOverflowScrolling: 'touch' }}>
-          <motion.div
+          <m.div
             className="grid grid-cols-2 gap-2 px-3 pt-4 pb-6 sm:grid-cols-3 sm:gap-3 sm:px-2 lg:grid-cols-4 lg:gap-4"
             variants={containerVariants}
           initial="hidden"
@@ -347,7 +372,7 @@ export default function PlayingScreen() {
               const selectionIndex = selectedCards.findIndex(c => c.id === card.id)
               const isSelected = selectionIndex >= 0
               return (
-                <motion.div
+                <m.div
                   key={card.id}
                   custom={dealRotationsRef.current[i] ?? 0}
                   variants={cardDealVariants}
@@ -376,7 +401,7 @@ export default function PlayingScreen() {
                     onClick={() => handleSelectCard(card)}
                   />
                   {isSelected && (
-                    <motion.div
+                    <m.div
                       initial={{ scale: 0, rotate: -12 }}
                       animate={{ scale: 1, rotate: -6 }}
                       className="absolute right-1 top-1 z-20"
@@ -384,33 +409,29 @@ export default function PlayingScreen() {
                       <Sticker color="green" rotation={-6} className="!text-xs !px-2 !py-1">
                         {blanks > 1 ? `#${selectionIndex + 1}` : 'THIS ONE'}
                       </Sticker>
-                    </motion.div>
+                    </m.div>
                   )}
-                </motion.div>
+                </m.div>
               )
             })}
           </AnimatePresence>
-        </motion.div>
+        </m.div>
         </div>
 
         {/* Submitted overlay */}
         {submitted && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="mt-4 flex flex-shrink-0 flex-col items-center"
           >
             <p
               className="text-center"
-              style={{
-                fontFamily: 'var(--font-archivo)',
-                fontSize: '20px',
-                color: 'var(--theme-text)',
-              }}
+              style={submittedTextStyle}
             >
               Card{blanks > 1 ? 's' : ''} Submitted! Waiting for others…
             </p>
-          </motion.div>
+          </m.div>
         )}
       </div>
 

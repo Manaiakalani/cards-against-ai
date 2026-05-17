@@ -12,7 +12,7 @@ interface StickerProps {
 const colorMap = {
   green: { bg: '#66FF00', text: '#111111' },
   pink: { bg: '#FFB6C1', text: '#111111' },
-  red: { bg: '#FF4242', text: '#FFFFFF' },
+  red: { bg: '#C62828', text: '#FFFFFF' },
   black: { bg: '#111111', text: '#FFFFFF' },
 } as const
 

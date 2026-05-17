@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { ACHIEVEMENTS, RARITY_COLORS, type AchievementRarity } from '@/data/achievements'
 
 interface ToastItem {
@@ -56,7 +56,7 @@ export function AchievementToast() {
     >
       <AnimatePresence mode="wait">
         {current && (
-          <motion.div
+          <m.div
             key={current.key}
             initial={{ opacity: 0, x: 80, y: -10 }}
             animate={{ opacity: 1, x: 0, y: 0 }}
@@ -122,7 +122,7 @@ export function AchievementToast() {
                 Achievement unlocked!
               </span>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </div>

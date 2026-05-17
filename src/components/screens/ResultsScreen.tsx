@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo, useEffect, useRef } from 'react'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { PosterBackground } from '@/components/PosterBackground'
 import { GameCard } from '@/components/GameCard'
@@ -22,7 +22,7 @@ function ConfettiPiece({ index }: { index: number }) {
   const height = 14 + (index % 4) * 4
 
   return (
-    <motion.div
+    <m.div
       initial={{ y: -40, x: 0, opacity: 1, rotate: 0 }}
       animate={{
         y: '100vh',
@@ -110,7 +110,7 @@ export default function ResultsScreen() {
         {/* Scrollable content */}
         <div className="flex min-h-0 flex-1 flex-col items-center overflow-y-auto px-4 pt-8 pb-4" tabIndex={0} role="region" aria-label="Round results">
           {/* Title */}
-          <motion.h1
+          <m.h1
             initial={{ scale: 0.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ type: 'spring', stiffness: 300, damping: 15 }}
@@ -125,10 +125,10 @@ export default function ResultsScreen() {
             }}
           >
             ATE & LEFT NO CRUMBS
-          </motion.h1>
+          </m.h1>
 
           {/* Subtitle */}
-          <motion.p
+          <m.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
@@ -142,10 +142,10 @@ export default function ResultsScreen() {
             }}
           >
             Round {latestResult.round} &bull; The Main Event
-          </motion.p>
+          </m.p>
 
           {/* Winning Pair */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, type: 'spring' }}
@@ -160,7 +160,7 @@ export default function ResultsScreen() {
               ))}
               {/* Winner Ticket Sticker */}
               <div className="absolute -right-3 -top-3 z-20">
-                <motion.div
+                <m.div
                   initial={{ scale: 0, rotate: -20 }}
                   animate={{ scale: 1, rotate: 6 }}
                   transition={{ delay: 0.8, type: 'spring' }}
@@ -168,13 +168,13 @@ export default function ResultsScreen() {
                   <Sticker color="green" rotation={6}>
                     THEY ATE
                   </Sticker>
-                </motion.div>
+                </m.div>
               </div>
             </div>
-          </motion.div>
+          </m.div>
 
           {/* Winner + Czar Info */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1 }}
@@ -234,11 +234,11 @@ export default function ResultsScreen() {
                 </span>
               </div>
             )}
-          </motion.div>
+          </m.div>
         </div>
 
         {/* Pinned bottom CTA — always visible */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
@@ -248,7 +248,7 @@ export default function ResultsScreen() {
           <NavButton variant="primary" onClick={nextRound}>
             KEEP GOING →
           </NavButton>
-        </motion.div>
+        </m.div>
       </div>
     </div>
   )

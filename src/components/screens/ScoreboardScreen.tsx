@@ -1,12 +1,17 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { PosterBackground } from '@/components/PosterBackground'
 import { NavButton } from '@/components/NavButton'
 import { Sticker } from '@/components/Sticker'
-import { RoundHistory } from '@/components/RoundHistory'
+import dynamic from 'next/dynamic'
+
+const RoundHistory = dynamic(
+  () => import('@/components/RoundHistory').then((mod) => mod.RoundHistory),
+  { ssr: false }
+)
 
 export default function ScoreboardScreen() {
   const { gameState, continueFromScoreboard } = useGame()
@@ -35,7 +40,7 @@ export default function ScoreboardScreen() {
         {/* Header */}
         <div className="flex w-full max-w-[800px] flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <motion.h1
+            <m.h1
               initial={{ x: -60, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ type: 'spring', stiffness: 200, damping: 20 }}
@@ -49,8 +54,8 @@ export default function ScoreboardScreen() {
               }}
             >
               STANDINGS
-            </motion.h1>
-            <motion.div
+            </m.h1>
+            <m.div
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.3, type: 'spring', stiffness: 300 }}
@@ -59,12 +64,12 @@ export default function ScoreboardScreen() {
               <Sticker color="pink" rotation={-3}>
                 After Round {currentRound}
               </Sticker>
-            </motion.div>
+            </m.div>
           </div>
 
           {/* Next Czar badge */}
           {nextCzar && (
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
@@ -110,7 +115,7 @@ export default function ScoreboardScreen() {
                   {nextCzar.name}
                 </span>
               </div>
-            </motion.div>
+            </m.div>
           )}
         </div>
 
@@ -121,7 +126,7 @@ export default function ScoreboardScreen() {
             const rotation = rotations[i % rotations.length]
 
             return (
-              <motion.div
+              <m.div
                 key={player.id}
                 initial={{ x: -100, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
@@ -213,14 +218,14 @@ export default function ScoreboardScreen() {
                     pts
                   </span>
                 </div>
-              </motion.div>
+              </m.div>
             )
           })}
         </div>
 
         {/* Last round winning combo */}
         {lastResult && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, type: 'spring', stiffness: 200 }}
@@ -287,12 +292,12 @@ export default function ScoreboardScreen() {
                 {players.find((p) => p.id === lastResult.winnerId)?.name ?? 'Unknown'}
               </span>
             </div>
-          </motion.div>
+          </m.div>
         )}
         </div>
 
         {/* Pinned bottom CTA — always visible */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
@@ -302,7 +307,7 @@ export default function ScoreboardScreen() {
           <NavButton variant="primary" onClick={continueFromScoreboard}>
             KEEP GOING →
           </NavButton>
-          <motion.button
+          <m.button
             onClick={() => setShowHistory(true)}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -319,8 +324,8 @@ export default function ScoreboardScreen() {
             }}
           >
             📜 History
-          </motion.button>
-        </motion.div>
+          </m.button>
+        </m.div>
       </div>
 
       {/* Round History Modal */}

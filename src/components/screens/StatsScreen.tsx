@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { useStats, type GameStats } from '@/hooks/useStats'
 import { allDecks } from '@/data/cards'
 
@@ -127,7 +127,7 @@ export function StatsScreen({ open, onClose }: StatsScreenProps) {
       {open && (
         <>
           {/* Backdrop */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -137,7 +137,7 @@ export function StatsScreen({ open, onClose }: StatsScreenProps) {
           />
 
           {/* Modal */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, scale: 0.9, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 30 }}
@@ -190,7 +190,7 @@ export function StatsScreen({ open, onClose }: StatsScreenProps) {
             {/* Stats grid */}
             <div className="grid grid-cols-2 gap-3 px-6 py-5 md:grid-cols-3">
               {cards.map((card, i) => (
-                <motion.div
+                <m.div
                   key={card.label}
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -227,7 +227,7 @@ export function StatsScreen({ open, onClose }: StatsScreenProps) {
                   >
                     {card.label}
                   </span>
-                </motion.div>
+                </m.div>
               ))}
             </div>
 
@@ -244,9 +244,9 @@ export function StatsScreen({ open, onClose }: StatsScreenProps) {
                   fontFamily: 'var(--font-archivo)',
                   fontSize: 14,
                   fontWeight: 700,
-                  color: confirmReset ? '#FFFFFF' : '#FF4242',
-                  backgroundColor: confirmReset ? '#FF4242' : 'transparent',
-                  border: '3px solid #FF4242',
+                  color: confirmReset ? '#FFFFFF' : '#C62828',
+                  backgroundColor: confirmReset ? '#C62828' : 'transparent',
+                  border: '3px solid #C62828',
                   borderRadius: 12,
                   boxShadow: confirmReset ? '4px 4px 0px var(--theme-shadow)' : 'none',
                   transition: 'background-color 0.15s ease, box-shadow 0.15s ease, color 0.15s ease',
@@ -255,7 +255,7 @@ export function StatsScreen({ open, onClose }: StatsScreenProps) {
                 {confirmReset ? 'Confirm Reset' : 'Reset All Stats'}
               </button>
             </div>
-          </motion.div>
+          </m.div>
         </>
       )}
     </AnimatePresence>

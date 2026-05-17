@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { PosterBackground } from '@/components/PosterBackground'
 import { GameCard } from '@/components/GameCard'
@@ -63,7 +63,7 @@ function ConfettiPiece({ config }: { config: ConfettiConfig }) {
         : { width: size, height: size, backgroundColor: color }
 
   return (
-    <motion.div
+    <m.div
       initial={{ y: -30, x: 0, opacity: 0.9, rotate: 0, scale: 1 }}
       animate={{
         y: '105vh',
@@ -208,7 +208,7 @@ export default function EndScreen() {
 
       <div className="relative z-10 flex h-full flex-col items-center overflow-y-auto px-4 py-8">
         {/* Trophy */}
-        <motion.div
+        <m.div
           initial={{ scale: 0, rotate: -10 }}
           animate={{ scale: 1, rotate: 0 }}
           transition={{ type: 'spring', stiffness: 200, damping: 12 }}
@@ -228,10 +228,10 @@ export default function EndScreen() {
               {humanWon ? 'SLAY' : 'GG'}
             </Sticker>
           </div>
-        </motion.div>
+        </m.div>
 
         {/* Winner Headline */}
-        <motion.h1
+        <m.h1
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.15, type: 'spring', stiffness: 160, damping: 10 }}
@@ -248,11 +248,11 @@ export default function EndScreen() {
           }}
         >
           {headlineText}
-        </motion.h1>
+        </m.h1>
 
         {/* Winner Name Badge */}
         {winner && (
-          <motion.div
+          <m.div
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.4, type: 'spring', stiffness: 180, damping: 14 }}
@@ -268,11 +268,11 @@ export default function EndScreen() {
             }}
           >
             {winner.name}
-          </motion.div>
+          </m.div>
         )}
 
         {/* Animated Stats Grid */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
@@ -283,7 +283,7 @@ export default function EndScreen() {
             { value: animWinnerRounds, label: 'Rounds Won' },
             { value: animTotalRounds, label: 'Total Rounds' },
           ].map((stat, i) => (
-            <motion.div
+            <m.div
               key={i}
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -319,13 +319,13 @@ export default function EndScreen() {
               >
                 {stat.label}
               </span>
-            </motion.div>
+            </m.div>
           ))}
-        </motion.div>
+        </m.div>
 
         {/* Best Combo Highlight */}
         {bestCombo && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8, type: 'spring', stiffness: 140, damping: 16 }}
@@ -346,7 +346,7 @@ export default function EndScreen() {
               Best Combo
             </div>
 
-            <motion.div
+            <m.div
               animate={{
                 boxShadow: [
                   '6px 6px 0px var(--theme-shadow), 0 0 0px 0px rgba(102,255,0,0)',
@@ -414,12 +414,12 @@ export default function EndScreen() {
                   ))}
                 </div>
               </div>
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
         )}
 
         {/* Final Standings */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.0 }}
@@ -440,7 +440,7 @@ export default function EndScreen() {
           </div>
           <div className="flex flex-col gap-3">
             {sortedPlayers.map((player, i) => (
-              <motion.div
+              <m.div
                 key={player.id}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -492,19 +492,19 @@ export default function EndScreen() {
                 >
                   {player.score}
                 </span>
-              </motion.div>
+              </m.div>
             ))}
           </div>
-        </motion.div>
+        </m.div>
 
         {/* Play Again + History Buttons */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.4 }}
           className="mt-12 mb-4 flex flex-col items-center gap-4"
         >
-          <motion.button
+          <m.button
             onClick={newGame}
             whileHover={{ y: 2, boxShadow: '0px 6px 0px var(--theme-shadow)' }}
             whileTap={{ y: 6, boxShadow: '0px 2px 0px var(--theme-shadow)' }}
@@ -522,8 +522,8 @@ export default function EndScreen() {
             }}
           >
             RUN IT BACK
-          </motion.button>
-          <motion.button
+          </m.button>
+          <m.button
             onClick={() => setShowHistory(true)}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -540,8 +540,8 @@ export default function EndScreen() {
             }}
           >
             📜 History
-          </motion.button>
-        </motion.div>
+          </m.button>
+        </m.div>
 
         <div className="mb-12" />
 

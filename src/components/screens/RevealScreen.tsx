@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { useSound } from '@/hooks/useSound'
 import { PosterBackground } from '@/components/PosterBackground'
@@ -47,7 +47,7 @@ export default function RevealScreen() {
 
       <div className="relative z-10 flex h-full flex-col items-center overflow-y-auto px-4 pt-12 pb-8">
         {/* Title */}
-        <motion.div
+        <m.div
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           className="mb-4"
@@ -55,17 +55,17 @@ export default function RevealScreen() {
           <Sticker color="pink" rotation={-2}>
             THE BIG REVEAL
           </Sticker>
-        </motion.div>
+        </m.div>
 
         {/* Black Card */}
         {gameState.currentBlackCard && (
-          <motion.div
+          <m.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             className="mb-8"
           >
             <GameCard card={gameState.currentBlackCard} size="sm" rotation={-2} />
-          </motion.div>
+          </m.div>
         )}
 
         {/* Submitted Cards — flip one by one */}
@@ -75,7 +75,7 @@ export default function RevealScreen() {
               const isRevealed = i < revealedCount
 
               return (
-                <motion.div
+                <m.div
                   key={sub.playerId}
                   initial={{ rotateY: 180, opacity: 0.8 }}
                   animate={{
@@ -110,14 +110,14 @@ export default function RevealScreen() {
                       <span style={{ fontSize: 'clamp(32px, 8vw, 48px)', opacity: 0.5 }}>🃏</span>
                     </div>
                   )}
-                </motion.div>
+                </m.div>
               )
             })}
           </AnimatePresence>
         </div>
 
         {/* Progress indicator */}
-        <motion.div
+        <m.div
           className="mt-8 flex items-center gap-2"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -136,7 +136,7 @@ export default function RevealScreen() {
               }}
             />
           ))}
-        </motion.div>
+        </m.div>
 
         <div className="h-8" />
       </div>

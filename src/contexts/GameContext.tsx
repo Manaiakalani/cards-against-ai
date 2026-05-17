@@ -1,9 +1,10 @@
 'use client'
 
-import { createContext, useContext, ReactNode } from 'react'
+import { createContext, useContext, useMemo, ReactNode } from 'react'
 import { useGameState } from '@/hooks/useGameState'
 import { GameState, Card } from '@/types/game'
 import { GlobalOverlay } from '@/components/GlobalOverlay'
+import { MotionProvider } from '@/components/MotionProvider'
 
 type GameContextType = {
   gameState: GameState
@@ -26,12 +27,64 @@ type GameContextType = {
 const GameContext = createContext<GameContextType | null>(null)
 
 export function GameProvider({ children }: { children: ReactNode }) {
-  const game = useGameState()
+  const {
+    gameState,
+    goToLobby,
+    updateSettings,
+    startGame,
+    redrawHand,
+    rebootHand,
+    submitCard,
+    submitCards,
+    botSubmit,
+    finishReveal,
+    pickWinner,
+    botPickWinner,
+    nextRound,
+    continueFromScoreboard,
+    newGame,
+  } = useGameState()
+
+  const value = useMemo<GameContextType>(() => ({
+    gameState,
+    goToLobby,
+    updateSettings,
+    startGame,
+    redrawHand,
+    rebootHand,
+    submitCard,
+    submitCards,
+    botSubmit,
+    finishReveal,
+    pickWinner,
+    botPickWinner,
+    nextRound,
+    continueFromScoreboard,
+    newGame,
+  }), [
+    gameState,
+    goToLobby,
+    updateSettings,
+    startGame,
+    redrawHand,
+    rebootHand,
+    submitCard,
+    submitCards,
+    botSubmit,
+    finishReveal,
+    pickWinner,
+    botPickWinner,
+    nextRound,
+    continueFromScoreboard,
+    newGame,
+  ])
 
   return (
-    <GameContext.Provider value={game}>
-      {children}
-      <GlobalOverlay />
+    <GameContext.Provider value={value}>
+      <MotionProvider>
+        {children}
+        <GlobalOverlay />
+      </MotionProvider>
     </GameContext.Provider>
   )
 }

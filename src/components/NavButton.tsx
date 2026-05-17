@@ -1,7 +1,7 @@
 'use client'
 
 import { type ReactNode } from 'react'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 
 interface NavButtonProps {
   children: ReactNode
@@ -25,7 +25,7 @@ export function NavButton({
   const { shadow, ...bg } = variantStyles[variant]
 
   return (
-    <motion.button
+    <m.button
       onClick={onClick}
       disabled={disabled}
       whileTap={disabled ? undefined : { y: 4, boxShadow: `0px 2px 0px ${shadow}` }}
@@ -46,6 +46,6 @@ export function NavButton({
       }}
     >
       {children}
-    </motion.button>
+    </m.button>
   )
 }

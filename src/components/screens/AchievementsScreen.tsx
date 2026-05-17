@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useCallback } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { ACHIEVEMENTS, RARITY_COLORS, ACHIEVEMENT_TARGETS } from '@/data/achievements'
 import { useAchievements } from '@/hooks/useAchievements'
 
@@ -31,7 +31,7 @@ export function AchievementsScreen({ open, onClose }: AchievementsScreenProps) {
       {open && (
         <>
           {/* Backdrop */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -41,7 +41,7 @@ export function AchievementsScreen({ open, onClose }: AchievementsScreenProps) {
           />
 
           {/* Modal */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, scale: 0.9, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 30 }}
@@ -109,7 +109,7 @@ export function AchievementsScreen({ open, onClose }: AchievementsScreenProps) {
                 const rarityColor = RARITY_COLORS[achievement.rarity]
 
                 return (
-                  <motion.div
+                  <m.div
                     key={achievement.id}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -216,7 +216,7 @@ export function AchievementsScreen({ open, onClose }: AchievementsScreenProps) {
                         </div>
                       )}
                     </div>
-                  </motion.div>
+                  </m.div>
                 )
               })}
             </div>
@@ -236,7 +236,7 @@ export function AchievementsScreen({ open, onClose }: AchievementsScreenProps) {
                 Keep playing to unlock them all 🏆
               </p>
             </div>
-          </motion.div>
+          </m.div>
         </>
       )}
     </AnimatePresence>
