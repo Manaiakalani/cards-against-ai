@@ -30,9 +30,9 @@ export function GlobalOverlay() {
 
   const isInGame = !['menu', 'lobby'].includes(gameState.phase)
 
-  // In-game: shrink buttons and tuck them into the HUD bar
+  // In-game: shrink buttons and tuck them into the HUD bar (40px tall)
   const btnSize = isInGame ? 36 : 44
-  const btnTop = isInGame ? 8 : 16
+  const btnTop = isInGame ? 2 : 16
 
   return (
     <>
@@ -45,7 +45,7 @@ export function GlobalOverlay() {
         className="fixed z-[150] flex cursor-pointer items-center justify-center rounded-full"
         style={{
           top: btnTop,
-          right: isInGame ? 108 : 120,
+          right: isInGame ? 92 : 120,
           width: btnSize,
           height: btnSize,
           backgroundColor: 'var(--theme-surface)',
@@ -70,7 +70,7 @@ export function GlobalOverlay() {
         className="fixed z-[150] flex cursor-pointer items-center justify-center rounded-full"
         style={{
           top: btnTop,
-          right: isInGame ? 66 : 68,
+          right: isInGame ? 50 : 68,
           width: btnSize,
           height: btnSize,
           backgroundColor: 'var(--theme-surface)',
@@ -95,7 +95,7 @@ export function GlobalOverlay() {
         className="fixed z-[150] flex cursor-pointer items-center justify-center rounded-full"
         style={{
           top: btnTop,
-          right: isInGame ? 24 : 16,
+          right: isInGame ? 8 : 16,
           width: btnSize,
           height: btnSize,
           backgroundColor: 'var(--theme-text)',
@@ -123,8 +123,8 @@ export function GlobalOverlay() {
             aria-label="Quit game"
             className="fixed z-[150] flex cursor-pointer items-center justify-center rounded-full"
             style={{
-              top: 8,
-              left: 16,
+              top: 2,
+              left: 10,
               width: 36,
               height: 36,
               backgroundColor: '#FF4242',

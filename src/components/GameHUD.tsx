@@ -29,13 +29,14 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode, timer }
         borderBottom: '3px solid var(--theme-border)',
       }}
     >
+      {/* Row 1: Room code + Round indicator */}
       <div
-        className="flex items-center justify-between pr-3 sm:pr-5"
-        style={{ height: 52, paddingLeft: 52 }}
+        className="flex items-center gap-3"
+        style={{ height: 40, paddingLeft: 52, paddingRight: 136 }}
       >
-        {/* Left: Room code — hidden on mobile to save space */}
+        {/* Room code — hidden on mobile */}
         <div
-          className="hidden items-center rounded px-3 py-1 sm:flex"
+          className="hidden items-center rounded px-2 py-0.5 sm:flex"
           style={{
             border: '2px solid var(--theme-border)',
             backgroundColor: 'var(--theme-surface)',
@@ -44,7 +45,7 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode, timer }
           <span
             style={{
               fontFamily: 'var(--font-archivo)',
-              fontSize: 14,
+              fontSize: 12,
               letterSpacing: 2,
               color: 'var(--theme-text)',
             }}
@@ -53,27 +54,25 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode, timer }
           </span>
         </div>
 
-        {/* Center: Round indicator + timer */}
-        <div className="flex items-center gap-3">
+        {/* Round indicator + timer */}
+        <div className="flex flex-shrink-0 items-center gap-2">
           <span
-            className="uppercase"
+            className="uppercase whitespace-nowrap"
             style={{
               fontFamily: 'var(--font-archivo)',
-              fontSize: 14,
+              fontSize: 11,
               color: 'var(--theme-text)',
             }}
           >
-            <span className="hidden sm:inline">ROUND </span>
-            <span className="sm:hidden">R</span>
-            {round}
-            {totalRounds ? ` of ${totalRounds}` : ''}
+            ROUND {round}
+            {totalRounds ? `/${totalRounds}` : ''}
           </span>
           {timer && (
             <span
-              className="rounded-full px-2.5 py-0.5"
+              className="rounded-full px-2 py-0.5"
               style={{
                 fontFamily: 'var(--font-archivo)',
-                fontSize: 16,
+                fontSize: 13,
                 fontVariantNumeric: 'tabular-nums',
                 color: timer.isUrgent ? 'white' : 'var(--theme-text)',
                 backgroundColor: timer.isUrgent ? '#FF4242' : 'var(--theme-surface)',
@@ -86,8 +85,8 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode, timer }
           )}
         </div>
 
-        {/* Right: Player score pills — scrollable on mobile */}
-        <div className="flex items-center gap-1.5 overflow-x-auto sm:gap-2">
+        {/* Score pills — flow after round indicator */}
+        <div className="flex items-center gap-1 overflow-x-auto">
           {players.map((player) => {
             const isCzar = player.id === czarId
             const isLeader = player.score === leadScore && leadScore > 0
@@ -95,7 +94,7 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode, timer }
             return (
               <div
                 key={player.id}
-                className="flex flex-shrink-0 items-center gap-1 rounded-full px-1.5 py-0.5 sm:gap-1.5 sm:px-2 sm:py-1"
+                className="flex flex-shrink-0 items-center gap-1 rounded-full px-1.5 py-0.5"
                 style={{
                   backgroundColor: isLeader ? '#66FF00' : 'var(--theme-surface)',
                   border: '2px solid var(--theme-border)',
@@ -104,18 +103,18 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode, timer }
                 <div
                   className="relative flex items-center justify-center rounded-full"
                   style={{
-                    width: 24,
-                    height: 24,
+                    width: 20,
+                    height: 20,
                     backgroundColor: player.avatarBg,
                     border: '2px solid var(--theme-border)',
-                    fontSize: 12,
+                    fontSize: 10,
                   }}
                 >
                   {player.avatar}
                   {isCzar && (
                     <span
                       className="absolute"
-                      style={{ top: -8, right: -4, fontSize: 12 }}
+                      style={{ top: -8, right: -6, fontSize: 10 }}
                     >
                       👑
                     </span>
@@ -124,7 +123,7 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode, timer }
                 <span
                   style={{
                     fontFamily: 'var(--font-archivo)',
-                    fontSize: 14,
+                    fontSize: 12,
                     fontWeight: 400,
                     color: 'var(--theme-text)',
                   }}
