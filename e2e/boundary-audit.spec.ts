@@ -224,3 +224,102 @@ test.describe('Boundary Audit — Card Grid', () => {
     }
   })
 })
+
+// ── CTA Always Visible ─────────────────────────────────────────────────
+test.describe('Boundary Audit — CTA Visibility', () => {
+  test('Results screen KEEP GOING button is visible without scrolling', async ({ page }) => {
+    await playToResults(page)
+    await page.waitForTimeout(1500)
+    const btn = page.getByRole('button', { name: /KEEP GOING/i })
+    await expect(btn).toBeVisible()
+    const box = await btn.boundingBox()
+    const vpHeight = page.viewportSize()!.height
+    expect(box!.y + box!.height, 'Button bottom should be within viewport').toBeLessThanOrEqual(vpHeight)
+  })
+
+  test('Scoreboard screen KEEP GOING button is visible without scrolling', async ({ page }) => {
+    await playToResults(page)
+    await page.getByRole('button', { name: /KEEP GOING/i }).click()
+    await expect(page.getByText('STANDINGS')).toBeVisible({ timeout: 5000 })
+    await page.waitForTimeout(1000)
+    const btn = page.getByRole('button', { name: /KEEP GOING/i })
+    await expect(btn).toBeVisible()
+    const box = await btn.boundingBox()
+    const vpHeight = page.viewportSize()!.height
+    expect(box!.y + box!.height, 'Button bottom should be within viewport').toBeLessThanOrEqual(vpHeight)
+  })
+
+  test('Scoreboard shows all player rows', async ({ page }) => {
+    await playToResults(page)
+    await page.getByRole('button', { name: /KEEP GOING/i }).click()
+    await expect(page.getByText('STANDINGS')).toBeVisible({ timeout: 5000 })
+    await page.waitForTimeout(1000)
+    // There should be 4 players (1 human + 3 bots), all visible
+    const collapsed = await page.evaluate(() => {
+      const rows = document.querySelectorAll('[style*="border-radius: 12px"]')
+      let zeroHeight = 0
+      rows.forEach(r => {
+        if (r.getBoundingClientRect().height === 0) zeroHeight++
+      })
+      return zeroHeight
+    })
+    expect(collapsed, 'No zero-height player rows').toBe(0)
+  })
+})
+
+// ── Zero-Height Container Detection ────────────────────────────────────
+test.describe('Boundary Audit — No Collapsed Containers', () => {
+  test('splash screen has no zero-height content containers', async ({ page }) => {
+    await page.goto('/')
+    await page.waitForTimeout(2500)
+    const collapsed = await page.evaluate(() => {
+      function hasAbsoluteAncestor(el: Element): boolean {
+        let cur = el.parentElement
+        while (cur) {
+          const pos = getComputedStyle(cur).position
+          if (pos === 'absolute' || pos === 'fixed') return true
+          cur = cur.parentElement
+        }
+        return false
+      }
+      return Array.from(document.querySelectorAll('div[class*="flex"], main, section'))
+        .filter(el => {
+          const r = el.getBoundingClientRect()
+          const s = getComputedStyle(el)
+          return r.height === 0 && el.children.length > 0
+            && !el.closest('[aria-hidden="true"]')
+            && s.display !== 'none' && s.visibility !== 'hidden'
+            && parseFloat(s.opacity) > 0
+            && !hasAbsoluteAncestor(el)
+        }).length
+    })
+    expect(collapsed, 'No collapsed containers').toBe(0)
+  })
+
+  test('playing screen has no zero-height content containers', async ({ page }) => {
+    await navigateToPlaying(page)
+    await page.waitForTimeout(1500)
+    const collapsed = await page.evaluate(() => {
+      function hasAbsoluteAncestor(el: Element): boolean {
+        let cur = el.parentElement
+        while (cur) {
+          const pos = getComputedStyle(cur).position
+          if (pos === 'absolute' || pos === 'fixed') return true
+          cur = cur.parentElement
+        }
+        return false
+      }
+      return Array.from(document.querySelectorAll('div[class*="flex"], main, section'))
+        .filter(el => {
+          const r = el.getBoundingClientRect()
+          const s = getComputedStyle(el)
+          return r.height === 0 && el.children.length > 0
+            && !el.closest('[aria-hidden="true"]')
+            && s.display !== 'none' && s.visibility !== 'hidden'
+            && parseFloat(s.opacity) > 0
+            && !hasAbsoluteAncestor(el)
+        }).length
+    })
+    expect(collapsed, 'No collapsed containers').toBe(0)
+  })
+})

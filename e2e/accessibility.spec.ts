@@ -15,6 +15,7 @@ async function navigateToLobby(page: import('@playwright/test').Page) {
   await page.getByRole('button', { name: /HOST GAME/i }).click();
   await page.getByPlaceholder(/enter your name/i).fill('test');
   await page.getByRole('button', { name: /let.*s go/i }).click();
+  await page.waitForTimeout(500);
 }
 
 async function navigateToPlaying(page: import('@playwright/test').Page) {
@@ -58,7 +59,7 @@ for (const vp of [
 
     test('Lobby screen has no a11y violations', async ({ page }) => {
       await navigateToLobby(page);
-      await page.waitForTimeout(1500);
+      await page.waitForTimeout(2000);
       const { violations } = await axeScan(page);
       expect(violations).toEqual([]);
     });
