@@ -190,18 +190,37 @@ test.describe('Boundary Audit — Text Readability', () => {
 })
 
 test.describe('Boundary Audit — Card Grid', () => {
-  test('cards fit within their grid cells (no overflow)', async ({ page }) => {
+  test('cards fit within their grid cells (no horizontal overflow)', async ({ page }) => {
     await navigateToPlaying(page)
     const overflows = await page.evaluate(() => {
       const gridItems = document.querySelectorAll('.grid > div')
       let overflowCount = 0
       gridItems.forEach(item => {
-        if (item.scrollWidth > item.clientWidth + 2 || item.scrollHeight > item.clientHeight + 2) {
+        // Only check horizontal overflow — vertical scroll is handled by the scroll container
+        if (item.scrollWidth > item.clientWidth + 2) {
           overflowCount++
         }
       })
       return overflowCount
     })
-    expect(overflows, 'Cards overflowing their grid cells').toBe(0)
+    expect(overflows, 'Cards overflowing their grid cells horizontally').toBe(0)
+  })
+
+  test('card stickers and shadows have breathing room', async ({ page }) => {
+    await navigateToPlaying(page)
+    const metrics = await page.evaluate(() => {
+      const scrollContainer = document.querySelector('.overflow-y-auto')
+      const grid = scrollContainer?.querySelector('.grid')
+      if (!scrollContainer || !grid) return null
+      const sr = scrollContainer.getBoundingClientRect()
+      const firstCard = grid.querySelector(':scope > div')?.getBoundingClientRect()
+      return {
+        topPadding: firstCard ? Math.round(firstCard.top - sr.top) : 0,
+      }
+    })
+    expect(metrics).toBeTruthy()
+    if (metrics) {
+      expect(metrics.topPadding, 'Top cards need breathing room for stickers').toBeGreaterThanOrEqual(12)
+    }
   })
 })

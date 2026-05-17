@@ -335,9 +335,9 @@ export default function PlayingScreen() {
         </div>
 
         {/* Card Grid — scrollable area */}
-        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain rounded-lg" style={{ WebkitOverflowScrolling: 'touch' }}>
+        <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain" style={{ WebkitOverflowScrolling: 'touch' }}>
           <motion.div
-            className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4 lg:gap-4"
+            className="grid grid-cols-2 gap-2 px-1 pt-4 pb-6 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4 lg:gap-4"
             variants={containerVariants}
           initial="hidden"
           animate="show"
