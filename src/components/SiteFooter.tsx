@@ -1,5 +1,7 @@
 'use client'
 
+import { Code2, MessageSquarePlus, GitPullRequestArrow } from 'lucide-react'
+
 export function SiteFooter() {
   return (
     <footer
@@ -20,9 +22,10 @@ export function SiteFooter() {
           href="https://github.com/Manaiakalani/Cards"
           target="_blank"
           rel="noopener noreferrer"
-          className="underline transition-colors hover:text-[#111]"
+          className="inline-flex items-center gap-1.5 underline transition-colors hover:text-[#111]"
           style={{ color: '#444' }}
         >
+          <Code2 className="h-3.5 w-3.5" strokeWidth={1.75} />
           GitHub ↗
         </a>
         <span style={{ color: '#999' }}>•</span>
@@ -30,9 +33,10 @@ export function SiteFooter() {
           href="https://github.com/Manaiakalani/Cards/issues/new?labels=new-deck&template=deck_submission.md&title=%5BDeck%5D+"
           target="_blank"
           rel="noopener noreferrer"
-          className="underline transition-colors hover:text-[#111]"
+          className="inline-flex items-center gap-1.5 underline transition-colors hover:text-[#111]"
           style={{ color: '#444' }}
         >
+          <MessageSquarePlus className="h-3.5 w-3.5" strokeWidth={1.75} />
           Submit a Deck ↗
         </a>
         <span style={{ color: '#999' }}>•</span>
@@ -40,9 +44,10 @@ export function SiteFooter() {
           href="https://github.com/Manaiakalani/Cards/pulls"
           target="_blank"
           rel="noopener noreferrer"
-          className="underline transition-colors hover:text-[#111]"
+          className="inline-flex items-center gap-1.5 underline transition-colors hover:text-[#111]"
           style={{ color: '#444' }}
         >
+          <GitPullRequestArrow className="h-3.5 w-3.5" strokeWidth={1.75} />
           Contribute ↗
         </a>
       </div>
