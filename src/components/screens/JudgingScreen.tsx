@@ -28,6 +28,11 @@ export default function JudgingScreen() {
     return () => clearTimeout(timer)
   }, [isHumanCzar, botPickWinner])
 
+  // Reset selection on new round
+  useEffect(() => {
+    setSelectedSubmissionIdx(null)
+  }, [gameState.currentRound])
+
   function handlePickWinner() {
     if (selectedSubmissionIdx === null) return
     const submission = gameState.submissions[selectedSubmissionIdx]

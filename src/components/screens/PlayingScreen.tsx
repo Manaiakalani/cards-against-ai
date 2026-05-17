@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { Card } from '@/types/game'
@@ -17,6 +17,21 @@ export default function PlayingScreen() {
 
   const humanPlayer = gameState.players.find((p) => p.id === 'player-1')
   const isPlayerCzar = humanPlayer?.isCardCzar ?? false
+
+  // When human is czar, auto-trigger bot submissions
+  useEffect(() => {
+    if (!isPlayerCzar) return
+    const timer = setTimeout(() => {
+      botSubmit()
+    }, 1000)
+    return () => clearTimeout(timer)
+  }, [isPlayerCzar, botSubmit])
+
+  // Reset selection state when a new round starts
+  useEffect(() => {
+    setSelectedCard(null)
+    setSubmitted(false)
+  }, [gameState.currentRound])
 
   const handleSelectCard = useCallback((card: Card) => {
     if (submitted) return

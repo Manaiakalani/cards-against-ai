@@ -85,8 +85,8 @@ export function useGameState() {
       shuffledWhite = remaining
     }
 
-    // First czar is the human
-    allPlayers[0].isCardCzar = true
+    // First czar is a bot so the human gets to play right away
+    allPlayers[1].isCardCzar = true
     const firstBlack = shuffledBlack[0]
 
     setBlackCardPool(shuffledBlack.slice(1))
@@ -100,7 +100,7 @@ export function useGameState() {
       players: allPlayers,
       submissions: [],
       roundWinner: null,
-      czarId: allPlayers[0].id,
+      czarId: allPlayers[1].id,
     }))
   }, [gameState.settings.selectedDecks])
 
