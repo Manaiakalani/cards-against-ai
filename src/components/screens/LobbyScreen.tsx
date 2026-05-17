@@ -1,22 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { m } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { allDecks } from '@/data/cards'
+import { BOT_POOL, pickRandomBots } from '@/hooks/useGameState'
 import { PosterBackground } from '@/components/PosterBackground'
 import { BottomNav } from '@/components/BottomNav'
 import { NavButton } from '@/components/NavButton'
 import { Sticker } from '@/components/Sticker'
 
 const MAX_PLAYERS = 6
-const BOT_PREVIEWS = [
-  { name: 'no_thoughts_ceo', emoji: '🧠', bg: '#7FFFD4' },
-  { name: 'delulu_vc', emoji: '💅', bg: '#F08080' },
-  { name: 'touch_grass_404', emoji: '🌿', bg: '#FFD700' },
-  { name: 'main_character', emoji: '✨', bg: '#DDA0DD' },
-  { name: 'slay_intern', emoji: '💀', bg: '#87CEEB' },
-]
 
 export default function LobbyScreen() {
   const { gameState, startGame, updateSettings, newGame } = useGame()
@@ -38,6 +32,9 @@ export default function LobbyScreen() {
     gameState.settings.rebootEnabled ?? false
   )
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const botRoster = useMemo(() => pickRandomBots(MAX_PLAYERS - 1), [])
+
   const totalPlayers = 1 + botCount
   const slots = Array.from({ length: MAX_PLAYERS })
 
@@ -46,7 +43,7 @@ export default function LobbyScreen() {
     filledSlots.push({ name: playerName, emoji: '🦄', bg: '#FFD700', role: 'Host', isHost: true })
   }
   for (let i = 0; i < botCount; i++) {
-    const bot = BOT_PREVIEWS[i]
+    const bot = botRoster[i]
     filledSlots.push({ name: bot.name, emoji: bot.emoji, bg: bot.bg, role: 'Bot', isHost: false })
   }
 

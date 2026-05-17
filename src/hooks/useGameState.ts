@@ -4,18 +4,43 @@ import { useState, useCallback, useRef, useEffect } from 'react'
 import { GameState, Player, Card, Submission } from '@/types/game'
 import { getAllCards, shuffle, drawCards } from '@/data/cards'
 
-const BOT_NAMES = [
+export const BOT_POOL = [
+  // OGs
   { name: 'no_thoughts_ceo', emoji: '🧠', bg: '#7FFFD4' },
   { name: 'delulu_vc', emoji: '💅', bg: '#F08080' },
   { name: 'touch_grass_404', emoji: '🌿', bg: '#FFD700' },
   { name: 'main_character', emoji: '✨', bg: '#DDA0DD' },
   { name: 'slay_intern', emoji: '💀', bg: '#87CEEB' },
+  // Tech bros
+  { name: 'git_push_force', emoji: '💥', bg: '#FF6B6B' },
+  { name: 'sudo_make_coffee', emoji: '☕', bg: '#D2B48C' },
+  { name: 'localhost_3000', emoji: '🖥️', bg: '#98FB98' },
+  { name: 'dev_null', emoji: '🕳️', bg: '#778899' },
+  // Chronically online
+  { name: 'ratio_queen', emoji: '👑', bg: '#FFD700' },
+  { name: 'unhinged_reply_guy', emoji: '🔥', bg: '#FF4500' },
+  { name: 'parasocial_andy', emoji: '📱', bg: '#BA55D3' },
+  { name: 'doom_scroller', emoji: '📜', bg: '#4682B4' },
+  // Startup culture
+  { name: 'pivot_to_ai', emoji: '🤖', bg: '#00CED1' },
+  { name: 'series_a_ghost', emoji: '👻', bg: '#E6E6FA' },
+  { name: 'equity_only_pay', emoji: '📉', bg: '#FFA07A' },
+  // Vibes
+  { name: 'chaotic_neutral', emoji: '🎲', bg: '#FF69B4' },
+  { name: 'npc_energy', emoji: '🧍', bg: '#F0E68C' },
+  { name: 'sigma_grindset', emoji: '🐺', bg: '#708090' },
+  { name: 'emotional_damage', emoji: '💔', bg: '#DC143C' },
 ]
+
+export function pickRandomBots(count: number) {
+  const shuffled = [...BOT_POOL].sort(() => Math.random() - 0.5)
+  return shuffled.slice(0, count)
+}
 
 const HAND_SIZE = 7
 
-function createBot(index: number): Player {
-  const bot = BOT_NAMES[index % BOT_NAMES.length]
+function createBot(index: number, roster: typeof BOT_POOL): Player {
+  const bot = roster[index % roster.length]
   return {
     id: `bot-${index}`,
     name: bot.name,
@@ -104,7 +129,8 @@ export function useGameState() {
     const shuffledBlack = shuffle(blackCards)
 
     const human = createHumanPlayer(playerName)
-    const bots = Array.from({ length: botCount }, (_, i) => createBot(i))
+    const roster = pickRandomBots(botCount)
+    const bots = Array.from({ length: botCount }, (_, i) => createBot(i, roster))
     const allPlayers = [human, ...bots]
 
     // Deal hands
