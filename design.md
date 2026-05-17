@@ -1,6 +1,6 @@
-# Design System: Cards Against Silicon Valley
+# Design System: Cards Against AI
 
-**Project:** Cards Against Silicon Valley — A brutalist party card game for tech culture
+**Project:** Cards Against AI — A brutalist party card game for AI culture
 
 ---
 
@@ -8,7 +8,7 @@
 
 **North Star: "Startup pitch deck meets punk rock poster shop."**
 
-A high-energy, brutalist poster-art aesthetic that feels like a Y Combinator demo day got hijacked by a graphic design zine. Bold, unapologetic, and dripping with Silicon Valley irony. The design uses oversized rotated typography as atmospheric wallpaper, hard-edged geometric shapes, and a tight 5-color palette applied with maximum contrast. Every surface feels tactile — thick borders, hard drop shadows, and sticker-like badges create a collage energy. The tone is playful irreverence aimed at tech-native players who'll immediately recognize the startup jargon being skewered.
+A high-energy, brutalist poster-art aesthetic that feels like an AI safety conference got hijacked by a graphic design zine. Bold, unapologetic, and dripping with AI industry irony. The design uses oversized rotated typography as atmospheric wallpaper, hard-edged geometric shapes, and a tight 5-color palette applied with maximum contrast. Every surface feels tactile — thick borders, hard drop shadows, and sticker-like badges create a collage energy. The tone is playful irreverence aimed at AI-native players who'll immediately recognize the jargon being skewered.
 
 **Density:** High — layered elements, overlapping cards, rotated stickers. But generous negative space on the cream background prevents claustrophobia.
 
@@ -44,7 +44,7 @@ A high-energy, brutalist poster-art aesthetic that feels like a Y Combinator dem
 | Display / Headlines | Archivo Black | 400 (Black is the only weight) | 48–120px | All-caps, tight letter-spacing (-0.04em), compressed line-height (0.75–0.9). Used for poster backgrounds and hero announcements. |
 | Headings / Labels | Archivo Black | 400 | 16–42px | Uppercase, used for player names, button text, sticker labels, card footers |
 | Body / Card Text | Inter | 700 | 22–28px | Card content text. Bold weight for readability at card scale. Tight line-height (1.2–1.3). |
-| Captions / Metadata | Inter | 900 | 11–14px | Uppercase, wide letter-spacing (0.05em). Used for card footers ("Cards Against Silicon Valley"), status badges. |
+| Captions / Metadata | Inter | 900 | 11–14px | Uppercase, wide letter-spacing (0.05em). Used for card footers ("Cards Against AI"), status badges. |
 
 **Hierarchy Strategy:** Size and weight establish hierarchy — not color. All text is either `#111111` or `#FFFFFF`. The only colored text is Alarm Red in poster backgrounds.
 
@@ -72,7 +72,7 @@ A high-energy, brutalist poster-art aesthetic that feels like a Y Combinator dem
 - **Shadow:** `box-shadow: 15px 25px 45px rgba(0,0,0,0.25)`
 - **Black Card:** Background `#111111`, text white, `border: 2px solid #333`
 - **White Card:** Background white, text `#111111`, `border: 3px solid #111111`
-- **Card Footer:** Archivo Black 11–13px, uppercase, `letter-spacing: 0.05em`, icon pair + "Cards Against Silicon Valley"
+- **Card Footer:** Archivo Black 11–13px, uppercase, `letter-spacing: 0.05em`, icon pair + "Cards Against AI"
 - **Hover:** `scale(1.03–1.05)`, `translateY(-10px)`, spring easing `cubic-bezier(0.175, 0.885, 0.32, 1.275)`
 - **Selected State:** `border-color: #66FF00`, `box-shadow: 0 0 0 6px #66FF00, ...`, lifted position
 - **Blank (fill-in):** `display: inline-block`, `width: 100–120px`, `border-bottom: 3px solid white`

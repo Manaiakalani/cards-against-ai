@@ -123,7 +123,7 @@ export function GameCard({
             color={isBlack ? '#FFFFFF' : '#111111'}
             size={dims.iconSize}
           />
-          <span>Cards Against Silicon Valley</span>
+          <span>Cards Against AI</span>
         </div>
       )}
     </motion.div>

@@ -29,7 +29,7 @@ export default function SplashScreen() {
       className="relative flex min-h-screen items-center justify-center overflow-hidden"
       style={{ backgroundColor: '#F4F4EE' }}
     >
-      <PosterBackground words={['cards', 'against', 'silicon valley']} opacity={0.9} />
+      <PosterBackground words={['cards', 'against', 'artificial intelligence']} opacity={0.9} />
 
       {/* Decorative floating cards — hidden on mobile */}
       <div
@@ -144,7 +144,7 @@ export default function SplashScreen() {
               textShadow: '6px 6px 0px #111',
             }}
           >
-            SILICON VALLEY
+            AI
           </h2>
         </motion.div>
 
@@ -158,7 +158,7 @@ export default function SplashScreen() {
             color: '#666666',
           }}
         >
-          The party game for horrible tech people
+          The party game for horrible AI people
         </motion.p>
 
         {/* Deck info */}

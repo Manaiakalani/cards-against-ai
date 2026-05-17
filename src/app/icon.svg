@@ -11,5 +11,5 @@
   <rect x="30" y="26" width="10" height="3" rx="1" fill="#111111" opacity="0.4"/>
   <!-- Green accent dot -->
   <circle cx="52" cy="12" r="8" fill="#66FF00" stroke="#111111" stroke-width="2.5"/>
-  <text x="52" y="16" text-anchor="middle" font-size="11" font-weight="bold" fill="#111111">SV</text>
+  <text x="52" y="16" text-anchor="middle" font-size="11" font-weight="bold" fill="#111111">AI</text>
 </svg>

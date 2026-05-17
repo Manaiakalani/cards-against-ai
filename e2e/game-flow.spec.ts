@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-test.describe('Cards Against Silicon Valley — Full Game Flow', () => {
+test.describe('Cards Against AI — Full Game Flow', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/')
     // Should land on splash screen
@@ -8,8 +8,8 @@ test.describe('Cards Against Silicon Valley — Full Game Flow', () => {
   })
 
   test('splash screen renders with title and play button', async ({ page }) => {
-    await expect(page.getByRole('heading', { name: 'SILICON VALLEY' })).toBeVisible()
-    await expect(page.getByText('The party game for horrible tech people')).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'AI' })).toBeVisible()
+    await expect(page.getByText('The party game for horrible AI people')).toBeVisible()
     await expect(page.getByRole('button', { name: /play/i })).toBeVisible()
   })
 

@@ -15,8 +15,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Cards Against Silicon Valley",
-  description: "The party game for horrible tech people",
+  title: "Cards Against AI",
+  description: "The party game for horrible AI people",
 };
 
 export const viewport: Viewport = {

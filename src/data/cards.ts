@@ -1,6 +1,6 @@
 import { Card, CardDeck } from '@/types/game'
 
-// ─── Silicon Valley (original from design files) ──────────────────────
+// ─── AI & Startup (original from design files) ────────────────────────
 const svBlack: Card[] = [
   { id: 'sv-b1', text: "To survive the crypto winter, we had to pivot our core business model to _____.", type: 'black', blanks: 1, category: 'startup' },
   { id: 'sv-b2', text: "Our Series A pitch deck accidentally included _____.", type: 'black', blanks: 1, category: 'startup' },
@@ -202,7 +202,7 @@ const gamingWhite: Card[] = [
 export const allDecks: CardDeck[] = [
   {
     id: 'silicon-valley',
-    name: 'Silicon Valley',
+    name: 'AI & Startup',
     description: 'Startup culture, VCs, and pivot-to-AI energy',
     icon: '🦄',
     cards: { blackCards: svBlack, whiteCards: svWhite },
