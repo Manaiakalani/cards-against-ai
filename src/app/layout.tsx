@@ -17,13 +17,42 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "Cards Against AI",
-  description: "The party game for horrible AI people",
+  description:
+    "The unhinged party card game for the chronically online. Play with AI bots in this Cards Against Humanity-inspired game.",
+  keywords: [
+    "cards against humanity",
+    "party game",
+    "card game",
+    "AI",
+    "multiplayer",
+  ],
+  authors: [{ name: "Cards Against AI" }],
+  openGraph: {
+    title: "Cards Against AI",
+    description: "The unhinged party card game for the chronically online",
+    type: "website",
+    siteName: "Cards Against AI",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Cards Against AI",
+    description: "The unhinged party card game for the chronically online",
+  },
+  icons: {
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+    apple: "/apple-touch-icon.png",
+  },
+  manifest: "/manifest.json",
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#F4F4EE" },
+    { media: "(prefers-color-scheme: dark)", color: "#1A1A1A" },
+  ],
 };
 
 export default function RootLayout({

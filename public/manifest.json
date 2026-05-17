@@ -1,0 +1,16 @@
+{
+  "name": "Cards Against AI",
+  "short_name": "CAI",
+  "description": "The unhinged party card game for the chronically online",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F4F4EE",
+  "theme_color": "#111111",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
