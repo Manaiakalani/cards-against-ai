@@ -29,7 +29,9 @@ export default function ScoreboardScreen() {
     >
       <PosterBackground words={['main', 'character', 'energy']} opacity={0.4} />
 
-      <div className="relative z-10 flex h-full flex-col items-center overflow-y-auto px-6 py-8 sm:px-8">
+      <div className="relative z-10 flex h-full flex-col">
+        {/* Scrollable content */}
+        <div className="flex min-h-0 flex-1 flex-col items-center overflow-y-auto overscroll-contain px-6 pt-8 pb-4 sm:px-8">
         {/* Header */}
         <div className="flex w-full max-w-[800px] flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -113,7 +115,7 @@ export default function ScoreboardScreen() {
         </div>
 
         {/* Player score list */}
-        <div className="mt-10 flex w-full max-w-[800px] flex-col gap-4 overflow-hidden px-2">
+        <div className="mt-6 flex w-full max-w-[800px] flex-col gap-3 px-2">
           {sortedPlayers.map((player, i) => {
             const isLeader = player.score === leadScore && leadScore > 0
             const rotation = rotations[i % rotations.length]
@@ -131,12 +133,12 @@ export default function ScoreboardScreen() {
                 }}
                 className="flex min-w-0 items-center justify-between"
                 style={{
-                  padding: 'clamp(12px, 2vw, 20px) clamp(16px, 3vw, 32px)',
+                  padding: 'clamp(10px, 1.5vw, 16px) clamp(12px, 2.5vw, 28px)',
                   backgroundColor: isLeader ? '#66FF00' : 'var(--theme-surface)',
-                  border: '4px solid var(--theme-border)',
+                  border: '3px solid var(--theme-border)',
                   borderRadius: 12,
-                  boxShadow: '6px 6px 0px var(--theme-shadow-soft)',
-                  transform: `rotate(${rotation}deg)${isLeader ? ' scale(1.05)' : ''}`,
+                  boxShadow: '4px 4px 0px var(--theme-shadow-soft)',
+                  transform: `rotate(${rotation}deg)${isLeader ? ' scale(1.03)' : ''}`,
                   zIndex: isLeader ? 10 : 1,
                   position: 'relative',
                 }}
@@ -146,9 +148,9 @@ export default function ScoreboardScreen() {
                   <span
                     style={{
                       fontFamily: 'var(--font-archivo)',
-                      fontSize: 'clamp(20px, 3vw, 32px)',
+                      fontSize: 'clamp(18px, 2.5vw, 28px)',
                       color: 'var(--theme-text)',
-                      minWidth: 28,
+                      minWidth: 24,
                     }}
                   >
                     {i + 1}
@@ -156,11 +158,11 @@ export default function ScoreboardScreen() {
                   <div
                     className="flex flex-shrink-0 items-center justify-center rounded-full"
                     style={{
-                      width: 40,
-                      height: 40,
+                      width: 36,
+                      height: 36,
                       backgroundColor: player.avatarBg,
-                      border: '3px solid var(--theme-border)',
-                      fontSize: 20,
+                      border: '2px solid var(--theme-border)',
+                      fontSize: 18,
                     }}
                   >
                     {player.avatar}
@@ -169,7 +171,7 @@ export default function ScoreboardScreen() {
                     className="truncate"
                     style={{
                       fontFamily: 'var(--font-archivo)',
-                      fontSize: 'clamp(16px, 2.5vw, 22px)',
+                      fontSize: 'clamp(14px, 2vw, 20px)',
                       color: 'var(--theme-text)',
                     }}
                   >
@@ -195,7 +197,7 @@ export default function ScoreboardScreen() {
                   <span
                     style={{
                       fontFamily: 'var(--font-archivo)',
-                      fontSize: 'clamp(22px, 4vw, 42px)',
+                      fontSize: 'clamp(20px, 3.5vw, 38px)',
                       color: 'var(--theme-text)',
                     }}
                   >
@@ -204,7 +206,7 @@ export default function ScoreboardScreen() {
                   <span
                     style={{
                       fontFamily: 'var(--font-inter)',
-                      fontSize: 14,
+                      fontSize: 13,
                       color: 'var(--theme-text-secondary)',
                     }}
                   >
@@ -222,7 +224,7 @@ export default function ScoreboardScreen() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, type: 'spring', stiffness: 200 }}
-            className="mt-12 flex w-full max-w-[800px] flex-col items-center gap-3"
+            className="mt-6 flex w-full max-w-[800px] flex-col items-center gap-3"
           >
             <span
               className="uppercase tracking-wider"
@@ -287,9 +289,16 @@ export default function ScoreboardScreen() {
             </div>
           </motion.div>
         )}
+        </div>
 
-        {/* Action buttons */}
-        <div className="mt-8 mb-12 flex flex-col items-center gap-4">
+        {/* Pinned bottom CTA — always visible */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="flex shrink-0 items-center justify-center gap-4 px-4 pb-6 pt-3"
+          style={{ paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}
+        >
           <NavButton variant="primary" onClick={continueFromScoreboard}>
             KEEP GOING →
           </NavButton>
@@ -311,7 +320,7 @@ export default function ScoreboardScreen() {
           >
             📜 History
           </motion.button>
-        </div>
+        </motion.div>
       </div>
 
       {/* Round History Modal */}
