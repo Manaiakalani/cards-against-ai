@@ -5,6 +5,9 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { useSound } from '@/hooks/useSound'
 import { useTimer } from '@/hooks/useTimer'
+import { useAchievements } from '@/hooks/useAchievements'
+import { useStats } from '@/hooks/useStats'
+import { pushToast } from '@/components/AchievementToast'
 import { Card } from '@/types/game'
 import { PosterBackground } from '@/components/PosterBackground'
 import { GameCard } from '@/components/GameCard'
@@ -14,12 +17,16 @@ import { NavButton } from '@/components/NavButton'
 import { Sticker } from '@/components/Sticker'
 
 export default function PlayingScreen() {
-  const { gameState, submitCard, submitCards, botSubmit, redrawHand } = useGame()
+  const { gameState, submitCard, submitCards, botSubmit, redrawHand, rebootHand } = useGame()
   const { play } = useSound()
+  const { checkAndUnlock, stats: achStats } = useAchievements()
+  const { recordCardPlayed, recordRedraw } = useStats()
   const [selectedCards, setSelectedCards] = useState<Card[]>([])
   const [submitted, setSubmitted] = useState(false)
+  const [hasRebooted, setHasRebooted] = useState(false)
   const [hasRedrawn, setHasRedrawn] = useState(false)
   const botTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const roundStartRef = useRef(Date.now())
 
   const humanPlayer = gameState.players.find((p) => p.id === 'player-1')
   const isPlayerCzar = humanPlayer?.isCardCzar ?? false
@@ -104,6 +111,15 @@ export default function PlayingScreen() {
     timer.stop()
     play('submit')
 
+    // Track stats
+    const submitMs = Date.now() - roundStartRef.current
+    recordCardPlayed(selectedCards.length)
+    const newlyUnlocked = checkAndUnlock({
+      cardsPlayed: achStats.cardsPlayed + selectedCards.length,
+      fastestSubmitMs: submitMs,
+    })
+    if (newlyUnlocked.length > 0) pushToast(newlyUnlocked)
+
     if (blanks === 1) {
       submitCard('player-1', selectedCards[0])
     } else {
@@ -113,14 +129,25 @@ export default function PlayingScreen() {
     // Bots submit after a short random delay
     const delay = 500 + Math.random() * 1000
     botTimerRef.current = setTimeout(() => { botSubmit() }, delay)
-  }, [selectedCards, blanks, humanPlayer, submitCard, submitCards, botSubmit, timer, play])
+  }, [selectedCards, blanks, humanPlayer, submitCard, submitCards, botSubmit, timer, play, recordCardPlayed, checkAndUnlock, achStats.cardsPlayed])
 
   const handleRedraw = useCallback(() => {
     if (hasRedrawn || submitted) return
     redrawHand('player-1')
     setSelectedCards([])
     setHasRedrawn(true)
-  }, [hasRedrawn, submitted, redrawHand])
+    recordRedraw()
+    checkAndUnlock({ redrawsUsed: achStats.redrawsUsed + 1 })
+  }, [hasRedrawn, submitted, redrawHand, recordRedraw, checkAndUnlock, achStats.redrawsUsed])
+
+  const handleReboot = useCallback(() => {
+    if (hasRebooted || submitted) return
+    if (!humanPlayer || humanPlayer.score < 1) return
+    rebootHand('player-1')
+    setSelectedCards([])
+    setHasRebooted(true)
+    play('submit')
+  }, [hasRebooted, submitted, humanPlayer, rebootHand, play])
 
   // Czar waiting view
   if (isPlayerCzar) {
@@ -340,6 +367,15 @@ export default function PlayingScreen() {
         <NavButton variant="secondary" onClick={handleRedraw} disabled={hasRedrawn || submitted}>
           {hasRedrawn ? '✓ DEALT' : '🔄 NEW HAND'}
         </NavButton>
+        {gameState.settings.rebootEnabled && (
+          <NavButton
+            variant="dark"
+            onClick={handleReboot}
+            disabled={hasRebooted || submitted || (humanPlayer?.score ?? 0) < 1}
+          >
+            {hasRebooted ? '✓ REBOOTED' : '💥 REBOOT (-1pt)'}
+          </NavButton>
+        )}
         <NavButton
           variant="primary"
           onClick={handleConfirm}

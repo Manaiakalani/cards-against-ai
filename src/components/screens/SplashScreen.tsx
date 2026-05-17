@@ -1,14 +1,19 @@
 'use client'
 
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { PosterBackground } from '@/components/PosterBackground'
 import { GameCard } from '@/components/GameCard'
 import { CardIcon } from '@/components/CardIcon'
 import { SiteFooter } from '@/components/SiteFooter'
+import { StatsScreen } from '@/components/screens/StatsScreen'
+import { AchievementsScreen } from '@/components/screens/AchievementsScreen'
 
 export default function SplashScreen() {
   const { goToLobby } = useGame()
+  const [showStats, setShowStats] = useState(false)
+  const [showAchievements, setShowAchievements] = useState(false)
 
   const stagger = {
     hidden: {},
@@ -181,6 +186,46 @@ export default function SplashScreen() {
           </motion.button>
         </motion.div>
 
+        {/* Menu buttons row */}
+        <motion.div variants={fadeUp} className="mt-4 flex gap-3">
+          <motion.button
+            onClick={() => setShowStats(true)}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="cursor-pointer uppercase"
+            style={{
+              fontFamily: 'var(--font-archivo)',
+              fontSize: '14px',
+              backgroundColor: 'var(--theme-surface)',
+              color: 'var(--theme-text)',
+              border: '3px solid var(--theme-border)',
+              padding: '10px 20px',
+              borderRadius: 12,
+              boxShadow: '4px 4px 0px var(--theme-shadow-soft)',
+            }}
+          >
+            📊 Stats
+          </motion.button>
+          <motion.button
+            onClick={() => setShowAchievements(true)}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="cursor-pointer uppercase"
+            style={{
+              fontFamily: 'var(--font-archivo)',
+              fontSize: '14px',
+              backgroundColor: 'var(--theme-surface)',
+              color: 'var(--theme-text)',
+              border: '3px solid var(--theme-border)',
+              padding: '10px 20px',
+              borderRadius: 12,
+              boxShadow: '4px 4px 0px var(--theme-shadow-soft)',
+            }}
+          >
+            🏆 Achievements
+          </motion.button>
+        </motion.div>
+
         {/* Version footer */}
         <motion.div
           variants={fadeUp}
@@ -205,6 +250,10 @@ export default function SplashScreen() {
           <SiteFooter />
         </motion.div>
       </motion.div>
+
+      {/* Modals */}
+      <StatsScreen open={showStats} onClose={() => setShowStats(false)} />
+      <AchievementsScreen open={showAchievements} onClose={() => setShowAchievements(false)} />
     </div>
   )
 }

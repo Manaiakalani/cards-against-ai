@@ -63,6 +63,8 @@ export function useGameState() {
       selectedDecks: ['brainrot', 'terminally-online', 'gen-z', 'millennial', 'ai-fever', 'gaming'],
       timerEnabled: false,
       timerSeconds: 60,
+      winnersPick: false,
+      rebootEnabled: false,
     },
     roomCode: generateRoomCode(),
     czarId: '',
@@ -144,6 +146,31 @@ export function useGameState() {
       const newPlayers = prev.players.map(p =>
         p.id === playerId
           ? { ...p, hand: drawn, selectedCard: null }
+          : p
+      )
+
+      return { ...prev, players: newPlayers }
+    })
+  }, [])
+
+  // Reboot the Universe: spend 1 point to redraw entire hand
+  const rebootHand = useCallback((playerId: string) => {
+    setGameState(prev => {
+      if (prev.phase !== 'playing') return prev
+      if (!prev.settings.rebootEnabled) return prev
+      if (prev.submissions.some(s => s.playerId === playerId)) return prev
+
+      const player = prev.players.find(p => p.id === playerId)
+      if (!player || player.score < 1) return prev
+
+      let pool = [...whitePoolRef.current, ...player.hand]
+      pool = shuffle(pool)
+      const { drawn, remaining } = drawCards(pool, HAND_SIZE)
+      setWhiteCardPool(remaining)
+
+      const newPlayers = prev.players.map(p =>
+        p.id === playerId
+          ? { ...p, hand: drawn, selectedCard: null, score: p.score - 1 }
           : p
       )
 
@@ -288,7 +315,15 @@ export function useGameState() {
     setGameState(prev => {
       const playerCount = prev.players.length
       const currentCzarIndex = prev.players.findIndex(p => p.id === prev.czarId)
-      const nextCzarIndex = (currentCzarIndex + 1) % playerCount
+
+      // Winner's Pick: round winner becomes next czar, else rotate
+      let nextCzarIndex: number
+      if (prev.settings.winnersPick && prev.roundWinner) {
+        nextCzarIndex = prev.players.findIndex(p => p.id === prev.roundWinner)
+        if (nextCzarIndex === -1) nextCzarIndex = (currentCzarIndex + 1) % playerCount
+      } else {
+        nextCzarIndex = (currentCzarIndex + 1) % playerCount
+      }
 
       // Use refs for latest pool values to avoid stale closure
       if (blackPoolRef.current.length === 0) return prev
@@ -345,6 +380,7 @@ export function useGameState() {
     updateSettings,
     startGame,
     redrawHand,
+    rebootHand,
     submitCard,
     submitCards,
     botSubmit,

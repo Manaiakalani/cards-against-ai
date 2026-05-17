@@ -7,6 +7,7 @@ import { useGame } from '@/contexts/GameContext'
 import { useTheme } from '@/contexts/ThemeContext'
 import { useSound } from '@/hooks/useSound'
 import { HelpModal } from '@/components/HelpModal'
+import { AchievementToast } from '@/components/AchievementToast'
 
 export function GlobalOverlay() {
   const { gameState, newGame } = useGame()
@@ -220,6 +221,9 @@ export function GlobalOverlay() {
 
       {/* Help modal */}
       <HelpModal open={helpOpen} onClose={() => setHelpOpen(false)} />
+
+      {/* Achievement toasts */}
+      <AchievementToast />
     </>
   )
 }

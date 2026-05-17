@@ -31,6 +31,12 @@ export default function LobbyScreen() {
   const [timerSeconds, setTimerSeconds] = useState(
     gameState.settings.timerSeconds ?? 60
   )
+  const [winnersPick, setWinnersPick] = useState(
+    gameState.settings.winnersPick ?? false
+  )
+  const [rebootEnabled, setRebootEnabled] = useState(
+    gameState.settings.rebootEnabled ?? false
+  )
 
   const totalPlayers = 1 + botCount
   const slots = Array.from({ length: MAX_PLAYERS })
@@ -66,6 +72,16 @@ export default function LobbyScreen() {
   function handleTimerSeconds(seconds: number) {
     setTimerSeconds(seconds)
     updateSettings({ timerEnabled, timerSeconds: seconds })
+  }
+
+  function handleWinnersPick(enabled: boolean) {
+    setWinnersPick(enabled)
+    updateSettings({ winnersPick: enabled })
+  }
+
+  function handleReboot(enabled: boolean) {
+    setRebootEnabled(enabled)
+    updateSettings({ rebootEnabled: enabled })
   }
 
   const totalCardsInPlay = allDecks
@@ -424,6 +440,108 @@ export default function LobbyScreen() {
               ))}
             </div>
           )}
+        </motion.div>
+
+        {/* House Rules */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.9 }}
+          className="mt-6 w-full max-w-md"
+        >
+          <h2
+            className="mb-3"
+            style={{
+              fontFamily: 'var(--font-archivo)',
+              fontSize: '16px',
+              color: 'var(--theme-text)',
+              letterSpacing: '2px',
+              textTransform: 'uppercase',
+            }}
+          >
+            🏠 HOUSE RULES
+          </h2>
+          <div className="flex flex-col gap-3">
+            {/* Winner's Pick */}
+            <div className="flex items-center justify-between">
+              <div>
+                <span
+                  style={{
+                    fontFamily: 'var(--font-archivo)',
+                    fontSize: '14px',
+                    color: 'var(--theme-text)',
+                  }}
+                >
+                  👑 Winner&apos;s Pick
+                </span>
+                <p
+                  className="mt-0.5"
+                  style={{
+                    fontFamily: 'var(--font-inter)',
+                    fontSize: '11px',
+                    color: 'var(--theme-text-muted)',
+                  }}
+                >
+                  Round winner becomes next czar
+                </p>
+              </div>
+              <button
+                onClick={() => handleWinnersPick(!winnersPick)}
+                className="cursor-pointer px-4 py-1 transition-transform hover:scale-105"
+                style={{
+                  fontFamily: 'var(--font-archivo)',
+                  fontSize: '14px',
+                  border: '3px solid var(--theme-border)',
+                  borderRadius: '10px',
+                  backgroundColor: winnersPick ? '#66FF00' : 'var(--theme-surface)',
+                  color: winnersPick ? '#111' : 'var(--theme-text)',
+                  boxShadow: winnersPick ? '3px 3px 0px var(--theme-shadow)' : 'none',
+                }}
+              >
+                {winnersPick ? 'ON' : 'OFF'}
+              </button>
+            </div>
+
+            {/* Reboot the Universe */}
+            <div className="flex items-center justify-between">
+              <div>
+                <span
+                  style={{
+                    fontFamily: 'var(--font-archivo)',
+                    fontSize: '14px',
+                    color: 'var(--theme-text)',
+                  }}
+                >
+                  💥 Reboot the Universe
+                </span>
+                <p
+                  className="mt-0.5"
+                  style={{
+                    fontFamily: 'var(--font-inter)',
+                    fontSize: '11px',
+                    color: 'var(--theme-text-muted)',
+                  }}
+                >
+                  Spend 1 point to redraw entire hand
+                </p>
+              </div>
+              <button
+                onClick={() => handleReboot(!rebootEnabled)}
+                className="cursor-pointer px-4 py-1 transition-transform hover:scale-105"
+                style={{
+                  fontFamily: 'var(--font-archivo)',
+                  fontSize: '14px',
+                  border: '3px solid var(--theme-border)',
+                  borderRadius: '10px',
+                  backgroundColor: rebootEnabled ? '#66FF00' : 'var(--theme-surface)',
+                  color: rebootEnabled ? '#111' : 'var(--theme-text)',
+                  boxShadow: rebootEnabled ? '3px 3px 0px var(--theme-shadow)' : 'none',
+                }}
+              >
+                {rebootEnabled ? 'ON' : 'OFF'}
+              </button>
+            </div>
+          </div>
         </motion.div>
 
         {/* Spacer for bottom nav */}

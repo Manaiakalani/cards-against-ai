@@ -1,12 +1,16 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useMemo, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { PosterBackground } from '@/components/PosterBackground'
 import { GameCard } from '@/components/GameCard'
 import { Sticker } from '@/components/Sticker'
 import { SiteFooter } from '@/components/SiteFooter'
+import { useAchievements } from '@/hooks/useAchievements'
+import { useStats } from '@/hooks/useStats'
+import { pushToast } from '@/components/AchievementToast'
+import { useSound } from '@/hooks/useSound'
 
 const CONFETTI_COLORS = ['#FF4242', '#66FF00', '#FFB6C1', '#111111']
 
@@ -44,6 +48,10 @@ function ConfettiPiece({ index }: { index: number }) {
 
 export default function EndScreen() {
   const { gameState, newGame } = useGame()
+  const { stats: achStats, checkAndUnlock } = useAchievements()
+  const { recordGameEnd } = useStats()
+  const { play } = useSound()
+  const tracked = useRef(false)
 
   const sortedPlayers = useMemo(
     () => [...gameState.players].sort((a, b) => b.score - a.score),
@@ -54,6 +62,26 @@ export default function EndScreen() {
 
   const totalRounds = gameState.roundHistory.length
   const winnerRounds = gameState.roundHistory.filter(r => r.winnerId === winner?.id).length
+  const humanWon = winner?.id === 'player-1'
+  const humanLosses = gameState.roundHistory.filter(r => r.winnerId !== 'player-1').length
+
+  // Track game end for stats + achievements (once)
+  useEffect(() => {
+    if (tracked.current) return
+    tracked.current = true
+
+    play('gameEnd')
+    // Estimate game duration from round count (~30s per round)
+    const estimatedDurationMs = totalRounds * 30_000
+    recordGameEnd(humanWon, estimatedDurationMs, gameState.settings.selectedDecks)
+
+    const newlyUnlocked = checkAndUnlock({
+      gamesPlayed: achStats.gamesPlayed + 1,
+      ...(humanWon ? { gamesWon: achStats.gamesWon + 1 } : {}),
+      ...(humanWon && humanLosses === 0 ? { perfectGames: achStats.perfectGames + 1 } : {}),
+    })
+    if (newlyUnlocked.length > 0) pushToast(newlyUnlocked)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps -- run once on mount
 
   return (
     <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>

@@ -11,6 +11,7 @@ type GameContextType = {
   updateSettings: (updates: Partial<GameState['settings']>) => void
   startGame: (playerName: string, botCount?: number) => void
   redrawHand: (playerId: string) => void
+  rebootHand: (playerId: string) => void
   submitCard: (playerId: string, card: Card) => void
   submitCards: (playerId: string, cards: Card[]) => void
   botSubmit: () => void

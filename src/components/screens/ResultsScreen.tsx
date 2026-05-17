@@ -1,12 +1,16 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useMemo, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { PosterBackground } from '@/components/PosterBackground'
 import { GameCard } from '@/components/GameCard'
 import { NavButton } from '@/components/NavButton'
 import { Sticker } from '@/components/Sticker'
+import { useAchievements } from '@/hooks/useAchievements'
+import { useStats } from '@/hooks/useStats'
+import { pushToast } from '@/components/AchievementToast'
+import { useSound } from '@/hooks/useSound'
 
 const CONFETTI_COLORS = ['#FF4242', '#66FF00', '#FFB6C1', '#111111', '#FFD700', '#87CEEB', '#DDA0DD']
 
@@ -47,12 +51,49 @@ function ConfettiPiece({ index }: { index: number }) {
 
 export default function ResultsScreen() {
   const { gameState, nextRound } = useGame()
+  const { checkAndUnlock } = useAchievements()
+  const { recordRoundWin, recordRoundLoss } = useStats()
+  const { play } = useSound()
+  const tracked = useRef(false)
 
   const latestResult = gameState.roundHistory[gameState.roundHistory.length - 1]
   const winner = gameState.players.find((p) => p.id === latestResult?.winnerId)
   const czar = gameState.players.find((p) => p.id === latestResult?.czarId)
+  const humanWon = latestResult?.winnerId === 'player-1'
 
   const confettiPieces = useMemo(() => Array.from({ length: 8 }, (_, i) => i), [])
+
+  // Track round results for achievements + stats (once per render)
+  useEffect(() => {
+    if (!latestResult || tracked.current) return
+    tracked.current = true
+
+    if (humanWon) {
+      play('winner')
+      recordRoundWin()
+      // Count consecutive human wins for streak
+      let streak = 0
+      for (let i = gameState.roundHistory.length - 1; i >= 0; i--) {
+        if (gameState.roundHistory[i].winnerId === 'player-1') streak++
+        else break
+      }
+      const isPick2 = (latestResult.blackCard.blanks ?? 1) >= 2
+      const totalHumanWins = gameState.roundHistory.filter(r => r.winnerId === 'player-1').length
+      const newlyUnlocked = checkAndUnlock({
+        roundsWon: totalHumanWins,
+        roundsPlayed: gameState.roundHistory.length,
+        currentStreak: streak,
+        ...(isPick2 ? { pick2Played: gameState.roundHistory.filter(r => r.winnerId === 'player-1' && (r.blackCard.blanks ?? 1) >= 2).length } : {}),
+      })
+      if (newlyUnlocked.length > 0) pushToast(newlyUnlocked)
+    } else {
+      recordRoundLoss()
+      checkAndUnlock({
+        roundsPlayed: gameState.roundHistory.length,
+        currentStreak: 0,
+      })
+    }
+  }, [latestResult, humanWon, checkAndUnlock, recordRoundWin, recordRoundLoss, gameState, play])
 
   if (!latestResult) return null
 

@@ -38,6 +38,8 @@ export interface GameSettings {
   selectedDecks: string[]
   timerEnabled: boolean
   timerSeconds: number
+  winnersPick: boolean
+  rebootEnabled: boolean
 }
 
 export type GamePhase = 'menu' | 'lobby' | 'playing' | 'revealing' | 'judging' | 'results' | 'scoreboard' | 'ended'
