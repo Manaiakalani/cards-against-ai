@@ -52,7 +52,7 @@ export default function LobbyScreen() {
           className="mb-4 text-center"
           style={{
             fontFamily: 'var(--font-archivo)',
-            fontSize: '64px',
+            fontSize: 'clamp(36px, 8vw, 64px)',
             lineHeight: 1,
             color: 'white',
             WebkitTextStroke: '2px #111',
@@ -111,7 +111,7 @@ export default function LobbyScreen() {
         </motion.div>
 
         {/* Player Grid */}
-        <div className="mt-8 grid w-full max-w-5xl grid-cols-3 gap-5">
+        <div className="mt-8 grid w-full max-w-5xl grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5">
           {slots.map((_, i) => {
             const player = filledSlots[i]
             const rotation = i % 2 === 0 ? -1.5 : 1.5
@@ -124,7 +124,7 @@ export default function LobbyScreen() {
                 transition={{ delay: 0.1 * i }}
                 className="relative flex flex-col items-center justify-center gap-3"
                 style={{
-                  height: '220px',
+                  minHeight: '180px',
                   borderRadius: '18px',
                   border: player ? '3px solid #111' : '3px dashed #ccc',
                   backgroundColor: player ? 'white' : 'transparent',

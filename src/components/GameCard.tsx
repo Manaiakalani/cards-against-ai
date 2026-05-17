@@ -22,9 +22,9 @@ interface GameCardProps {
 }
 
 const sizeMap = {
-  sm: { w: 220, h: 320, fontSize: 22, footerSize: 11, px: 20, pt: 24, iconSize: 10 },
-  md: { w: 280, h: 400, fontSize: 25, footerSize: 12, px: 24, pt: 28, iconSize: 12 },
-  lg: { w: 320, h: 460, fontSize: 28, footerSize: 13, px: 28, pt: 32, iconSize: 14 },
+  sm: { w: 180, h: 260, fontSize: 18, footerSize: 10, px: 16, pt: 20, iconSize: 9 },
+  md: { w: 240, h: 340, fontSize: 21, footerSize: 11, px: 20, pt: 24, iconSize: 11 },
+  lg: { w: 280, h: 400, fontSize: 24, footerSize: 12, px: 24, pt: 28, iconSize: 12 },
 } as const
 
 function renderCardText(text: string, isBlack: boolean) {
@@ -75,8 +75,9 @@ export function GameCard({
         ${className}
       `}
       style={{
-        width: dims.w,
-        height: dims.h,
+        width: '100%',
+        maxWidth: dims.w,
+        aspectRatio: `${dims.w} / ${dims.h}`,
         padding: `${dims.pt}px ${dims.px}px ${dims.px}px`,
         borderRadius: 18,
         backgroundColor: isBlack ? '#111111' : '#FFFFFF',

@@ -18,9 +18,9 @@ export default function Home() {
     case 'lobby':
       return <LobbyScreen />
     case 'playing':
-      return <PlayingScreen />
+      return <PlayingScreen key={`playing-${gameState.currentRound}`} />
     case 'judging':
-      return <JudgingScreen />
+      return <JudgingScreen key={`judging-${gameState.currentRound}`} />
     case 'results':
       return <ResultsScreen />
     case 'scoreboard':

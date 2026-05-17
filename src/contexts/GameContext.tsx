@@ -8,6 +8,7 @@ type GameContextType = {
   gameState: GameState
   goToLobby: () => void
   startGame: (playerName: string, botCount?: number) => void
+  redrawHand: (playerId: string) => void
   submitCard: (playerId: string, card: Card) => void
   botSubmit: () => void
   pickWinner: (winnerId: string) => void

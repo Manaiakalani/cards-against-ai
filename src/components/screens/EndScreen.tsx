@@ -95,7 +95,7 @@ export default function EndScreen() {
           className="mb-2 text-center"
           style={{
             fontFamily: 'var(--font-archivo)',
-            fontSize: '84px',
+            fontSize: 'clamp(48px, 10vw, 84px)',
             lineHeight: 0.9,
             textTransform: 'uppercase',
             color: '#66FF00',
@@ -132,7 +132,7 @@ export default function EndScreen() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="mb-10 flex gap-5"
+          className="mb-10 flex flex-wrap justify-center gap-3 sm:gap-5"
         >
           {[
             { value: winner?.score ?? 0, label: 'Points' },
@@ -145,10 +145,10 @@ export default function EndScreen() {
               style={{
                 background: 'white',
                 border: '3px solid #111',
-                padding: '16px 24px',
+                padding: 'clamp(10px, 2vw, 16px) clamp(16px, 3vw, 24px)',
                 borderRadius: '12px',
                 boxShadow: '6px 6px 0px #111',
-                minWidth: '120px',
+                minWidth: 'clamp(80px, 15vw, 120px)',
               }}
             >
               <span
@@ -350,7 +350,7 @@ export default function EndScreen() {
               textTransform: 'uppercase',
               backgroundColor: '#66FF00',
               color: '#111',
-              padding: '24px 60px',
+              padding: 'clamp(16px, 3vw, 24px) clamp(36px, 8vw, 60px)',
               borderRadius: '100px',
               border: '4px solid #111',
               boxShadow: '0px 8px 0px #111',

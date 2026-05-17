@@ -12,9 +12,10 @@ import { NavButton } from '@/components/NavButton'
 import { Sticker } from '@/components/Sticker'
 
 export default function PlayingScreen() {
-  const { gameState, submitCard, botSubmit } = useGame()
+  const { gameState, submitCard, botSubmit, redrawHand } = useGame()
   const [selectedCard, setSelectedCard] = useState<Card | null>(null)
   const [submitted, setSubmitted] = useState(false)
+  const [hasRedrawn, setHasRedrawn] = useState(false)
 
   const humanPlayer = gameState.players.find((p) => p.id === 'player-1')
   const isPlayerCzar = humanPlayer?.isCardCzar ?? false
@@ -27,12 +28,6 @@ export default function PlayingScreen() {
     }, 1000)
     return () => clearTimeout(timer)
   }, [isPlayerCzar, botSubmit])
-
-  // Reset selection state when a new round starts
-  useEffect(() => {
-    setSelectedCard(null)
-    setSubmitted(false)
-  }, [gameState.currentRound])
 
   const handleSelectCard = useCallback((card: Card) => {
     if (submitted) return
@@ -52,9 +47,11 @@ export default function PlayingScreen() {
   }, [selectedCard, humanPlayer, submitCard, botSubmit])
 
   const handleRedraw = useCallback(() => {
-    // MVP placeholder
-    alert('Coming soon — Redraw Hand is not yet available!')
-  }, [])
+    if (hasRedrawn || submitted) return
+    redrawHand('player-1')
+    setSelectedCard(null)
+    setHasRedrawn(true)
+  }, [hasRedrawn, submitted, redrawHand])
 
   // Czar waiting view
   if (isPlayerCzar) {
@@ -79,7 +76,7 @@ export default function PlayingScreen() {
             className="mb-3 text-center"
             style={{
               fontFamily: 'var(--font-archivo)',
-              fontSize: '42px',
+              fontSize: 'clamp(28px, 5vw, 42px)',
               color: '#111',
             }}
           >
@@ -134,12 +131,12 @@ export default function PlayingScreen() {
 
       <div className="relative z-10 flex flex-col px-6 pt-16 pb-8">
         {/* Top Section: Title + Mini Black Card */}
-        <div className="mb-8 flex items-start justify-between gap-6">
+        <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
           <div>
             <h2
               style={{
                 fontFamily: 'var(--font-archivo)',
-                fontSize: '42px',
+                fontSize: 'clamp(28px, 5vw, 42px)',
                 color: '#111',
                 lineHeight: 1.1,
               }}
@@ -258,8 +255,8 @@ export default function PlayingScreen() {
       </div>
 
       <BottomNav>
-        <NavButton variant="secondary" onClick={handleRedraw}>
-          REDRAW HAND
+        <NavButton variant="secondary" onClick={handleRedraw} disabled={hasRedrawn || submitted}>
+          {hasRedrawn ? '✓ REDRAWN' : 'REDRAW HAND'}
         </NavButton>
         <NavButton
           variant="primary"

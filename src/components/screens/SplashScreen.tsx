@@ -31,9 +31,9 @@ export default function SplashScreen() {
     >
       <PosterBackground words={['cards', 'against', 'silicon valley']} opacity={0.9} />
 
-      {/* Decorative floating cards */}
+      {/* Decorative floating cards — hidden on mobile */}
       <div
-        className="pointer-events-none absolute"
+        className="pointer-events-none absolute hidden md:block"
         style={{
           top: '15%',
           left: '10%',
@@ -62,7 +62,7 @@ export default function SplashScreen() {
         </span>
       </div>
       <div
-        className="pointer-events-none absolute"
+        className="pointer-events-none absolute hidden md:block"
         style={{
           top: '20%',
           right: '8%',
@@ -103,7 +103,7 @@ export default function SplashScreen() {
           <h1
             style={{
               fontFamily: 'var(--font-archivo)',
-              fontSize: 120,
+              fontSize: 'clamp(60px, 15vw, 120px)',
               fontWeight: 400,
               lineHeight: 0.9,
               color: 'white',
@@ -120,7 +120,7 @@ export default function SplashScreen() {
             className="inline-block px-5 py-1"
             style={{
               fontFamily: 'var(--font-archivo)',
-              fontSize: 48,
+              fontSize: 'clamp(28px, 6vw, 48px)',
               fontWeight: 400,
               lineHeight: 1.1,
               color: 'white',
@@ -136,7 +136,7 @@ export default function SplashScreen() {
           <h2
             style={{
               fontFamily: 'var(--font-archivo)',
-              fontSize: 96,
+              fontSize: 'clamp(48px, 12vw, 96px)',
               fontWeight: 400,
               lineHeight: 1,
               color: '#66FF00',
@@ -184,12 +184,12 @@ export default function SplashScreen() {
             className="cursor-pointer uppercase"
             style={{
               fontFamily: 'var(--font-archivo)',
-              fontSize: 28,
+              fontSize: 'clamp(20px, 3.5vw, 28px)',
               fontWeight: 400,
               backgroundColor: '#66FF00',
               color: '#111111',
               border: '4px solid #111111',
-              padding: '24px 80px',
+              padding: 'clamp(16px, 3vw, 24px) clamp(40px, 8vw, 80px)',
               borderRadius: 100,
               boxShadow: '0px 8px 0px #111111',
             }}

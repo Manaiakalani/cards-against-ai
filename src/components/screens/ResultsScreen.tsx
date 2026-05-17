@@ -75,7 +75,7 @@ export default function ResultsScreen() {
           className="mb-2 text-center"
           style={{
             fontFamily: 'var(--font-archivo)',
-            fontSize: '64px',
+            fontSize: 'clamp(36px, 8vw, 64px)',
             lineHeight: 1,
             color: '#111',
             filter: 'drop-shadow(4px 4px 0px rgba(0,0,0,0.3))',
@@ -106,13 +106,13 @@ export default function ResultsScreen() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, type: 'spring' }}
-          className="mb-10 flex items-center justify-center"
+          className="mb-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-0"
         >
-          <div style={{ transform: 'rotate(-4deg) translateX(20px)' }}>
-            <GameCard card={latestResult.blackCard} size="lg" rotation={-4} />
+          <div style={{ transform: 'rotate(-4deg)' }} className="sm:translate-x-5">
+            <GameCard card={latestResult.blackCard} size="md" rotation={-4} />
           </div>
-          <div className="relative" style={{ transform: 'rotate(4deg) translateX(-20px)' }}>
-            <GameCard card={latestResult.winningCard} size="lg" rotation={4} />
+          <div className="relative sm:-translate-x-5" style={{ transform: 'rotate(4deg)' }}>
+            <GameCard card={latestResult.winningCard} size="md" rotation={4} />
             {/* Winner Ticket Sticker */}
             <div className="absolute -right-3 -top-3 z-20">
               <motion.div

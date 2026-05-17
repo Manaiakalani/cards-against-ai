@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { GameState, GamePhase, Player, Card } from '@/types/game'
+import { GameState, Player, Card } from '@/types/game'
 import { getAllCards, shuffle, drawCards } from '@/data/cards'
 
 const BOT_NAMES = [
@@ -108,6 +108,31 @@ export function useGameState() {
     }))
   }, [gameState.settings.selectedDecks])
 
+  const redrawHand = useCallback((playerId: string) => {
+    setGameState(prev => {
+      if (prev.phase !== 'playing') return prev
+      // Can't redraw if already submitted
+      if (prev.submissions.some(s => s.playerId === playerId)) return prev
+
+      const player = prev.players.find(p => p.id === playerId)
+      if (!player) return prev
+
+      // Return current hand to the pool, draw fresh cards
+      let pool = [...whiteCardPool, ...player.hand]
+      pool = shuffle(pool)
+      const { drawn, remaining } = drawCards(pool, HAND_SIZE)
+      setWhiteCardPool(remaining)
+
+      const newPlayers = prev.players.map(p =>
+        p.id === playerId
+          ? { ...p, hand: drawn, selectedCard: null }
+          : p
+      )
+
+      return { ...prev, players: newPlayers }
+    })
+  }, [whiteCardPool])
+
   const submitCard = useCallback((playerId: string, card: Card) => {
     setGameState(prev => {
       const alreadySubmitted = prev.submissions.some(s => s.playerId === playerId)
@@ -142,7 +167,7 @@ export function useGameState() {
       if (prev.phase !== 'playing') return prev
 
       const botPlayers = prev.players.filter(p => p.isBot && !p.isCardCzar)
-      let newSubmissions = [...prev.submissions]
+      const newSubmissions = [...prev.submissions]
       let newPlayers = [...prev.players]
 
       for (const bot of botPlayers) {
@@ -307,6 +332,7 @@ export function useGameState() {
     gameState,
     goToLobby,
     startGame,
+    redrawHand,
     submitCard,
     botSubmit,
     pickWinner,

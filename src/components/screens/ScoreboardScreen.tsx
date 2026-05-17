@@ -30,7 +30,7 @@ export default function ScoreboardScreen() {
 
       <div className="relative z-10 flex flex-col items-center px-4 py-12">
         {/* Header */}
-        <div className="flex w-full max-w-[800px] items-end justify-between">
+        <div className="flex w-full max-w-[800px] flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <motion.h1
               initial={{ x: -60, opacity: 0 }}
@@ -38,7 +38,7 @@ export default function ScoreboardScreen() {
               transition={{ type: 'spring', stiffness: 200, damping: 20 }}
               style={{
                 fontFamily: 'var(--font-archivo)',
-                fontSize: 84,
+                fontSize: 'clamp(48px, 10vw, 84px)',
                 fontWeight: 400,
                 lineHeight: 0.9,
                 color: '#111111',
@@ -130,7 +130,7 @@ export default function ScoreboardScreen() {
                 }}
                 className="flex items-center justify-between"
                 style={{
-                  padding: '20px 32px',
+                  padding: 'clamp(12px, 2vw, 20px) clamp(16px, 3vw, 32px)',
                   backgroundColor: isLeader ? '#66FF00' : '#FFFFFF',
                   border: '4px solid #111111',
                   borderRadius: 12,
@@ -145,7 +145,7 @@ export default function ScoreboardScreen() {
                   <span
                     style={{
                       fontFamily: 'var(--font-archivo)',
-                      fontSize: 32,
+                      fontSize: 'clamp(20px, 3vw, 32px)',
                       color: '#111111',
                       minWidth: 40,
                     }}
@@ -193,7 +193,7 @@ export default function ScoreboardScreen() {
                   <span
                     style={{
                       fontFamily: 'var(--font-archivo)',
-                      fontSize: 42,
+                      fontSize: 'clamp(24px, 4vw, 42px)',
                       color: '#111111',
                     }}
                   >

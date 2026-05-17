@@ -56,8 +56,8 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode }: GameH
         {totalRounds ? ` of ${totalRounds}` : ''}
       </span>
 
-      {/* Right: Player score pills */}
-      <div className="flex items-center gap-2">
+      {/* Right: Player score pills — scrollable on mobile */}
+      <div className="flex items-center gap-1.5 overflow-x-auto sm:gap-2">
         {players.map((player) => {
           const isCzar = player.id === czarId
           const isLeader = player.score === leadScore && leadScore > 0
@@ -65,7 +65,7 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode }: GameH
           return (
             <div
               key={player.id}
-              className="flex items-center gap-1.5 rounded-full px-2 py-1"
+              className="flex flex-shrink-0 items-center gap-1 rounded-full px-1.5 py-0.5 sm:gap-1.5 sm:px-2 sm:py-1"
               style={{
                 backgroundColor: isLeader ? '#66FF00' : '#FFFFFF',
                 border: '2px solid #111111',
@@ -74,11 +74,11 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode }: GameH
               <div
                 className="relative flex items-center justify-center rounded-full"
                 style={{
-                  width: 28,
-                  height: 28,
+                  width: 24,
+                  height: 24,
                   backgroundColor: player.avatarBg,
                   border: '2px solid #111',
-                  fontSize: 14,
+                  fontSize: 12,
                 }}
               >
                 {player.avatar}

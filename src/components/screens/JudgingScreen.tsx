@@ -10,8 +10,6 @@ import { BottomNav } from '@/components/BottomNav'
 import { NavButton } from '@/components/NavButton'
 import { Sticker } from '@/components/Sticker'
 
-const FAN_ANGLES = [-20, -10, 0, 10, 20]
-
 export default function JudgingScreen() {
   const { gameState, pickWinner, botPickWinner } = useGame()
   const [selectedSubmissionIdx, setSelectedSubmissionIdx] = useState<number | null>(null)
@@ -28,11 +26,6 @@ export default function JudgingScreen() {
     }, 2000)
     return () => clearTimeout(timer)
   }, [isHumanCzar, botPickWinner])
-
-  // Reset selection on new round
-  useEffect(() => {
-    setSelectedSubmissionIdx(null)
-  }, [gameState.currentRound])
 
   function handlePickWinner() {
     if (selectedSubmissionIdx === null) return
@@ -64,7 +57,7 @@ export default function JudgingScreen() {
             className="mb-2 text-center"
             style={{
               fontFamily: 'var(--font-archivo)',
-              fontSize: '36px',
+              fontSize: 'clamp(24px, 5vw, 36px)',
               color: '#111',
             }}
           >
@@ -110,7 +103,7 @@ export default function JudgingScreen() {
         </motion.div>
 
         {/* Game Board */}
-        <div className="flex w-full max-w-5xl flex-col items-center gap-10 lg:flex-row lg:items-start lg:justify-center lg:gap-16">
+        <div className="flex w-full max-w-5xl flex-col items-center gap-6 lg:flex-row lg:items-start lg:justify-center lg:gap-16">
           {/* Black Card */}
           <motion.div
             initial={{ x: -40, opacity: 0 }}
@@ -132,10 +125,9 @@ export default function JudgingScreen() {
             </div>
           </motion.div>
 
-          {/* Submitted Cards Fan */}
-          <div className="relative flex min-h-[340px] w-full max-w-lg items-center justify-center">
+          {/* Submitted Cards — Grid on mobile, spread on desktop */}
+          <div className="grid w-full max-w-lg grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-4">
             {gameState.submissions.map((sub, i) => {
-              const angle = FAN_ANGLES[i % FAN_ANGLES.length] ?? 0
               const isSelected = selectedSubmissionIdx === i
 
               return (
@@ -145,16 +137,13 @@ export default function JudgingScreen() {
                   animate={{
                     opacity: 1,
                     y: isSelected ? -16 : 0,
-                    rotate: angle,
                     scale: isSelected ? 1.08 : 1,
                   }}
                   whileHover={{ y: -10, scale: 1.05 }}
                   transition={{ delay: 0.1 * i, type: 'spring', stiffness: 300 }}
-                  className="absolute cursor-pointer"
+                  className="cursor-pointer"
                   style={{
-                    left: `${50 + (i - (gameState.submissions.length - 1) / 2) * 70}px`,
-                    transformOrigin: 'bottom center',
-                    zIndex: isSelected ? 20 : 10 - Math.abs(angle),
+                    zIndex: isSelected ? 20 : 10,
                     boxShadow: isSelected
                       ? '0 0 0 3px #66FF00, 6px 6px 0px #111'
                       : undefined,
@@ -162,7 +151,7 @@ export default function JudgingScreen() {
                   }}
                   onClick={() => setSelectedSubmissionIdx(i)}
                 >
-                  <GameCard card={sub.card} size="md" isSelected={isSelected} />
+                  <GameCard card={sub.card} size="sm" isSelected={isSelected} />
                 </motion.div>
               )
             })}
