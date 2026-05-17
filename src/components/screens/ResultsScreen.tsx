@@ -106,144 +106,149 @@ export default function ResultsScreen() {
         <ConfettiPiece key={i} index={i} />
       ))}
 
-      <div className="relative z-10 flex h-full flex-col items-center overflow-y-auto px-4 py-8">
-        {/* Title */}
-        <motion.h1
-          initial={{ scale: 0.5, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: 'spring', stiffness: 300, damping: 15 }}
-          className="mb-1 text-center"
-          style={{
-            fontFamily: 'var(--font-archivo)',
-            fontSize: 'clamp(28px, 7vw, 56px)',
-            lineHeight: 1,
-            color: 'var(--theme-text)',
-            filter: 'drop-shadow(4px 4px 0px var(--theme-shadow-soft))',
-            textWrap: 'balance',
-          }}
-        >
-          ATE & LEFT NO CRUMBS
-        </motion.h1>
+      <div className="relative z-10 flex h-full flex-col">
+        {/* Scrollable content */}
+        <div className="flex min-h-0 flex-1 flex-col items-center overflow-y-auto px-4 pt-8 pb-4">
+          {/* Title */}
+          <motion.h1
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 15 }}
+            className="mb-1 text-center"
+            style={{
+              fontFamily: 'var(--font-archivo)',
+              fontSize: 'clamp(28px, 7vw, 56px)',
+              lineHeight: 1,
+              color: 'var(--theme-text)',
+              filter: 'drop-shadow(4px 4px 0px var(--theme-shadow-soft))',
+              textWrap: 'balance',
+            }}
+          >
+            ATE & LEFT NO CRUMBS
+          </motion.h1>
 
-        {/* Subtitle */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="mb-10"
-          style={{
-            fontFamily: 'var(--font-inter)',
-            fontSize: 'clamp(14px, 3vw, 18px)',
-            textTransform: 'uppercase',
-            letterSpacing: '0.1em',
-            color: 'var(--theme-text-secondary)',
-          }}
-        >
-          Round {latestResult.round} &bull; The Main Event
-        </motion.p>
+          {/* Subtitle */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="mb-6"
+            style={{
+              fontFamily: 'var(--font-inter)',
+              fontSize: 'clamp(14px, 3vw, 18px)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.1em',
+              color: 'var(--theme-text-secondary)',
+            }}
+          >
+            Round {latestResult.round} &bull; The Main Event
+          </motion.p>
 
-        {/* Winning Pair */}
+          {/* Winning Pair */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, type: 'spring' }}
+            className="mb-6 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-0"
+          >
+            <div style={{ transform: 'rotate(-4deg)' }} className="sm:translate-x-5">
+              <GameCard card={latestResult.blackCard} size="sm" rotation={-4} />
+            </div>
+            <div className="relative flex flex-col gap-2 sm:-translate-x-5" style={{ transform: 'rotate(4deg)' }}>
+              {latestResult.winningCards.map((card, ci) => (
+                <GameCard key={card.id} card={card} size="sm" rotation={ci === 0 ? 4 : 6} />
+              ))}
+              {/* Winner Ticket Sticker */}
+              <div className="absolute -right-3 -top-3 z-20">
+                <motion.div
+                  initial={{ scale: 0, rotate: -20 }}
+                  animate={{ scale: 1, rotate: 6 }}
+                  transition={{ delay: 0.8, type: 'spring' }}
+                >
+                  <Sticker color="green" rotation={6}>
+                    THEY ATE
+                  </Sticker>
+                </motion.div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Winner + Czar Info */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1 }}
+            className="flex flex-col items-center gap-2"
+          >
+            {winner && (
+              <div className="flex items-center gap-3">
+                <div
+                  className="flex h-12 w-12 items-center justify-center rounded-full text-2xl"
+                  style={{
+                    backgroundColor: winner.avatarBg,
+                    border: '3px solid var(--theme-border)',
+                  }}
+                >
+                  {winner.avatar}
+                </div>
+                <span
+                  style={{
+                    fontFamily: 'var(--font-archivo)',
+                    fontSize: 'clamp(20px, 5vw, 28px)',
+                    color: 'var(--theme-text)',
+                  }}
+                >
+                  {winner.name}
+                </span>
+              </div>
+            )}
+
+            {czar && (
+              <div className="flex items-center gap-2">
+                <div
+                  className="flex h-8 w-8 items-center justify-center rounded-full text-base"
+                  style={{
+                    backgroundColor: czar.avatarBg,
+                    border: '2px solid var(--theme-border)',
+                  }}
+                >
+                  {czar.avatar}
+                </div>
+                <span
+                  className="text-sm uppercase tracking-wide"
+                  style={{
+                    fontFamily: 'var(--font-inter)',
+                    color: 'var(--theme-text-muted)',
+                  }}
+                >
+                  Judged by
+                </span>
+                <span
+                  className="text-sm"
+                  style={{
+                    fontFamily: 'var(--font-archivo)',
+                    color: 'var(--theme-text-secondary)',
+                  }}
+                >
+                  {czar.name}
+                </span>
+              </div>
+            )}
+          </motion.div>
+        </div>
+
+        {/* Pinned bottom CTA — always visible */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, type: 'spring' }}
-          className="mb-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-0"
+          transition={{ delay: 0.6 }}
+          className="flex shrink-0 justify-center px-4 pb-6 pt-3"
+          style={{ paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}
         >
-          <div style={{ transform: 'rotate(-4deg)' }} className="sm:translate-x-5">
-            <GameCard card={latestResult.blackCard} size="sm" rotation={-4} />
-          </div>
-          <div className="relative flex flex-col gap-2 sm:-translate-x-5" style={{ transform: 'rotate(4deg)' }}>
-            {latestResult.winningCards.map((card, ci) => (
-              <GameCard key={card.id} card={card} size="sm" rotation={ci === 0 ? 4 : 6} />
-            ))}
-            {/* Winner Ticket Sticker */}
-            <div className="absolute -right-3 -top-3 z-20">
-              <motion.div
-                initial={{ scale: 0, rotate: -20 }}
-                animate={{ scale: 1, rotate: 6 }}
-                transition={{ delay: 0.8, type: 'spring' }}
-              >
-                <Sticker color="green" rotation={6}>
-                  THEY ATE
-                </Sticker>
-              </motion.div>
-            </div>
-          </div>
+          <NavButton variant="primary" onClick={nextRound}>
+            KEEP GOING →
+          </NavButton>
         </motion.div>
-
-        {/* Judge Badge */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
-          className="flex flex-col items-center gap-2"
-        >
-          {/* Winner Info */}
-          {winner && (
-            <div className="mb-4 flex items-center gap-3">
-              <div
-                className="flex h-12 w-12 items-center justify-center rounded-full text-2xl"
-                style={{
-                  backgroundColor: winner.avatarBg,
-                  border: '3px solid var(--theme-border)',
-                }}
-              >
-                {winner.avatar}
-              </div>
-              <span
-                style={{
-                  fontFamily: 'var(--font-archivo)',
-                  fontSize: 'clamp(20px, 5vw, 28px)',
-                  color: 'var(--theme-text)',
-                }}
-              >
-                {winner.name}
-              </span>
-            </div>
-          )}
-
-          {/* Inline Next Round button */}
-          <div className="my-6">
-            <NavButton variant="primary" onClick={nextRound}>
-              KEEP GOING →
-            </NavButton>
-          </div>
-
-          {/* Czar Badge */}
-          {czar && (
-            <div className="flex items-center gap-2">
-              <div
-                className="flex h-8 w-8 items-center justify-center rounded-full text-base"
-                style={{
-                  backgroundColor: czar.avatarBg,
-                  border: '2px solid var(--theme-border)',
-                }}
-              >
-                {czar.avatar}
-              </div>
-              <span
-                className="text-sm uppercase tracking-wide"
-                style={{
-                  fontFamily: 'var(--font-inter)',
-                  color: 'var(--theme-text-muted)',
-                }}
-              >
-                Judged by
-              </span>
-              <span
-                className="text-sm"
-                style={{
-                  fontFamily: 'var(--font-archivo)',
-                  color: 'var(--theme-text-secondary)',
-                }}
-              >
-                {czar.name}
-              </span>
-            </div>
-          )}
-        </motion.div>
-
-        <div className="h-8" />
       </div>
     </div>
   )
