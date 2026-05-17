@@ -3,10 +3,8 @@
 import { motion } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { PosterBackground } from '@/components/PosterBackground'
-import { BottomNav } from '@/components/BottomNav'
 import { NavButton } from '@/components/NavButton'
 import { Sticker } from '@/components/Sticker'
-import { GameCard } from '@/components/GameCard'
 
 export default function ScoreboardScreen() {
   const { gameState, continueFromScoreboard } = useGame()
@@ -23,7 +21,7 @@ export default function ScoreboardScreen() {
 
   return (
     <div
-      className="relative min-h-screen overflow-hidden"
+      className="relative min-h-screen overflow-x-hidden"
       style={{ backgroundColor: '#F4F4EE' }}
     >
       <PosterBackground words={['funding', 'round', 'valuation']} opacity={0.4} />
@@ -221,7 +219,7 @@ export default function ScoreboardScreen() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, type: 'spring', stiffness: 200 }}
-            className="mt-12 flex flex-col items-center gap-3"
+            className="mt-12 flex w-full max-w-[800px] flex-col items-center gap-3"
           >
             <span
               className="uppercase tracking-wider"
@@ -233,55 +231,67 @@ export default function ScoreboardScreen() {
             >
               Last Round Winner
             </span>
-            <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
-              <div className="flex items-center gap-2">
-                <GameCard
-                  card={lastResult.blackCard}
-                  size="sm"
-                  showFooter={false}
-                  rotation={-2}
-                />
-                <GameCard
-                  card={lastResult.winningCard}
-                  variant="white"
-                  size="sm"
-                  showFooter={false}
-                  rotation={3}
-                />
+            <div
+              className="flex w-full items-center gap-3 rounded-2xl p-4"
+              style={{
+                backgroundColor: 'white',
+                border: '3px solid #111',
+                boxShadow: '4px 4px 0px #111',
+              }}
+            >
+              <div
+                className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-lg"
+                style={{
+                  backgroundColor: players.find((p) => p.id === lastResult.winnerId)?.avatarBg ?? '#DDA0DD',
+                  border: '2px solid #111',
+                }}
+              >
+                {players.find((p) => p.id === lastResult.winnerId)?.avatar ?? '?'}
               </div>
-              <div className="flex flex-col items-center sm:items-start">
-                <span
-                  style={{
-                    fontFamily: 'var(--font-archivo)',
-                    fontSize: 18,
-                    color: '#111111',
-                  }}
-                >
-                  {players.find((p) => p.id === lastResult.winnerId)?.name ?? 'Unknown'}
-                </span>
-                <span
+              <div className="min-w-0 flex-1">
+                <p
+                  className="truncate"
                   style={{
                     fontFamily: 'var(--font-inter)',
-                    fontSize: 12,
-                    color: '#999',
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: '#111',
                   }}
                 >
-                  won the round
-                </span>
+                  {lastResult.blackCard.text.replace(/_+/g, '____')}
+                </p>
+                <p
+                  className="mt-0.5 truncate"
+                  style={{
+                    fontFamily: 'var(--font-inter)',
+                    fontSize: 13,
+                    color: '#2D8C00',
+                    fontWeight: 700,
+                  }}
+                >
+                  → {lastResult.winningCard.text}
+                </p>
               </div>
+              <span
+                className="flex-shrink-0 text-sm"
+                style={{
+                  fontFamily: 'var(--font-archivo)',
+                  color: '#111',
+                }}
+              >
+                {players.find((p) => p.id === lastResult.winnerId)?.name ?? 'Unknown'}
+              </span>
             </div>
           </motion.div>
         )}
 
-        {/* Spacer for bottom nav */}
-        <div className="h-32" />
+        {/* Inline Next Round button */}
+        <div className="mt-8 mb-12 flex justify-center">
+          <NavButton variant="primary" onClick={continueFromScoreboard}>
+            NEXT ROUND →
+          </NavButton>
+        </div>
       </div>
-
-      <BottomNav>
-        <NavButton variant="primary" onClick={continueFromScoreboard}>
-          NEXT ROUND →
-        </NavButton>
-      </BottomNav>
     </div>
   )
 }

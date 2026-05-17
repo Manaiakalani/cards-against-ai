@@ -155,7 +155,11 @@ export default function SplashScreen() {
           style={{
             fontFamily: 'var(--font-inter)',
             fontSize: 18,
-            color: '#666666',
+            color: '#111111',
+            fontWeight: 700,
+            backgroundColor: 'rgba(244, 244, 238, 0.85)',
+            padding: '6px 16px',
+            borderRadius: 6,
           }}
         >
           The party game for horrible AI people
@@ -168,7 +172,10 @@ export default function SplashScreen() {
           style={{
             fontFamily: 'var(--font-inter)',
             fontSize: 14,
-            color: '#999999',
+            color: '#666666',
+            backgroundColor: 'rgba(244, 244, 238, 0.85)',
+            padding: '4px 12px',
+            borderRadius: 4,
           }}
         >
           176 Cards • 6 Decks • Unlimited Bad Takes

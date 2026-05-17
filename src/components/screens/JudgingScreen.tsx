@@ -38,7 +38,7 @@ export default function JudgingScreen() {
   // Bot czar deliberating view
   if (!isHumanCzar) {
     return (
-      <div className="relative min-h-screen overflow-hidden" style={{ backgroundColor: '#F4F4EE' }}>
+      <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: '#F4F4EE' }}>
         <PosterBackground words={['czar', 'judge', 'verdict']} />
         <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} />
         <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 pt-14">
@@ -79,7 +79,7 @@ export default function JudgingScreen() {
 
   // Human czar judging view
   return (
-    <div className="relative min-h-screen overflow-hidden" style={{ backgroundColor: '#F4F4EE' }}>
+    <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: '#F4F4EE' }}>
       <PosterBackground words={['czar', 'judge', 'verdict']} />
       <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} />
 
@@ -159,7 +159,7 @@ export default function JudgingScreen() {
         </div>
 
         {/* Spacer for bottom nav */}
-        <div className="h-28" />
+        <div className="h-36" />
       </div>
 
       <BottomNav>

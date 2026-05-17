@@ -5,7 +5,6 @@ import { motion } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { PosterBackground } from '@/components/PosterBackground'
 import { GameCard } from '@/components/GameCard'
-import { BottomNav } from '@/components/BottomNav'
 import { NavButton } from '@/components/NavButton'
 import { Sticker } from '@/components/Sticker'
 
@@ -58,7 +57,7 @@ export default function ResultsScreen() {
   if (!latestResult) return null
 
   return (
-    <div className="relative min-h-screen overflow-hidden" style={{ backgroundColor: '#F4F4EE' }}>
+    <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: '#F4F4EE' }}>
       <PosterBackground words={['winner', 'exit', 'unicorn']} opacity={0.9} />
 
       {/* Confetti */}
@@ -109,10 +108,10 @@ export default function ResultsScreen() {
           className="mb-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-0"
         >
           <div style={{ transform: 'rotate(-4deg)' }} className="sm:translate-x-5">
-            <GameCard card={latestResult.blackCard} size="md" rotation={-4} />
+            <GameCard card={latestResult.blackCard} size="sm" rotation={-4} />
           </div>
           <div className="relative sm:-translate-x-5" style={{ transform: 'rotate(4deg)' }}>
-            <GameCard card={latestResult.winningCard} size="md" rotation={4} />
+            <GameCard card={latestResult.winningCard} size="sm" rotation={4} />
             {/* Winner Ticket Sticker */}
             <div className="absolute -right-3 -top-3 z-20">
               <motion.div
@@ -159,6 +158,13 @@ export default function ResultsScreen() {
             </div>
           )}
 
+          {/* Inline Next Round button */}
+          <div className="my-6">
+            <NavButton variant="primary" onClick={nextRound}>
+              NEXT ROUND →
+            </NavButton>
+          </div>
+
           {/* Czar Badge */}
           {czar && (
             <div className="flex items-center gap-2">
@@ -193,15 +199,8 @@ export default function ResultsScreen() {
           )}
         </motion.div>
 
-        {/* Spacer for bottom nav */}
-        <div className="h-28" />
+        <div className="h-8" />
       </div>
-
-      <BottomNav>
-        <NavButton variant="primary" onClick={nextRound}>
-          NEXT ROUND →
-        </NavButton>
-      </BottomNav>
     </div>
   )
 }

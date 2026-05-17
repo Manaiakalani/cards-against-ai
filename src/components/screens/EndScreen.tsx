@@ -55,7 +55,7 @@ export default function EndScreen() {
   const winnerRounds = gameState.roundHistory.filter(r => r.winnerId === winner?.id).length
 
   return (
-    <div className="relative min-h-screen overflow-hidden" style={{ backgroundColor: '#F4F4EE' }}>
+    <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: '#F4F4EE' }}>
       <PosterBackground words={['exit', 'unicorn', 'liquid']} opacity={0.9} />
 
       {/* Confetti */}

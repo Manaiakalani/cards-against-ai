@@ -40,7 +40,7 @@ export default function LobbyScreen() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden" style={{ backgroundColor: '#F4F4EE' }}>
+    <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: '#F4F4EE' }}>
       <PosterBackground words={['lobby', 'waiting', 'series a']} />
 
       <div className="relative z-10 flex flex-col items-center px-4 py-12">
@@ -244,7 +244,7 @@ export default function LobbyScreen() {
         </motion.div>
 
         {/* Spacer for bottom nav */}
-        <div className="h-28" />
+        <div className="h-36" />
       </div>
 
       <BottomNav>
