@@ -354,7 +354,7 @@ export default function PlayingScreen() {
                   initial={isDealt ? false : undefined}
                   animate={isDealt ? {
                     opacity: 1,
-                    y: isSelected ? -8 : 0,
+                    y: 0,
                     scale: isSelected ? 1.03 : 1,
                     rotate: 0,
                   } : undefined}
@@ -379,7 +379,7 @@ export default function PlayingScreen() {
                     <motion.div
                       initial={{ scale: 0, rotate: -12 }}
                       animate={{ scale: 1, rotate: -6 }}
-                      className="absolute right-0 -top-2 z-20"
+                      className="absolute right-1 top-1 z-20"
                     >
                       <Sticker color="green" rotation={-6} className="!text-xs !px-2 !py-1">
                         {blanks > 1 ? `#${selectionIndex + 1}` : 'THIS ONE'}
