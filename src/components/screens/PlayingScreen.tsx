@@ -335,9 +335,9 @@ export default function PlayingScreen() {
         </div>
 
         {/* Card Grid — scrollable area */}
-        <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain" style={{ WebkitOverflowScrolling: 'touch' }}>
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain" style={{ WebkitOverflowScrolling: 'touch' }}>
           <motion.div
-            className="grid grid-cols-2 gap-2 px-1 pt-4 pb-6 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4 lg:gap-4"
+            className="grid grid-cols-2 gap-2 px-3 pt-4 pb-6 sm:grid-cols-3 sm:gap-3 sm:px-2 lg:grid-cols-4 lg:gap-4"
             variants={containerVariants}
           initial="hidden"
           animate="show"
@@ -379,9 +379,9 @@ export default function PlayingScreen() {
                     <motion.div
                       initial={{ scale: 0, rotate: -12 }}
                       animate={{ scale: 1, rotate: -6 }}
-                      className="absolute -right-2 -top-3 z-20"
+                      className="absolute right-0 -top-2 z-20"
                     >
-                      <Sticker color="green" rotation={-6}>
+                      <Sticker color="green" rotation={-6} className="!text-xs !px-2 !py-1">
                         {blanks > 1 ? `#${selectionIndex + 1}` : 'THIS ONE'}
                       </Sticker>
                     </motion.div>
