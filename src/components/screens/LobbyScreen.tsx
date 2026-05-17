@@ -210,6 +210,7 @@ export default function LobbyScreen() {
                       {player.emoji}
                     </div>
                     <span
+                      className="max-w-full truncate px-2"
                       style={{
                         fontFamily: 'var(--font-archivo)',
                         fontSize: '20px',

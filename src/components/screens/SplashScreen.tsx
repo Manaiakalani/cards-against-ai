@@ -189,7 +189,7 @@ export default function SplashScreen() {
         </motion.div>
 
         {/* Menu buttons row */}
-        <motion.div variants={fadeUp} className="mt-4 flex gap-3">
+        <motion.div variants={fadeUp} className="mt-4 flex flex-wrap justify-center gap-3">
           <motion.button
             onClick={() => setShowStats(true)}
             whileHover={{ scale: 1.05 }}

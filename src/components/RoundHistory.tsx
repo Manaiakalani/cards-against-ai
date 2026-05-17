@@ -28,8 +28,10 @@ function getFavsClient(): FavEntry[] {
   return cachedFavs
 }
 
+const SERVER_FAVS: FavEntry[] = []
+
 function getFavsServer(): FavEntry[] {
-  return []
+  return SERVER_FAVS
 }
 
 function subscribeFavs(callback: () => void): () => void {
