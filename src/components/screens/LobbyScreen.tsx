@@ -126,14 +126,15 @@ export default function LobbyScreen() {
                 style={{
                   minHeight: '180px',
                   borderRadius: '18px',
-                  border: player ? '3px solid #111' : '3px dashed #ccc',
+                  borderStyle: player ? 'solid' : 'dashed',
+                  borderColor: player ? '#111' : '#ccc',
+                  borderWidth: player?.isHost ? '4px' : '3px',
                   backgroundColor: player ? 'white' : 'transparent',
                   boxShadow: player
                     ? player.isHost
                       ? '8px 8px 0px #FFB6C1'
                       : '5px 5px 0px #111'
                     : 'none',
-                  borderWidth: player?.isHost ? '4px' : '3px',
                   transform: `rotate(${rotation}deg)`,
                 }}
               >
