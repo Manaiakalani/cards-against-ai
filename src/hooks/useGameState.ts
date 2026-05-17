@@ -60,7 +60,7 @@ export function useGameState() {
       maxPlayers: 6,
       roundTime: 90,
       winningScore: 7,
-      selectedDecks: ['brainrot', 'terminally-online', 'gen-z', 'millennial', 'ai-fever', 'gaming'],
+      selectedDecks: ['brainrot', 'terminally-online', 'gen-z', 'millennial', 'ai-fever', 'gaming', 'crypto', 'startup'],
       timerEnabled: false,
       timerSeconds: 60,
       winnersPick: false,

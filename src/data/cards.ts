@@ -222,6 +222,10 @@ const gamingBlack: Card[] = [
   { id: 'gm-b4', text: "The real lore is _____.", type: 'black', blanks: 1, category: 'gaming' },
   { id: 'gm-b5', text: "NPC behavior is when someone _____.", type: 'black', blanks: 1, category: 'internet' },
   { id: 'gm-b6', text: "The boss fight was _____ but the real boss was _____.", type: 'black', blanks: 2, category: 'gaming' },
+  { id: 'gm-b7', text: "My teammates blamed the loss on _____.", type: 'black', blanks: 1, category: 'gaming' },
+  { id: 'gm-b8', text: "Twitch chat when they see _____.", type: 'black', blanks: 1, category: 'gaming' },
+  { id: 'gm-b9', text: "Speedrunners skipping _____ to save 0.3 seconds.", type: 'black', blanks: 1, category: 'gaming' },
+  { id: 'gm-b10', text: "EA's next $60 DLC will include _____.", type: 'black', blanks: 1, category: 'gaming' },
 ]
 
 const gamingWhite: Card[] = [
@@ -232,6 +236,71 @@ const gamingWhite: Card[] = [
   { id: 'gm-w5', text: "Saying \"GG EZ\" after barely surviving", type: 'white', category: 'gaming' },
   { id: 'gm-w6', text: "Twitch chat being more toxic than Chernobyl", type: 'white', category: 'gaming' },
   { id: 'gm-w7', text: "Rage-quitting life but respawning at your desk job", type: 'white', category: 'gaming' },
+  { id: 'gm-w8', text: "A toxic Valorant lobby at 2 AM", type: 'white', category: 'gaming' },
+  { id: 'gm-w9', text: "Pretending to understand frame rates", type: 'white', category: 'gaming' },
+  { id: 'gm-w10', text: "Explaining why mobile games aren't real games", type: 'white', category: 'gaming' },
+  { id: 'gm-w11', text: "Falling for a Fortnite scam", type: 'white', category: 'gaming' },
+  { id: 'gm-w12', text: "Rage quitting after one death", type: 'white', category: 'gaming' },
+]
+
+// ─── Crypto & Web3 (from Cards repo) ────────────────────────────────
+const cryptoBlack: Card[] = [
+  { id: 'cr-b1', text: "My NFT is worth _____ now.", type: 'black', blanks: 1, category: 'crypto' },
+  { id: 'cr-b2', text: "Elon Musk just tweeted about _____.", type: 'black', blanks: 1, category: 'crypto' },
+  { id: 'cr-b3', text: "We're disrupting _____ with blockchain.", type: 'black', blanks: 1, category: 'crypto' },
+  { id: 'cr-b4', text: "The rug pull was so bad, even _____ got rekt.", type: 'black', blanks: 1, category: 'crypto' },
+  { id: 'cr-b5', text: "WAGMI until _____.", type: 'black', blanks: 1, category: 'crypto' },
+  { id: 'cr-b6', text: "The SEC is investigating us for _____.", type: 'black', blanks: 1, category: 'crypto' },
+  { id: 'cr-b7', text: "I put my life savings into _____ and now I _____.", type: 'black', blanks: 2, category: 'crypto' },
+  { id: 'cr-b8', text: "The whitepaper promises _____ but the roadmap is just _____.", type: 'black', blanks: 2, category: 'crypto' },
+]
+
+const cryptoWhite: Card[] = [
+  { id: 'cr-w1', text: "A JPEG of a monkey worth $50,000", type: 'white', category: 'crypto' },
+  { id: 'cr-w2', text: "Hodling dogecoin to the moon 🚀", type: 'white', category: 'crypto' },
+  { id: 'cr-w3', text: "Explaining blockchain to your grandmother", type: 'white', category: 'crypto' },
+  { id: 'cr-w4', text: "Diamond hands turning into paper hands", type: 'white', category: 'crypto' },
+  { id: 'cr-w5', text: "A decentralized dating app (no matches, ever)", type: 'white', category: 'crypto' },
+  { id: 'cr-w6', text: "Minting an NFT of my therapist's notes", type: 'white', category: 'crypto' },
+  { id: 'cr-w7', text: "A DAO that votes on what to order for lunch", type: 'white', category: 'crypto' },
+  { id: 'cr-w8', text: "Buying the dip (it kept dipping)", type: 'white', category: 'crypto' },
+  { id: 'cr-w9', text: "Web3 but it's just a Google Doc", type: 'white', category: 'crypto' },
+  { id: 'cr-w10', text: "Your seed phrase tattooed somewhere regrettable", type: 'white', category: 'crypto' },
+  { id: 'cr-w11', text: "A Ponzi scheme but with extra steps and a Discord", type: 'white', category: 'crypto' },
+  { id: 'cr-w12', text: "Right-clicking and saving someone's NFT", type: 'white', category: 'crypto' },
+  { id: 'cr-w13', text: "Getting rugged by a teenager's memecoin", type: 'white', category: 'crypto' },
+  { id: 'cr-w14', text: "\"This is good for Bitcoin\" (said during a crash)", type: 'white', category: 'crypto' },
+  { id: 'cr-w15', text: "A metaverse mansion with zero visitors", type: 'white', category: 'crypto' },
+]
+
+// ─── Startup Life (from Cards repo) ─────────────────────────────────
+const startupBlack: Card[] = [
+  { id: 'su-b1', text: "Our startup failed because of _____.", type: 'black', blanks: 1, category: 'startup' },
+  { id: 'su-b2', text: "The pitch deck has 47 slides about _____.", type: 'black', blanks: 1, category: 'startup' },
+  { id: 'su-b3', text: "We're pre-revenue, but post-_____.", type: 'black', blanks: 1, category: 'startup' },
+  { id: 'su-b4', text: "The founder's LinkedIn bio says _____.", type: 'black', blanks: 1, category: 'startup' },
+  { id: 'su-b5', text: "Our company culture is basically _____.", type: 'black', blanks: 1, category: 'startup' },
+  { id: 'su-b6', text: "We pivoted from _____ to _____ and somehow raised a Series B.", type: 'black', blanks: 2, category: 'startup' },
+  { id: 'su-b7', text: "It works on my _____.", type: 'black', blanks: 1, category: 'programming' },
+  { id: 'su-b8', text: "The real reason we got acquired: _____.", type: 'black', blanks: 1, category: 'startup' },
+]
+
+const startupWhite: Card[] = [
+  { id: 'su-w1', text: "A Series A funded entirely by vibes", type: 'white', category: 'startup' },
+  { id: 'su-w2', text: "\"We're like Uber but for _____\" (it's always laundry)", type: 'white', category: 'startup' },
+  { id: 'su-w3', text: "Unlimited PTO that nobody actually uses", type: 'white', category: 'startup' },
+  { id: 'su-w4', text: "A ping pong table instead of health insurance", type: 'white', category: 'startup' },
+  { id: 'su-w5', text: "\"Disrupting\" an industry by losing money faster", type: 'white', category: 'startup' },
+  { id: 'su-w6', text: "A 3-hour standup meeting about the standup format", type: 'white', category: 'startup' },
+  { id: 'su-w7', text: "Equity in a company valued at $0.00", type: 'white', category: 'startup' },
+  { id: 'su-w8', text: "A CEO who learned leadership from Twitter threads", type: 'white', category: 'startup' },
+  { id: 'su-w9', text: "Moving fast and breaking prod (on a Friday)", type: 'white', category: 'startup' },
+  { id: 'su-w10', text: "Culture fit interviews that are just astrology checks", type: 'white', category: 'startup' },
+  { id: 'su-w11', text: "A product hunt launch with 3 upvotes (all employees)", type: 'white', category: 'startup' },
+  { id: 'su-w12', text: "The CTO's entire tech stack is a single spreadsheet", type: 'white', category: 'startup' },
+  { id: 'su-w13', text: "Burning $2M on a rebrand nobody asked for", type: 'white', category: 'startup' },
+  { id: 'su-w14', text: "A founding team that met at Burning Man", type: 'white', category: 'startup' },
+  { id: 'su-w15', text: "Putting \"AI-powered\" on everything including the bathroom", type: 'white', category: 'startup' },
 ]
 
 // ─── Deck definitions ────────────────────────────────────────────────
@@ -277,6 +346,20 @@ export const allDecks: CardDeck[] = [
     description: 'NPC behavior, rage quits, and RGB everything',
     icon: '🎮',
     cards: { blackCards: gamingBlack, whiteCards: gamingWhite },
+  },
+  {
+    id: 'crypto',
+    name: 'Crypto & Web3',
+    description: 'NFT disasters, blockchain bros, and diamond hands',
+    icon: '💎',
+    cards: { blackCards: cryptoBlack, whiteCards: cryptoWhite },
+  },
+  {
+    id: 'startup',
+    name: 'Startup Life',
+    description: 'Pitch decks, pivots, and ping pong tables',
+    icon: '🚀',
+    cards: { blackCards: startupBlack, whiteCards: startupWhite },
   },
 ]
 
