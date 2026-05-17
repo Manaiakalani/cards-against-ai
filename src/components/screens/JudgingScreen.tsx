@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { useSound } from '@/hooks/useSound'
@@ -41,10 +41,10 @@ export default function JudgingScreen() {
   // Bot czar deliberating view
   if (!isHumanCzar) {
     return (
-      <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>
+      <div className="relative h-dvh overflow-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>
         <PosterBackground words={['slay', 'ate', 'period']} />
         <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} />
-        <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 pt-14">
+        <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 pt-12">
           <motion.div
             animate={{ rotate: [0, 5, -5, 0] }}
             transition={{ repeat: Infinity, duration: 1.5 }}
@@ -64,7 +64,7 @@ export default function JudgingScreen() {
               color: 'var(--theme-text)',
             }}
           >
-            The Czar is Deliberating...
+            The Czar is Deliberating…
           </h2>
           <p
             style={{
@@ -82,11 +82,11 @@ export default function JudgingScreen() {
 
   // Human czar judging view
   return (
-    <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>
+    <div className="relative h-dvh overflow-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>
       <PosterBackground words={['slay', 'ate', 'period']} />
       <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} />
 
-      <div className="relative z-10 flex flex-col items-center px-4 pt-16 pb-8">
+      <div className="relative z-10 flex h-full flex-col items-center overflow-y-auto px-4 pt-12 pb-8">
         {/* Status Badge */}
         <motion.div
           initial={{ y: -20, opacity: 0 }}
@@ -136,6 +136,8 @@ export default function JudgingScreen() {
               return (
                 <motion.div
                   key={sub.playerId}
+                  role="button"
+                  tabIndex={0}
                   initial={{ opacity: 0, y: 40 }}
                   animate={{
                     opacity: 1,
@@ -144,17 +146,25 @@ export default function JudgingScreen() {
                   }}
                   whileHover={{ y: -10, scale: 1.05 }}
                   transition={{ delay: 0.1 * i, type: 'spring', stiffness: 300 }}
-                  className="cursor-pointer"
+                  className="cursor-pointer focus-visible:ring-4 focus-visible:ring-[#66FF00] focus-visible:outline-none"
                   style={{
                     zIndex: isSelected ? 20 : 10,
                     boxShadow: isSelected
                       ? '0 0 0 3px #66FF00, 6px 6px 0px var(--theme-shadow)'
                       : undefined,
                     borderRadius: '16px',
+                    touchAction: 'manipulation',
                   }}
                   onClick={() => {
                     play('select')
                     setSelectedSubmissionIdx(i)
+                  }}
+                  onKeyDown={(e: React.KeyboardEvent) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      play('select')
+                      setSelectedSubmissionIdx(i)
+                    }
                   }}
                 >
                   <div className="flex flex-col gap-2">

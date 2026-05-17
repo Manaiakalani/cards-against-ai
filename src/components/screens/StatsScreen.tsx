@@ -142,7 +142,7 @@ export function StatsScreen({ open, onClose }: StatsScreenProps) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 30 }}
             transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-            className="fixed left-1/2 top-1/2 z-[201] w-[calc(100vw-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 overflow-y-auto"
+            className="fixed left-1/2 top-1/2 z-[201] w-[calc(100vw-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 overflow-y-auto overscroll-contain"
             role="dialog"
             aria-modal="true"
             aria-labelledby="stats-modal-title"
@@ -249,7 +249,7 @@ export function StatsScreen({ open, onClose }: StatsScreenProps) {
                   border: '3px solid #FF4242',
                   borderRadius: 12,
                   boxShadow: confirmReset ? '4px 4px 0px var(--theme-shadow)' : 'none',
-                  transition: 'all 0.15s ease',
+                  transition: 'background-color 0.15s ease, box-shadow 0.15s ease, color 0.15s ease',
                 }}
               >
                 {confirmReset ? 'Confirm Reset' : 'Reset All Stats'}

@@ -240,7 +240,7 @@ test.describe('Visual Audit — Fonts & Colors', () => {
     await playToResults(page)
     const title = page.getByText('ATE & LEFT NO CRUMBS')
     const fontSize = await title.evaluate((el) => parseFloat(getComputedStyle(el).fontSize))
-    expect(fontSize).toBeGreaterThanOrEqual(36) // clamp min
+    expect(fontSize).toBeGreaterThanOrEqual(28) // clamp min
   })
 
   test('scoreboard renders with legible player names', async ({ page }) => {

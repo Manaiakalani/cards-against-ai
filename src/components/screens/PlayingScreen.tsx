@@ -230,7 +230,7 @@ export default function PlayingScreen() {
               color: 'var(--theme-text-secondary)',
             }}
           >
-            Waiting for everyone to lock in...
+            Waiting for everyone to lock in…
           </p>
           <motion.div
             className="mt-6 flex gap-2"
@@ -265,18 +265,18 @@ export default function PlayingScreen() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>
+    <div className="relative h-dvh overflow-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>
       <PosterBackground words={['no cap', 'fr fr', 'lowkey']} opacity={0.15} />
       <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} timer={timerEnabled ? { timeLeft: timer.timeLeft, progress: timer.progress, isUrgent: timer.isUrgent } : undefined} />
 
-      <div className="relative z-10 flex flex-col px-6 pt-16 pb-8">
+      <div className="relative z-10 flex h-full flex-col px-4 pt-12 pb-24 sm:px-6 sm:pt-14">
         {/* Top Section: Title + Mini Black Card */}
-        <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
+        <div className="mb-3 flex flex-shrink-0 flex-col gap-2 sm:mb-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
           <div>
             <h2
               style={{
                 fontFamily: 'var(--font-archivo)',
-                fontSize: 'clamp(28px, 5vw, 42px)',
+                fontSize: 'clamp(22px, 4vw, 36px)',
                 color: 'var(--theme-text)',
                 lineHeight: 1.1,
               }}
@@ -284,10 +284,10 @@ export default function PlayingScreen() {
               Your Hand
             </h2>
             <p
-              className="mt-1"
+              className="mt-0.5"
               style={{
                 fontFamily: 'var(--font-inter)',
-                fontSize: '16px',
+                fontSize: '13px',
                 color: 'var(--theme-text-muted)',
               }}
             >
@@ -300,17 +300,17 @@ export default function PlayingScreen() {
             <motion.div
               initial={{ x: 30, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
-              className="flex-shrink-0 px-4 py-3"
+              className="flex-shrink-0 px-3 py-2"
               style={{
-                maxWidth: '260px',
+                maxWidth: '240px',
                 backgroundColor: '#111',
-                borderRadius: '16px',
-                border: '3px solid var(--theme-border)',
-                boxShadow: '4px 4px 0px var(--theme-shadow-soft)',
+                borderRadius: '12px',
+                border: '2px solid var(--theme-border)',
+                boxShadow: '3px 3px 0px var(--theme-shadow-soft)',
               }}
             >
               <p
-                className="text-sm leading-snug"
+                className="text-xs leading-snug sm:text-sm"
                 style={{
                   fontFamily: 'var(--font-inter)',
                   color: 'white',
@@ -334,10 +334,11 @@ export default function PlayingScreen() {
           )}
         </div>
 
-        {/* Card Grid */}
-        <motion.div
-          className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4"
-          variants={containerVariants}
+        {/* Card Grid — scrollable area */}
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain rounded-lg" style={{ WebkitOverflowScrolling: 'touch' }}>
+          <motion.div
+            className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4 lg:gap-4"
+            variants={containerVariants}
           initial="hidden"
           animate="show"
         >
@@ -370,7 +371,7 @@ export default function PlayingScreen() {
                 >
                   <GameCard
                     card={card}
-                    size="md"
+                    size="sm"
                     isSelected={isSelected}
                     onClick={() => handleSelectCard(card)}
                   />
@@ -390,29 +391,27 @@ export default function PlayingScreen() {
             })}
           </AnimatePresence>
         </motion.div>
+        </div>
 
         {/* Submitted overlay */}
         {submitted && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mt-8 flex flex-col items-center"
+            className="mt-4 flex flex-shrink-0 flex-col items-center"
           >
             <p
               className="text-center"
               style={{
                 fontFamily: 'var(--font-archivo)',
-                fontSize: '24px',
+                fontSize: '20px',
                 color: 'var(--theme-text)',
               }}
             >
-              Card{blanks > 1 ? 's' : ''} Submitted! Waiting for others...
+              Card{blanks > 1 ? 's' : ''} Submitted! Waiting for others…
             </p>
           </motion.div>
         )}
-
-        {/* Spacer for bottom nav */}
-        <div className="h-36" />
       </div>
 
       <BottomNav>

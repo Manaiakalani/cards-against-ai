@@ -231,7 +231,7 @@ export default function LobbyScreen() {
                     className="text-sm"
                     style={{ fontFamily: 'var(--font-inter)', color: 'var(--theme-text-muted)' }}
                   >
-                    Waiting for Talent...
+                    Waiting for Talent…
                   </span>
                 )}
               </motion.div>
@@ -248,14 +248,16 @@ export default function LobbyScreen() {
         >
           <input
             type="text"
-            placeholder="Enter your name..."
+            placeholder="Enter your name…"
             value={playerName}
             onChange={(e) => setPlayerName(e.target.value)}
             maxLength={20}
             onKeyDown={(e) => {
               if (e.key === 'Enter') handleStart()
             }}
-            className="w-full px-5 py-3 text-lg outline-none placeholder:text-gray-400"
+            className="w-full px-5 py-3 text-lg outline-none focus-visible:ring-4 focus-visible:ring-[#66FF00] placeholder:text-gray-400"
+            spellCheck={false}
+            autoComplete="off"
             style={{
               fontFamily: 'var(--font-archivo)',
               border: '3px solid var(--theme-border)',

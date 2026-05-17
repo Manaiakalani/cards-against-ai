@@ -1,5 +1,6 @@
 'use client'
 
+import React from 'react'
 import { motion } from 'framer-motion'
 import { CardIcon } from './CardIcon'
 
@@ -64,13 +65,16 @@ export function GameCard({
 
   return (
     <motion.div
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
       onClick={onClick}
+      onKeyDown={onClick ? (e: React.KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick() } } : undefined}
       whileHover={onClick ? { scale: 1.05, y: -10 } : undefined}
       whileTap={onClick ? { scale: 0.98 } : undefined}
       transition={{ type: 'spring', stiffness: 400, damping: 25 }}
       className={`
         relative flex flex-col justify-between
-        ${onClick ? 'cursor-pointer' : ''}
+        ${onClick ? 'cursor-pointer focus-visible:ring-4 focus-visible:ring-[#66FF00] focus-visible:outline-none' : ''}
         ${isSelected ? 'ring-[6px] ring-[#66FF00]' : ''}
         ${className}
       `}
@@ -92,6 +96,7 @@ export function GameCard({
           : '15px 25px 45px var(--theme-shadow-soft)',
         transform: `rotate(${rotation}deg)${isSelected ? ' translateY(-8px)' : ''}`,
         userSelect: 'none',
+        touchAction: onClick ? 'manipulation' : undefined,
       }}
     >
       {/* Card text */}

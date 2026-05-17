@@ -198,7 +198,7 @@ export default function EndScreen() {
     : 'DEFEATED BY THE ALGORITHM 🤖'
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>
+    <div className="relative h-dvh overflow-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>
       <PosterBackground words={['slay', 'iconic', 'legend']} opacity={0.9} />
 
       {/* Enhanced Confetti */}
@@ -206,7 +206,7 @@ export default function EndScreen() {
         <ConfettiPiece key={i} config={cfg} />
       ))}
 
-      <div className="relative z-10 flex flex-col items-center px-4 py-12">
+      <div className="relative z-10 flex h-full flex-col items-center overflow-y-auto px-4 py-8">
         {/* Trophy */}
         <motion.div
           initial={{ scale: 0, rotate: -10 }}

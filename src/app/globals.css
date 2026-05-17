@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+  color-scheme: light;
   /* Theme tokens — light mode (default) */
   --theme-bg: #F4F4EE;
   --theme-surface: #FFFFFF;
@@ -28,6 +29,7 @@
 }
 
 [data-theme="dark"] {
+  color-scheme: dark;
   --theme-bg: #1A1A1A;
   --theme-surface: #2A2A2A;
   --theme-surface-alt: #333333;
@@ -120,4 +122,13 @@ button, a, [role="button"] {
 ::selection {
   background: var(--green);
   color: var(--black);
+}
+
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -24,12 +24,12 @@ export default function ScoreboardScreen() {
 
   return (
     <div
-      className="relative min-h-screen overflow-x-hidden"
+      className="relative h-dvh overflow-hidden"
       style={{ backgroundColor: 'var(--theme-bg)' }}
     >
       <PosterBackground words={['main', 'character', 'energy']} opacity={0.4} />
 
-      <div className="relative z-10 flex flex-col items-center px-6 py-12 sm:px-8">
+      <div className="relative z-10 flex h-full flex-col items-center overflow-y-auto px-6 py-8 sm:px-8">
         {/* Header */}
         <div className="flex w-full max-w-[800px] flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>

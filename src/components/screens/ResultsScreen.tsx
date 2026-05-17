@@ -98,7 +98,7 @@ export default function ResultsScreen() {
   if (!latestResult) return null
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>
+    <div className="relative h-dvh overflow-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>
       <PosterBackground words={['ate', 'left no', 'crumbs']} opacity={0.9} />
 
       {/* Confetti */}
@@ -106,16 +106,16 @@ export default function ResultsScreen() {
         <ConfettiPiece key={i} index={i} />
       ))}
 
-      <div className="relative z-10 flex flex-col items-center px-4 py-12">
+      <div className="relative z-10 flex h-full flex-col items-center overflow-y-auto px-4 py-8">
         {/* Title */}
         <motion.h1
           initial={{ scale: 0.5, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ type: 'spring', stiffness: 300, damping: 15 }}
-          className="mb-2 text-center"
+          className="mb-1 text-center"
           style={{
             fontFamily: 'var(--font-archivo)',
-            fontSize: 'clamp(36px, 8vw, 64px)',
+            fontSize: 'clamp(28px, 7vw, 56px)',
             lineHeight: 1,
             color: 'var(--theme-text)',
             filter: 'drop-shadow(4px 4px 0px var(--theme-shadow-soft))',
