@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { PosterBackground } from '@/components/PosterBackground'
+import { GameCard } from '@/components/GameCard'
 import { CardIcon } from '@/components/CardIcon'
 import { SiteFooter } from '@/components/SiteFooter'
 
@@ -38,58 +39,32 @@ export default function SplashScreen() {
         style={{
           top: '15%',
           left: '10%',
-          width: 220,
-          height: 320,
-          borderRadius: 18,
-          backgroundColor: '#111111',
-          border: '3px solid #333',
-          boxShadow: '15px 25px 45px rgba(0,0,0,0.25)',
           transform: 'rotate(-8deg)',
-          opacity: 0.35,
-          padding: '24px 20px',
+          opacity: 0.8,
           zIndex: 1,
         }}
       >
-        <span
-          style={{
-            fontFamily: 'var(--font-inter)',
-            fontSize: 18,
-            fontWeight: 700,
-            lineHeight: 1.3,
-            color: '#FFFFFF',
-          }}
-        >
-          The next _____ will be my entire personality.
-        </span>
+        <GameCard
+          card={{ id: 'splash-black', text: 'The next _____ will be my entire personality.', type: 'black' }}
+          size="sm"
+          showFooter
+        />
       </div>
       <div
         className="pointer-events-none absolute hidden md:block"
         style={{
           top: '20%',
           right: '8%',
-          width: 200,
-          height: 290,
-          borderRadius: 18,
-          backgroundColor: '#FFFFFF',
-          border: '3px solid #111111',
-          boxShadow: '15px 25px 45px rgba(0,0,0,0.25)',
           transform: 'rotate(6deg)',
-          opacity: 0.3,
-          padding: '24px 20px',
+          opacity: 0.8,
           zIndex: 1,
         }}
       >
-        <span
-          style={{
-            fontFamily: 'var(--font-inter)',
-            fontSize: 18,
-            fontWeight: 700,
-            lineHeight: 1.3,
-            color: '#111111',
-          }}
-        >
-          Vibe coding at 3 AM with zero tests
-        </span>
+        <GameCard
+          card={{ id: 'splash-white', text: 'Vibe coding at 3 AM with zero tests', type: 'white' }}
+          size="sm"
+          showFooter
+        />
       </div>
 
       {/* Main content */}
