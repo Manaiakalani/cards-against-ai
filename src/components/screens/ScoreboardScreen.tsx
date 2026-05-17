@@ -19,7 +19,7 @@ export default function ScoreboardScreen() {
   // Find the next czar (the czarId in gameState is already set for the next round)
   const nextCzar = players.find((p) => p.id === czarId)
 
-  const rotations = [-1, 1.5, -0.5, 1, -1.5, 0.5]
+  const rotations = [-0.5, 0.8, -0.3, 0.5, -0.8, 0.3]
 
   return (
     <div
@@ -28,7 +28,7 @@ export default function ScoreboardScreen() {
     >
       <PosterBackground words={['funding', 'round', 'valuation']} opacity={0.4} />
 
-      <div className="relative z-10 flex flex-col items-center px-4 py-12">
+      <div className="relative z-10 flex flex-col items-center px-6 py-12 sm:px-8">
         {/* Header */}
         <div className="flex w-full max-w-[800px] flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -112,7 +112,7 @@ export default function ScoreboardScreen() {
         </div>
 
         {/* Player score list */}
-        <div className="mt-10 flex w-full max-w-[800px] flex-col gap-4">
+        <div className="mt-10 flex w-full max-w-[800px] flex-col gap-4 overflow-hidden px-2">
           {sortedPlayers.map((player, i) => {
             const isLeader = player.score === leadScore && leadScore > 0
             const rotation = rotations[i % rotations.length]
@@ -134,40 +134,41 @@ export default function ScoreboardScreen() {
                   backgroundColor: isLeader ? '#66FF00' : '#FFFFFF',
                   border: '4px solid #111111',
                   borderRadius: 12,
-                  boxShadow: '10px 10px 0px rgba(0,0,0,0.1)',
+                  boxShadow: '6px 6px 0px rgba(0,0,0,0.1)',
                   transform: `rotate(${rotation}deg)${isLeader ? ' scale(1.05)' : ''}`,
                   zIndex: isLeader ? 10 : 1,
                   position: 'relative',
                 }}
               >
                 {/* Left: rank + avatar + name */}
-                <div className="flex items-center gap-4">
+                <div className="flex min-w-0 items-center gap-2 sm:gap-4">
                   <span
                     style={{
                       fontFamily: 'var(--font-archivo)',
                       fontSize: 'clamp(20px, 3vw, 32px)',
                       color: '#111111',
-                      minWidth: 40,
+                      minWidth: 28,
                     }}
                   >
                     {i + 1}
                   </span>
                   <div
-                    className="flex items-center justify-center rounded-full"
+                    className="flex flex-shrink-0 items-center justify-center rounded-full"
                     style={{
-                      width: 48,
-                      height: 48,
+                      width: 40,
+                      height: 40,
                       backgroundColor: player.avatarBg,
                       border: '3px solid #111',
-                      fontSize: 24,
+                      fontSize: 20,
                     }}
                   >
                     {player.avatar}
                   </div>
                   <span
+                    className="truncate"
                     style={{
                       fontFamily: 'var(--font-archivo)',
-                      fontSize: 22,
+                      fontSize: 'clamp(16px, 2.5vw, 22px)',
                       color: '#111111',
                     }}
                   >
@@ -175,7 +176,7 @@ export default function ScoreboardScreen() {
                   </span>
                   {player.isBot && (
                     <span
-                      className="rounded px-2 py-0.5 text-xs uppercase"
+                      className="hidden rounded px-2 py-0.5 text-xs uppercase sm:inline"
                       style={{
                         fontFamily: 'var(--font-inter)',
                         backgroundColor: '#EEE',
@@ -189,11 +190,11 @@ export default function ScoreboardScreen() {
                 </div>
 
                 {/* Right: score */}
-                <div className="flex items-baseline gap-1">
+                <div className="flex flex-shrink-0 items-baseline gap-1">
                   <span
                     style={{
                       fontFamily: 'var(--font-archivo)',
-                      fontSize: 'clamp(24px, 4vw, 42px)',
+                      fontSize: 'clamp(22px, 4vw, 42px)',
                       color: '#111111',
                     }}
                   >
@@ -232,21 +233,23 @@ export default function ScoreboardScreen() {
             >
               Last Round Winner
             </span>
-            <div className="flex items-center gap-4">
-              <GameCard
-                card={lastResult.blackCard}
-                size="sm"
-                showFooter={false}
-                rotation={-2}
-              />
-              <GameCard
-                card={lastResult.winningCard}
-                variant="white"
-                size="sm"
-                showFooter={false}
-                rotation={3}
-              />
-              <div className="ml-2 flex flex-col items-start">
+            <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
+              <div className="flex items-center gap-2">
+                <GameCard
+                  card={lastResult.blackCard}
+                  size="sm"
+                  showFooter={false}
+                  rotation={-2}
+                />
+                <GameCard
+                  card={lastResult.winningCard}
+                  variant="white"
+                  size="sm"
+                  showFooter={false}
+                  rotation={3}
+                />
+              </div>
+              <div className="flex flex-col items-center sm:items-start">
                 <span
                   style={{
                     fontFamily: 'var(--font-archivo)',
