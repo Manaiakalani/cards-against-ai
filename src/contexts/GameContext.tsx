@@ -6,12 +6,14 @@ import { GameState, Card } from '@/types/game'
 
 type GameContextType = {
   gameState: GameState
+  goToLobby: () => void
   startGame: (playerName: string, botCount?: number) => void
   submitCard: (playerId: string, card: Card) => void
   botSubmit: () => void
   pickWinner: (winnerId: string) => void
   botPickWinner: () => void
   nextRound: () => void
+  continueFromScoreboard: () => void
   newGame: () => void
 }
 

@@ -49,7 +49,7 @@ function createHumanPlayer(name: string): Player {
 
 export function useGameState() {
   const [gameState, setGameState] = useState<GameState>({
-    phase: 'lobby',
+    phase: 'menu',
     currentRound: 0,
     currentBlackCard: null,
     players: [],
@@ -68,6 +68,10 @@ export function useGameState() {
 
   const [blackCardPool, setBlackCardPool] = useState<Card[]>([])
   const [whiteCardPool, setWhiteCardPool] = useState<Card[]>([])
+
+  const goToLobby = useCallback(() => {
+    setGameState(prev => ({ ...prev, phase: 'lobby' }))
+  }, [])
 
   const startGame = useCallback((playerName: string, botCount: number = 3) => {
     const { blackCards, whiteCards } = getAllCards(gameState.settings.selectedDecks)
@@ -234,7 +238,16 @@ export function useGameState() {
     })
   }, [])
 
+  // Results → Scoreboard (show standings)
   const nextRound = useCallback(() => {
+    setGameState(prev => ({
+      ...prev,
+      phase: 'scoreboard',
+    }))
+  }, [])
+
+  // Scoreboard → Playing (deal next round)
+  const continueFromScoreboard = useCallback(() => {
     setGameState(prev => {
       const playerCount = prev.players.length
       const currentCzarIndex = prev.players.findIndex(p => p.id === prev.czarId)
@@ -276,7 +289,7 @@ export function useGameState() {
   const newGame = useCallback(() => {
     setGameState(prev => ({
       ...prev,
-      phase: 'lobby',
+      phase: 'menu',
       currentRound: 0,
       currentBlackCard: null,
       players: [],
@@ -284,6 +297,7 @@ export function useGameState() {
       roundWinner: null,
       roundHistory: [],
       czarId: '',
+      roomCode: generateRoomCode(),
     }))
     setBlackCardPool([])
     setWhiteCardPool([])
@@ -291,12 +305,14 @@ export function useGameState() {
 
   return {
     gameState,
+    goToLobby,
     startGame,
     submitCard,
     botSubmit,
     pickWinner,
     botPickWinner,
     nextRound,
+    continueFromScoreboard,
     newGame,
   }
 }

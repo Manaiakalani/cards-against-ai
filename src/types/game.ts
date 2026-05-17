@@ -38,7 +38,7 @@ export interface GameSettings {
   selectedDecks: string[]
 }
 
-export type GamePhase = 'lobby' | 'playing' | 'judging' | 'results' | 'ended'
+export type GamePhase = 'menu' | 'lobby' | 'playing' | 'judging' | 'results' | 'scoreboard' | 'ended'
 
 export interface RoundResult {
   blackCard: Card

@@ -11,9 +11,9 @@ interface NavButtonProps {
 }
 
 const variantStyles = {
-  primary: { backgroundColor: '#66FF00', color: '#111111' },
-  secondary: { backgroundColor: '#FFB6C1', color: '#111111' },
-  dark: { backgroundColor: '#111111', color: '#FFFFFF' },
+  primary: { backgroundColor: '#66FF00', color: '#111111', shadow: '#111111' },
+  secondary: { backgroundColor: '#FFB6C1', color: '#111111', shadow: '#111111' },
+  dark: { backgroundColor: '#111111', color: '#FFFFFF', shadow: '#333333' },
 } as const
 
 export function NavButton({
@@ -22,12 +22,14 @@ export function NavButton({
   variant = 'primary',
   disabled = false,
 }: NavButtonProps) {
+  const { shadow, ...bg } = variantStyles[variant]
+
   return (
     <motion.button
       onClick={onClick}
       disabled={disabled}
-      whileTap={disabled ? undefined : { scale: 0.95 }}
-      whileHover={disabled ? undefined : { scale: 1.02 }}
+      whileTap={disabled ? undefined : { y: 4, boxShadow: `0px 2px 0px ${shadow}` }}
+      whileHover={disabled ? undefined : { y: 1, boxShadow: `0px 5px 0px ${shadow}` }}
       className={`
         rounded-full uppercase cursor-pointer px-8 py-4
         ${disabled ? 'opacity-50 grayscale cursor-not-allowed' : ''}
@@ -37,8 +39,10 @@ export function NavButton({
         fontSize: '18px',
         fontWeight: 400,
         letterSpacing: '0.02em',
-        border: 'none',
-        ...variantStyles[variant],
+        border: '3px solid #111111',
+        boxShadow: `0px 6px 0px ${shadow}`,
+        transition: 'filter 0.1s',
+        ...bg,
       }}
     >
       {children}

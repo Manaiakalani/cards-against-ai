@@ -6,6 +6,7 @@ import { useGame } from '@/contexts/GameContext'
 import { Card } from '@/types/game'
 import { PosterBackground } from '@/components/PosterBackground'
 import { GameCard } from '@/components/GameCard'
+import { GameHUD } from '@/components/GameHUD'
 import { BottomNav } from '@/components/BottomNav'
 import { NavButton } from '@/components/NavButton'
 import { Sticker } from '@/components/Sticker'
@@ -60,7 +61,8 @@ export default function PlayingScreen() {
     return (
       <div className="relative min-h-screen overflow-hidden" style={{ backgroundColor: '#F4F4EE' }}>
         <PosterBackground words={['equity', 'scaling', 'burn rate']} opacity={0.15} />
-        <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4">
+        <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} />
+        <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 pt-14">
           <motion.div
             animate={{ scale: [1, 1.05, 1] }}
             transition={{ repeat: Infinity, duration: 2 }}
@@ -128,8 +130,9 @@ export default function PlayingScreen() {
   return (
     <div className="relative min-h-screen overflow-hidden" style={{ backgroundColor: '#F4F4EE' }}>
       <PosterBackground words={['equity', 'scaling', 'burn rate']} opacity={0.15} />
+      <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} />
 
-      <div className="relative z-10 flex flex-col px-6 py-8">
+      <div className="relative z-10 flex flex-col px-6 pt-16 pb-8">
         {/* Top Section: Title + Mini Black Card */}
         <div className="mb-8 flex items-start justify-between gap-6">
           <div>

@@ -18,20 +18,20 @@ const BOT_PREVIEWS = [
 ]
 
 export default function LobbyScreen() {
-  const { startGame } = useGame()
+  const { gameState, startGame } = useGame()
   const [playerName, setPlayerName] = useState('')
   const [botCount, setBotCount] = useState(3)
 
   const totalPlayers = 1 + botCount
   const slots = Array.from({ length: MAX_PLAYERS })
 
-  const filledSlots: { name: string; emoji: string; bg: string; role: string }[] = []
+  const filledSlots: { name: string; emoji: string; bg: string; role: string; isHost: boolean }[] = []
   if (playerName.trim()) {
-    filledSlots.push({ name: playerName, emoji: '🦄', bg: '#FFD700', role: 'Host' })
+    filledSlots.push({ name: playerName, emoji: '🦄', bg: '#FFD700', role: 'Host', isHost: true })
   }
   for (let i = 0; i < botCount; i++) {
     const bot = BOT_PREVIEWS[i]
-    filledSlots.push({ name: bot.name, emoji: bot.emoji, bg: bot.bg, role: 'Bot' })
+    filledSlots.push({ name: bot.name, emoji: bot.emoji, bg: bot.bg, role: 'Bot', isHost: false })
   }
 
   function handleStart() {
@@ -44,11 +44,12 @@ export default function LobbyScreen() {
       <PosterBackground words={['lobby', 'waiting', 'series a']} />
 
       <div className="relative z-10 flex flex-col items-center px-4 py-12">
+        {/* Title */}
         <motion.h1
           initial={{ y: -40, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5, ease: 'easeOut' }}
-          className="mb-6 text-center"
+          className="mb-4 text-center"
           style={{
             fontFamily: 'var(--font-archivo)',
             fontSize: '64px',
@@ -61,10 +62,48 @@ export default function LobbyScreen() {
           THE BOARDROOM
         </motion.h1>
 
+        {/* Room Code Card */}
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.15, type: 'spring', stiffness: 300 }}
+          className="mb-4 inline-block text-center"
+          style={{
+            background: 'white',
+            border: '4px solid #111',
+            padding: '12px 32px',
+            boxShadow: '8px 8px 0px rgba(0,0,0,0.1)',
+            transform: 'rotate(-2deg)',
+          }}
+        >
+          <div
+            style={{
+              fontFamily: 'var(--font-archivo)',
+              fontSize: '12px',
+              textTransform: 'uppercase',
+              opacity: 0.5,
+              marginBottom: '2px',
+            }}
+          >
+            Room Code
+          </div>
+          <div
+            style={{
+              fontFamily: 'var(--font-archivo)',
+              fontSize: '36px',
+              letterSpacing: '4px',
+              color: '#111',
+            }}
+          >
+            {gameState.roomCode}
+          </div>
+        </motion.div>
+
+        {/* Player Count Sticker */}
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.25 }}
         >
           <Sticker color="pink" rotation={-2}>
             {totalPlayers} / {MAX_PLAYERS} Players Joined
@@ -72,7 +111,7 @@ export default function LobbyScreen() {
         </motion.div>
 
         {/* Player Grid */}
-        <div className="mt-10 grid w-full max-w-5xl grid-cols-3 gap-5">
+        <div className="mt-8 grid w-full max-w-5xl grid-cols-3 gap-5">
           {slots.map((_, i) => {
             const player = filledSlots[i]
             const rotation = i % 2 === 0 ? -1.5 : 1.5
@@ -83,26 +122,39 @@ export default function LobbyScreen() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 * i }}
+                className="relative flex flex-col items-center justify-center gap-3"
                 style={{
-                  height: '240px',
+                  height: '220px',
                   borderRadius: '18px',
                   border: player ? '3px solid #111' : '3px dashed #ccc',
                   backgroundColor: player ? 'white' : 'transparent',
-                  boxShadow: player ? '5px 5px 0px #111' : 'none',
-                  rotate: `${rotation}deg`,
+                  boxShadow: player
+                    ? player.isHost
+                      ? '8px 8px 0px #FFB6C1'
+                      : '5px 5px 0px #111'
+                    : 'none',
+                  borderWidth: player?.isHost ? '4px' : '3px',
+                  transform: `rotate(${rotation}deg)`,
                 }}
-                className="flex flex-col items-center justify-center gap-3"
               >
                 {player ? (
                   <>
+                    {/* Host badge */}
+                    {player.isHost && (
+                      <div className="absolute -right-3 -top-3">
+                        <Sticker color="green" rotation={12}>
+                          HOST
+                        </Sticker>
+                      </div>
+                    )}
                     <div
                       className="flex items-center justify-center rounded-full"
                       style={{
-                        width: '80px',
-                        height: '80px',
+                        width: '72px',
+                        height: '72px',
                         backgroundColor: player.bg,
                         border: '3px solid #111',
-                        fontSize: '36px',
+                        fontSize: '32px',
                       }}
                     >
                       {player.emoji}
@@ -110,23 +162,23 @@ export default function LobbyScreen() {
                     <span
                       style={{
                         fontFamily: 'var(--font-archivo)',
-                        fontSize: '22px',
+                        fontSize: '20px',
                         color: '#111',
                       }}
                     >
                       {player.name}
                     </span>
                     <span
-                      className="text-sm"
-                      style={{ fontFamily: 'var(--font-inter)', color: '#888' }}
+                      className="text-xs uppercase tracking-wider"
+                      style={{ fontFamily: 'var(--font-inter)', color: '#999' }}
                     >
                       {player.role}
                     </span>
                   </>
                 ) : (
                   <span
-                    className="text-base"
-                    style={{ fontFamily: 'var(--font-inter)', color: '#bbb' }}
+                    className="text-sm"
+                    style={{ fontFamily: 'var(--font-inter)', color: '#ccc' }}
                   >
                     Waiting for Talent...
                   </span>
@@ -136,12 +188,12 @@ export default function LobbyScreen() {
           })}
         </div>
 
-        {/* Name Input */}
+        {/* Name Input + Bot Selector */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="mt-10 flex w-full max-w-md flex-col gap-4"
+          className="mt-8 flex w-full max-w-md flex-col gap-4"
         >
           <input
             type="text"
@@ -174,7 +226,7 @@ export default function LobbyScreen() {
               <button
                 key={count}
                 onClick={() => setBotCount(count)}
-                className="flex h-10 w-10 items-center justify-center transition-transform hover:scale-110"
+                className="flex h-10 w-10 items-center justify-center transition-transform hover:scale-110 cursor-pointer"
                 style={{
                   fontFamily: 'var(--font-archivo)',
                   fontSize: '18px',

@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { PosterBackground } from '@/components/PosterBackground'
 import { GameCard } from '@/components/GameCard'
+import { GameHUD } from '@/components/GameHUD'
 import { BottomNav } from '@/components/BottomNav'
 import { NavButton } from '@/components/NavButton'
 import { Sticker } from '@/components/Sticker'
@@ -46,7 +47,8 @@ export default function JudgingScreen() {
     return (
       <div className="relative min-h-screen overflow-hidden" style={{ backgroundColor: '#F4F4EE' }}>
         <PosterBackground words={['czar', 'judge', 'verdict']} />
-        <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4">
+        <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} />
+        <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 pt-14">
           <motion.div
             animate={{ rotate: [0, 5, -5, 0] }}
             transition={{ repeat: Infinity, duration: 1.5 }}
@@ -86,8 +88,9 @@ export default function JudgingScreen() {
   return (
     <div className="relative min-h-screen overflow-hidden" style={{ backgroundColor: '#F4F4EE' }}>
       <PosterBackground words={['czar', 'judge', 'verdict']} />
+      <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} />
 
-      <div className="relative z-10 flex flex-col items-center px-4 py-8">
+      <div className="relative z-10 flex flex-col items-center px-4 pt-16 pb-8">
         {/* Status Badge */}
         <motion.div
           initial={{ y: -20, opacity: 0 }}

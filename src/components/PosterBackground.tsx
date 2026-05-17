@@ -36,9 +36,12 @@ export function PosterBackground({ words, opacity = 0.9 }: PosterBackgroundProps
               fontFamily: 'var(--font-archivo)',
               fontSize: '18vw',
               fontWeight: 400,
-              lineHeight: 1,
+              lineHeight: 0.75,
+              textTransform: 'lowercase',
+              letterSpacing: '-0.04em',
               color: row.isOutline ? 'transparent' : '#FF4242',
               WebkitTextStroke: row.isOutline ? '3px #FF4242' : undefined,
+              paddingRight: '2vw',
             }}
           >
             {row.word}
