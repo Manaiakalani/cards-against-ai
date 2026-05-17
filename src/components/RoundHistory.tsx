@@ -196,7 +196,7 @@ function RoundEntry({
         style={{
           fontFamily: 'var(--font-inter)',
           fontSize: 13,
-          color: '#2D8C00',
+          color: '#1A7A00',
           fontWeight: 700,
           lineHeight: 1.4,
         }}

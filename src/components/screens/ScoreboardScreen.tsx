@@ -31,7 +31,7 @@ export default function ScoreboardScreen() {
 
       <div className="relative z-10 flex h-full flex-col">
         {/* Scrollable content */}
-        <div className="flex min-h-0 flex-1 flex-col items-center overflow-y-auto overscroll-contain px-6 pt-8 pb-4 sm:px-8">
+        <div className="flex min-h-0 flex-1 flex-col items-center overflow-y-auto overscroll-contain px-6 pt-8 pb-4 sm:px-8" tabIndex={0} role="region" aria-label="Scoreboard">
         {/* Header */}
         <div className="flex w-full max-w-[800px] flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -171,7 +171,7 @@ export default function ScoreboardScreen() {
                     className="truncate"
                     style={{
                       fontFamily: 'var(--font-archivo)',
-                      fontSize: 'clamp(14px, 2vw, 20px)',
+                      fontSize: 'clamp(16px, 2.5vw, 20px)',
                       color: 'var(--theme-text)',
                     }}
                   >
@@ -270,7 +270,7 @@ export default function ScoreboardScreen() {
                   style={{
                     fontFamily: 'var(--font-inter)',
                     fontSize: 13,
-                    color: '#2D8C00',
+                    color: '#1A7A00',
                     fontWeight: 700,
                   }}
                 >

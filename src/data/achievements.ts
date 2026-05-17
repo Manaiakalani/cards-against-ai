@@ -40,7 +40,7 @@ export const DEFAULT_STATS: AchievementStats = {
 }
 
 export const RARITY_COLORS: Record<AchievementRarity, string> = {
-  common: '#66FF00',
+  common: '#2D7A00',
   rare: '#87CEEB',
   epic: '#DDA0DD',
   legendary: '#FFD700',

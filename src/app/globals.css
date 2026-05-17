@@ -7,8 +7,8 @@
   --theme-surface: #FFFFFF;
   --theme-surface-alt: #EEEEEE;
   --theme-text: #111111;
-  --theme-text-secondary: #666666;
-  --theme-text-muted: #999999;
+  --theme-text-secondary: #595959;
+  --theme-text-muted: #6B6B6B;
   --theme-border: #111111;
   --theme-border-light: #CCCCCC;
   --theme-shadow: #111111;
@@ -35,7 +35,7 @@
   --theme-surface-alt: #333333;
   --theme-text: #E8E8E2;
   --theme-text-secondary: #AAAAAA;
-  --theme-text-muted: #777777;
+  --theme-text-muted: #888888;
   --theme-border: #555555;
   --theme-border-light: #444444;
   --theme-shadow: #000000;

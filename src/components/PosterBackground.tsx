@@ -15,6 +15,7 @@ export function PosterBackground({ words, opacity }: PosterBackgroundProps) {
   return (
     <div
       className="fixed inset-0 overflow-hidden pointer-events-none select-none"
+      aria-hidden="true"
       style={{ zIndex: 0, opacity: opacity ?? 'var(--theme-poster-opacity)' }}
     >
       <div

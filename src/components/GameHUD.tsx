@@ -87,7 +87,7 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode, timer }
         </div>
 
         {/* Score pills — flow after round indicator */}
-        <div className="flex min-w-0 items-center gap-1 overflow-x-auto">
+        <div className="flex min-w-0 items-center gap-1 overflow-x-auto" tabIndex={0} role="region" aria-label="Player scores">
           {players.map((player) => {
             const isCzar = player.id === czarId
             const isLeader = player.score === leadScore && leadScore > 0
