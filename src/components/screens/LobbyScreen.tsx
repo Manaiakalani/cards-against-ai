@@ -10,11 +10,11 @@ import { Sticker } from '@/components/Sticker'
 
 const MAX_PLAYERS = 6
 const BOT_PREVIEWS = [
-  { name: 'VC_DARREN', emoji: '📉', bg: '#7FFFD4' },
-  { name: 'GPT_Slayer', emoji: '🤖', bg: '#F08080' },
-  { name: 'CryptoBro88', emoji: '₿', bg: '#FFD700' },
-  { name: 'AgileCoach', emoji: '☕', bg: '#DDA0DD' },
-  { name: 'Intern_Ex', emoji: '🫠', bg: '#87CEEB' },
+  { name: 'no_thoughts_ceo', emoji: '🧠', bg: '#7FFFD4' },
+  { name: 'delulu_vc', emoji: '💅', bg: '#F08080' },
+  { name: 'touch_grass_404', emoji: '🌿', bg: '#FFD700' },
+  { name: 'main_character', emoji: '✨', bg: '#DDA0DD' },
+  { name: 'slay_intern', emoji: '💀', bg: '#87CEEB' },
 ]
 
 export default function LobbyScreen() {
@@ -41,7 +41,7 @@ export default function LobbyScreen() {
 
   return (
     <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: '#F4F4EE' }}>
-      <PosterBackground words={['lobby', 'waiting', 'series a']} />
+      <PosterBackground words={['touch', 'grass', 'never']} />
 
       <div className="relative z-10 flex flex-col items-center px-4 py-12">
         {/* Title */}
@@ -59,7 +59,7 @@ export default function LobbyScreen() {
             textShadow: '6px 6px 0px #111',
           }}
         >
-          THE BOARDROOM
+          THE PREGAME
         </motion.h1>
 
         {/* Room Code Card */}
@@ -253,7 +253,7 @@ export default function LobbyScreen() {
           onClick={handleStart}
           disabled={!playerName.trim()}
         >
-          START GAME
+          LET&apos;S GO 🔥
         </NavButton>
       </BottomNav>
     </div>

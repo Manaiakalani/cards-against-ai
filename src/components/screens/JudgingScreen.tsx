@@ -39,7 +39,7 @@ export default function JudgingScreen() {
   if (!isHumanCzar) {
     return (
       <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: '#F4F4EE' }}>
-        <PosterBackground words={['czar', 'judge', 'verdict']} />
+        <PosterBackground words={['slay', 'ate', 'period']} />
         <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} />
         <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 pt-14">
           <motion.div
@@ -80,7 +80,7 @@ export default function JudgingScreen() {
   // Human czar judging view
   return (
     <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: '#F4F4EE' }}>
-      <PosterBackground words={['czar', 'judge', 'verdict']} />
+      <PosterBackground words={['slay', 'ate', 'period']} />
       <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} />
 
       <div className="relative z-10 flex flex-col items-center px-4 pt-16 pb-8">
@@ -120,7 +120,7 @@ export default function JudgingScreen() {
             )}
             <div className="absolute -right-4 -top-4">
               <Sticker color="pink" rotation={8}>
-                CARD CZAR
+                MAIN JUDGE
               </Sticker>
             </div>
           </motion.div>
@@ -168,7 +168,7 @@ export default function JudgingScreen() {
           onClick={handlePickWinner}
           disabled={selectedSubmissionIdx === null}
         >
-          PICK WINNER
+          CROWN THEM 👑
         </NavButton>
       </BottomNav>
     </div>

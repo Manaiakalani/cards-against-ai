@@ -56,7 +56,7 @@ export default function EndScreen() {
 
   return (
     <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: '#F4F4EE' }}>
-      <PosterBackground words={['exit', 'unicorn', 'liquid']} opacity={0.9} />
+      <PosterBackground words={['slay', 'iconic', 'legend']} opacity={0.9} />
 
       {/* Confetti */}
       {confetti.map((i) => (
@@ -82,7 +82,7 @@ export default function EndScreen() {
           </span>
           <div className="absolute -right-6 -top-2">
             <Sticker color="pink" rotation={15}>
-              WINNER
+              SLAY
             </Sticker>
           </div>
         </motion.div>
@@ -103,7 +103,7 @@ export default function EndScreen() {
             textShadow: '6px 6px 0px #111',
           }}
         >
-          THE UNICORN
+          THE GOAT
         </motion.h1>
 
         {/* Winner Name Badge */}
@@ -253,7 +253,7 @@ export default function EndScreen() {
           </div>
         </motion.div>
 
-        {/* Winning Combos */}
+        {/* Best Combos */}
         {gameState.roundHistory.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -273,7 +273,7 @@ export default function EndScreen() {
                 transform: 'rotate(1deg)',
               }}
             >
-              Winning Combos
+              Best Combos
             </div>
 
             <div className="flex flex-col gap-4">
@@ -356,7 +356,7 @@ export default function EndScreen() {
               boxShadow: '0px 8px 0px #111',
             }}
           >
-            PLAY AGAIN
+            RUN IT BACK
           </motion.button>
         </motion.div>
       </div>

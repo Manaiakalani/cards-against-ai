@@ -57,7 +57,7 @@ export default function PlayingScreen() {
   if (isPlayerCzar) {
     return (
       <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: '#F4F4EE' }}>
-        <PosterBackground words={['equity', 'scaling', 'burn rate']} opacity={0.15} />
+        <PosterBackground words={['no cap', 'fr fr', 'lowkey']} opacity={0.15} />
         <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} />
         <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 pt-14">
           <motion.div
@@ -90,7 +90,7 @@ export default function PlayingScreen() {
               color: '#666',
             }}
           >
-            Waiting for submissions...
+            Waiting for everyone to lock in...
           </p>
           <motion.div
             className="mt-6 flex gap-2"
@@ -126,7 +126,7 @@ export default function PlayingScreen() {
 
   return (
     <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: '#F4F4EE' }}>
-      <PosterBackground words={['equity', 'scaling', 'burn rate']} opacity={0.15} />
+      <PosterBackground words={['no cap', 'fr fr', 'lowkey']} opacity={0.15} />
       <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} />
 
       <div className="relative z-10 flex flex-col px-6 pt-16 pb-8">
@@ -220,7 +220,7 @@ export default function PlayingScreen() {
                       className="absolute -right-2 -top-3 z-20"
                     >
                       <Sticker color="green" rotation={-6}>
-                        SELECTED
+                        THIS ONE
                       </Sticker>
                     </motion.div>
                   )}
@@ -256,14 +256,14 @@ export default function PlayingScreen() {
 
       <BottomNav>
         <NavButton variant="secondary" onClick={handleRedraw} disabled={hasRedrawn || submitted}>
-          {hasRedrawn ? '✓ REDRAWN' : 'REDRAW HAND'}
+          {hasRedrawn ? '✓ DEALT' : '🔄 NEW HAND'}
         </NavButton>
         <NavButton
           variant="primary"
           onClick={handleConfirm}
           disabled={!selectedCard || submitted}
         >
-          CONFIRM SELECTION
+          LOCK IT IN
         </NavButton>
       </BottomNav>
     </div>

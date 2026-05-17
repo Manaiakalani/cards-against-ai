@@ -58,7 +58,7 @@ export default function ResultsScreen() {
 
   return (
     <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: '#F4F4EE' }}>
-      <PosterBackground words={['winner', 'exit', 'unicorn']} opacity={0.9} />
+      <PosterBackground words={['ate', 'left no', 'crumbs']} opacity={0.9} />
 
       {/* Confetti */}
       {confettiPieces.map((i) => (
@@ -80,7 +80,7 @@ export default function ResultsScreen() {
             filter: 'drop-shadow(4px 4px 0px rgba(0,0,0,0.3))',
           }}
         >
-          WINNER REVEALED
+          ATE & LEFT NO CRUMBS
         </motion.h1>
 
         {/* Subtitle */}
@@ -97,7 +97,7 @@ export default function ResultsScreen() {
             color: '#555',
           }}
         >
-          Round {latestResult.round} &bull; The Pivot
+          Round {latestResult.round} &bull; The Main Event
         </motion.p>
 
         {/* Winning Pair */}
@@ -120,7 +120,7 @@ export default function ResultsScreen() {
                 transition={{ delay: 0.8, type: 'spring' }}
               >
                 <Sticker color="green" rotation={6}>
-                  ROUND WINNER
+                  THEY ATE
                 </Sticker>
               </motion.div>
             </div>
@@ -161,7 +161,7 @@ export default function ResultsScreen() {
           {/* Inline Next Round button */}
           <div className="my-6">
             <NavButton variant="primary" onClick={nextRound}>
-              NEXT ROUND →
+              KEEP GOING →
             </NavButton>
           </div>
 

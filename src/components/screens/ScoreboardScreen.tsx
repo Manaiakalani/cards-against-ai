@@ -24,7 +24,7 @@ export default function ScoreboardScreen() {
       className="relative min-h-screen overflow-x-hidden"
       style={{ backgroundColor: '#F4F4EE' }}
     >
-      <PosterBackground words={['funding', 'round', 'valuation']} opacity={0.4} />
+      <PosterBackground words={['main', 'character', 'energy']} opacity={0.4} />
 
       <div className="relative z-10 flex flex-col items-center px-6 py-12 sm:px-8">
         {/* Header */}
@@ -288,7 +288,7 @@ export default function ScoreboardScreen() {
         {/* Inline Next Round button */}
         <div className="mt-8 mb-12 flex justify-center">
           <NavButton variant="primary" onClick={continueFromScoreboard}>
-            NEXT ROUND →
+            KEEP GOING →
           </NavButton>
         </div>
       </div>

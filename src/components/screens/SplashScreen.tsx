@@ -29,7 +29,7 @@ export default function SplashScreen() {
       className="relative flex min-h-screen items-center justify-center overflow-hidden"
       style={{ backgroundColor: '#F4F4EE' }}
     >
-      <PosterBackground words={['cards', 'against', 'artificial intelligence']} opacity={0.9} />
+      <PosterBackground words={['slay', 'brainrot', 'unhinged']} opacity={0.9} />
 
       {/* Decorative floating cards — hidden on mobile */}
       <div
@@ -58,7 +58,7 @@ export default function SplashScreen() {
             color: '#FFFFFF',
           }}
         >
-          The next _____ will disrupt the entire _____.
+          The next _____ will be my entire personality.
         </span>
       </div>
       <div
@@ -87,7 +87,7 @@ export default function SplashScreen() {
             color: '#111111',
           }}
         >
-          A blockchain-powered cat
+          Vibe coding at 3 AM with zero tests
         </span>
       </div>
 
@@ -162,7 +162,7 @@ export default function SplashScreen() {
             borderRadius: 6,
           }}
         >
-          The party game for horrible AI people
+          The party game for chronically online people
         </motion.p>
 
         {/* Deck info */}
@@ -178,7 +178,7 @@ export default function SplashScreen() {
             borderRadius: 4,
           }}
         >
-          176 Cards • 6 Decks • Unlimited Bad Takes
+          189 Cards • 6 Decks • Unlimited Bad Takes
         </motion.p>
 
         {/* Play button */}

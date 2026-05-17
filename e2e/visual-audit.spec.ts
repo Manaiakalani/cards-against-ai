@@ -5,8 +5,8 @@ import { test, expect, type Page } from '@playwright/test'
 async function navigateToPlaying(page: Page) {
   await page.goto('/')
   await page.getByRole('button', { name: /play/i }).click()
-  await page.getByPlaceholder(/enter your name/i).fill('DesignTester')
-  await page.getByRole('button', { name: /start game/i }).click()
+  await page.getByPlaceholder(/enter your name/i).fill('vibecheck')
+  await page.getByRole('button', { name: /let.*s go/i }).click()
   await expect(page.getByText('Your Hand')).toBeVisible({ timeout: 5000 })
 }
 
@@ -14,8 +14,8 @@ async function playToResults(page: Page) {
   await navigateToPlaying(page)
   const cardGrid = page.locator('.grid')
   await cardGrid.locator('> div').first().click()
-  await page.getByRole('button', { name: /confirm selection/i }).click()
-  await expect(page.getByText('WINNER REVEALED')).toBeVisible({ timeout: 10000 })
+  await page.getByRole('button', { name: /lock it in/i }).click()
+  await expect(page.getByText('ATE & LEFT NO CRUMBS')).toBeVisible({ timeout: 10000 })
 }
 
 /** Get computed CSS property from an element */
@@ -70,14 +70,14 @@ test.describe('Visual Audit — Fonts & Colors', () => {
   })
 
   test('Inter loads on body text', async ({ page }) => {
-    const tagline = page.getByText('The party game for horrible AI people')
+    const tagline = page.getByText('The party game for chronically online people')
     const fontFamily = await tagline.evaluate((el) => getComputedStyle(el).fontFamily)
     expect(fontFamily.toLowerCase()).toContain('inter')
   })
 
   test('fonts load on lobby screen', async ({ page }) => {
     await page.getByRole('button', { name: /play/i }).click()
-    const title = page.getByText('THE BOARDROOM')
+    const title = page.getByText('THE PREGAME')
     await expect(title).toBeVisible()
     const fontFamily = await title.evaluate((el) => getComputedStyle(el).fontFamily)
     expect(fontFamily.toLowerCase()).toContain('archivo')
@@ -138,7 +138,7 @@ test.describe('Visual Audit — Fonts & Colors', () => {
   })
 
   test('body text is at least 14px for readability', async ({ page }) => {
-    const tagline = page.getByText('The party game for horrible AI people')
+    const tagline = page.getByText('The party game for chronically online people')
     const fontSize = await tagline.evaluate((el) => parseFloat(getComputedStyle(el).fontSize))
     expect(fontSize).toBeGreaterThanOrEqual(14)
   })
@@ -164,7 +164,7 @@ test.describe('Visual Audit — Fonts & Colors', () => {
 
   test('nav buttons meet touch target size', async ({ page }) => {
     await navigateToPlaying(page)
-    const confirmBtn = page.getByRole('button', { name: /confirm selection/i })
+    const confirmBtn = page.getByRole('button', { name: /lock it in/i })
     const box = await confirmBtn.boundingBox()
     expect(box).toBeTruthy()
     expect(box!.height).toBeGreaterThanOrEqual(44)
@@ -227,17 +227,17 @@ test.describe('Visual Audit — Fonts & Colors', () => {
 
   test('results screen shows winner with readable text', async ({ page }) => {
     await playToResults(page)
-    const title = page.getByText('WINNER REVEALED')
+    const title = page.getByText('ATE & LEFT NO CRUMBS')
     const fontSize = await title.evaluate((el) => parseFloat(getComputedStyle(el).fontSize))
     expect(fontSize).toBeGreaterThanOrEqual(36) // clamp min
   })
 
   test('scoreboard renders with legible player names', async ({ page }) => {
     await playToResults(page)
-    await page.getByRole('button', { name: /next round/i }).click()
+    await page.getByRole('button', { name: /keep going/i }).click()
     await expect(page.getByText('STANDINGS')).toBeVisible({ timeout: 5000 })
     // Check player name font size
-    const playerName = page.getByText('DesignTester').first()
+    const playerName = page.getByText('vibecheck').first()
     await expect(playerName).toBeVisible()
     const fontSize = await playerName.first().evaluate(
       (el) => parseFloat(getComputedStyle(el).fontSize),
@@ -254,8 +254,8 @@ test.describe('Visual Audit — Fonts & Colors', () => {
 
   test('capture lobby screen', async ({ page }) => {
     await page.getByRole('button', { name: /play/i }).click()
-    await page.getByPlaceholder(/enter your name/i).fill('DesignTester')
-    await expect(page.getByText('THE BOARDROOM')).toBeVisible()
+    await page.getByPlaceholder(/enter your name/i).fill('vibecheck')
+    await expect(page.getByText('THE PREGAME')).toBeVisible()
     await page.waitForTimeout(800)
     await page.screenshot({ path: 'test-results/screenshots/lobby.png', fullPage: true })
   })
@@ -274,7 +274,7 @@ test.describe('Visual Audit — Fonts & Colors', () => {
 
   test('capture scoreboard screen', async ({ page }) => {
     await playToResults(page)
-    await page.getByRole('button', { name: /next round/i }).click()
+    await page.getByRole('button', { name: /keep going/i }).click()
     await expect(page.getByText('STANDINGS')).toBeVisible({ timeout: 5000 })
     await page.waitForTimeout(800)
     await page.screenshot({ path: 'test-results/screenshots/scoreboard.png', fullPage: true })
