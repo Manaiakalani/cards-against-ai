@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
 import React from 'react'
 import { m } from 'framer-motion'
+import { Share2 } from 'lucide-react'
 import { useGame } from '@/contexts/GameContext'
 import { PosterBackground } from '@/components/PosterBackground'
 import { GameCard } from '@/components/GameCard'
@@ -197,6 +198,40 @@ export default function EndScreen() {
   const headlineText = humanWon
     ? 'YOU ATE THE WHOLE TABLE 🏆'
     : 'DEFEATED BY THE ALGORITHM 🤖'
+
+  const [shared, setShared] = useState(false)
+
+  const handleShare = useCallback(async () => {
+    const lines = [
+      `🃏 Cards Against AI`,
+      ``,
+      humanWon ? `🏆 I won!` : `🤖 Defeated by ${winner?.name ?? 'AI'}`,
+      `📊 ${winner?.score ?? 0} pts • ${totalRounds} rounds`,
+      ``,
+      sortedPlayers
+        .map((p, i) => `${i === 0 ? '👑' : `#${i + 1}`} ${p.name}: ${p.score}`)
+        .join('\n'),
+      ``,
+      `Play → cards-against-ai.vercel.app`,
+    ]
+    const text = lines.join('\n')
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: 'Cards Against AI', text })
+        return
+      } catch {
+        // User cancelled or share failed — fall through to clipboard
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(text)
+      setShared(true)
+      setTimeout(() => setShared(false), 2000)
+    } catch {
+      // Clipboard also failed — do nothing
+    }
+  }, [humanWon, winner, totalRounds, sortedPlayers])
 
   return (
     <div className="relative h-dvh overflow-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>
@@ -526,24 +561,45 @@ export default function EndScreen() {
           >
             RUN IT BACK
           </m.button>
-          <m.button
-            onClick={() => setShowHistory(true)}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="cursor-pointer uppercase"
-            style={{
-              fontFamily: 'var(--font-archivo)',
-              fontSize: '14px',
-              backgroundColor: 'var(--theme-surface)',
-              color: 'var(--theme-text)',
-              border: '3px solid var(--theme-border)',
-              padding: '10px 20px',
-              borderRadius: 12,
-              boxShadow: '4px 4px 0px var(--theme-shadow-soft)',
-            }}
-          >
-            📜 History
-          </m.button>
+          <div className="flex gap-3">
+            <m.button
+              onClick={handleShare}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="cursor-pointer uppercase"
+              style={{
+                fontFamily: 'var(--font-archivo)',
+                fontSize: '14px',
+                backgroundColor: 'var(--theme-surface)',
+                color: 'var(--theme-text)',
+                border: '3px solid var(--theme-border)',
+                padding: '10px 20px',
+                borderRadius: 12,
+                boxShadow: '4px 4px 0px var(--theme-shadow-soft)',
+              }}
+            >
+              <Share2 className="mr-1.5 inline-block h-4 w-4" aria-hidden="true" />
+              {shared ? 'Copied!' : 'Share'}
+            </m.button>
+            <m.button
+              onClick={() => setShowHistory(true)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="cursor-pointer uppercase"
+              style={{
+                fontFamily: 'var(--font-archivo)',
+                fontSize: '14px',
+                backgroundColor: 'var(--theme-surface)',
+                color: 'var(--theme-text)',
+                border: '3px solid var(--theme-border)',
+                padding: '10px 20px',
+                borderRadius: 12,
+                boxShadow: '4px 4px 0px var(--theme-shadow-soft)',
+              }}
+            >
+              📜 History
+            </m.button>
+          </div>
         </m.div>
 
         <div className="mb-12" />

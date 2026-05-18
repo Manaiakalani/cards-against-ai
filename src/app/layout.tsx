@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Archivo_Black, Inter } from "next/font/google";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { GameProvider } from "@/contexts/GameContext";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import "./globals.css";
 
 const archivoBlack = Archivo_Black({
@@ -63,7 +64,9 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
-          <GameProvider>{children}</GameProvider>
+          <ErrorBoundary>
+            <GameProvider>{children}</GameProvider>
+          </ErrorBoundary>
         </ThemeProvider>
       </body>
     </html>
