@@ -28,10 +28,13 @@ const sizeMap = {
   lg: { w: 280, h: 400, fontSize: 24, footerSize: 12, px: 24, pt: 28, iconSize: 12 },
 } as const
 
+const BLANK_PATTERN = /(_____+)/
+const BLANK_TEST = /^_+$/
+
 function renderCardText(text: string, isBlack: boolean) {
-  const parts = text.split(/(_____+)/)
+  const parts = text.split(BLANK_PATTERN)
   return parts.map((part, i) => {
-    if (/^_+$/.test(part)) {
+    if (BLANK_TEST.test(part)) {
       return (
         <span
           key={i}

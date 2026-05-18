@@ -62,6 +62,7 @@ export default function JudgingScreen() {
               fontFamily: 'var(--font-archivo)',
               fontSize: 'clamp(24px, 5vw, 36px)',
               color: 'var(--theme-text)',
+              textWrap: 'balance',
             }}
           >
             The Czar is Deliberating…

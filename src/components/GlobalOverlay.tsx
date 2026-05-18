@@ -63,8 +63,8 @@ export function GlobalOverlay() {
         }}
       >
         {isMuted
-          ? <VolumeX className={isInGame ? 'h-4 w-4' : 'h-5 w-5'} strokeWidth={2} />
-          : <Volume2 className={isInGame ? 'h-4 w-4' : 'h-5 w-5'} strokeWidth={2} />
+          ? <VolumeX className={isInGame ? 'h-4 w-4' : 'h-5 w-5'} strokeWidth={2} aria-hidden="true" />
+          : <Volume2 className={isInGame ? 'h-4 w-4' : 'h-5 w-5'} strokeWidth={2} aria-hidden="true" />
         }
       </m.button>
 
@@ -87,8 +87,8 @@ export function GlobalOverlay() {
         }}
       >
         {isDark
-          ? <Sun className={isInGame ? 'h-4 w-4' : 'h-5 w-5'} strokeWidth={2} />
-          : <Moon className={isInGame ? 'h-4 w-4' : 'h-5 w-5'} strokeWidth={2} />
+          ? <Sun className={isInGame ? 'h-4 w-4' : 'h-5 w-5'} strokeWidth={2} aria-hidden="true" />
+          : <Moon className={isInGame ? 'h-4 w-4' : 'h-5 w-5'} strokeWidth={2} aria-hidden="true" />
         }
       </m.button>
 

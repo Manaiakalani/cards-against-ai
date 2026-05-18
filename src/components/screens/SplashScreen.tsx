@@ -348,6 +348,9 @@ export default function SplashScreen() {
               transition={{ type: 'spring', stiffness: 400, damping: 25 }}
               onClick={(e) => e.stopPropagation()}
               className="relative w-full max-w-md rounded-lg p-8 shadow-hard"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Join game"
               style={{
                 backgroundColor: 'var(--theme-bg)',
                 border: '4px solid var(--theme-border)',
@@ -355,6 +358,7 @@ export default function SplashScreen() {
             >
               <button
                 onClick={() => setShowJoin(false)}
+                aria-label="Close join dialog"
                 className="absolute top-2 right-2 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full"
                 style={{
                   backgroundColor: 'var(--theme-text)',
@@ -382,18 +386,22 @@ export default function SplashScreen() {
                 style={{
                   fontFamily: 'var(--font-inter)',
                   fontSize: 14,
-                  color: 'var(--theme-muted)',
+                  color: 'var(--theme-text-muted)',
                 }}
               >
                 Enter the room code from a host
               </p>
 
+              <label className="sr-only" htmlFor="join-room-code">Room code</label>
               <input
+                id="join-room-code"
                 type="text"
                 value={joinCode}
                 onChange={(e) => setJoinCode(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6))}
                 placeholder="ROOM CODE"
                 maxLength={6}
+                autoComplete="off"
+                spellCheck={false}
                 className="mb-4 w-full rounded-lg px-4 py-3 text-center tracking-[4px] uppercase"
                 style={{
                   fontFamily: 'var(--font-archivo)',
@@ -408,7 +416,7 @@ export default function SplashScreen() {
               <div
                 className="rounded-lg p-4 text-center"
                 style={{
-                  backgroundColor: 'var(--theme-accent)',
+                  backgroundColor: 'var(--theme-surface-alt)',
                   border: '2px solid var(--theme-border)',
                 }}
               >
@@ -427,7 +435,7 @@ export default function SplashScreen() {
                   style={{
                     fontFamily: 'var(--font-inter)',
                     fontSize: 12,
-                    color: 'var(--theme-muted)',
+                    color: 'var(--theme-text-muted)',
                   }}
                 >
                   Online multiplayer is in development. For now, host a game and play with AI bots!

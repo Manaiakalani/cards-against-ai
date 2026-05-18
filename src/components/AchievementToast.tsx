@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { m, AnimatePresence } from 'framer-motion'
 import { ACHIEVEMENTS, RARITY_COLORS, type AchievementRarity } from '@/data/achievements'
 
@@ -63,6 +63,8 @@ export function AchievementToast() {
             exit={{ opacity: 0, x: 80, y: -10 }}
             transition={{ type: 'spring', stiffness: 340, damping: 26 }}
             className="pointer-events-auto flex items-center gap-3"
+            role="status"
+            tabIndex={0}
             style={{
               backgroundColor: 'var(--theme-surface)',
               border: '4px solid var(--theme-border)',
@@ -73,6 +75,7 @@ export function AchievementToast() {
               cursor: 'pointer',
             }}
             onClick={() => dismiss(current.key)}
+            onKeyDown={(e: React.KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); dismiss(current.key) } }}
           >
             {/* Rarity strip */}
             <div

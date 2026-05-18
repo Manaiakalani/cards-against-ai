@@ -127,6 +127,7 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode, timer }
                     fontSize: 12,
                     fontWeight: 400,
                     color: 'var(--theme-text)',
+                    fontVariantNumeric: 'tabular-nums',
                   }}
                 >
                   {player.score}

@@ -147,7 +147,7 @@ export default function EndScreen() {
   const [showHistory, setShowHistory] = useState(false)
 
   const sortedPlayers = useMemo(
-    () => [...gameState.players].sort((a, b) => b.score - a.score),
+    () => gameState.players.toSorted((a, b) => b.score - a.score),
     [gameState.players]
   )
   const winner = sortedPlayers[0]
@@ -306,6 +306,7 @@ export default function EndScreen() {
                   fontWeight: 900,
                   color: 'var(--theme-text)',
                   lineHeight: 1,
+                  fontVariantNumeric: 'tabular-nums',
                 }}
               >
                 {stat.value}
@@ -489,6 +490,7 @@ export default function EndScreen() {
                     fontFamily: 'var(--font-archivo)',
                     fontSize: 'clamp(20px, 4vw, 28px)',
                     color: 'var(--theme-text)',
+                    fontVariantNumeric: 'tabular-nums',
                   }}
                 >
                   {player.score}

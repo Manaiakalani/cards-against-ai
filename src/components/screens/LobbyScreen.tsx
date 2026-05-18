@@ -244,7 +244,9 @@ export default function LobbyScreen() {
           transition={{ delay: 0.6 }}
           className="mt-8 flex w-full max-w-md flex-col gap-4"
         >
+          <label className="sr-only" htmlFor="player-name-input">Your name</label>
           <input
+            id="player-name-input"
             type="text"
             placeholder="Enter your name…"
             value={playerName}
@@ -253,7 +255,7 @@ export default function LobbyScreen() {
             onKeyDown={(e) => {
               if (e.key === 'Enter') handleStart()
             }}
-            className="w-full px-5 py-3 text-lg outline-none focus-visible:ring-4 focus-visible:ring-[#66FF00] placeholder:text-gray-400"
+            className="w-full px-5 py-3 text-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#66FF00] placeholder:text-[var(--theme-text-muted)]"
             spellCheck={false}
             autoComplete="off"
             style={{

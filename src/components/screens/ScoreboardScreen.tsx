@@ -18,7 +18,7 @@ export default function ScoreboardScreen() {
   const { players, currentRound, roundHistory, czarId } = gameState
   const [showHistory, setShowHistory] = useState(false)
 
-  const sortedPlayers = [...players].sort((a, b) => b.score - a.score)
+  const sortedPlayers = players.toSorted((a, b) => b.score - a.score)
   const leadScore = sortedPlayers[0]?.score ?? 0
   const lastResult = roundHistory[roundHistory.length - 1]
 
@@ -203,6 +203,7 @@ export default function ScoreboardScreen() {
                       fontFamily: 'var(--font-archivo)',
                       fontSize: 'clamp(20px, 3.5vw, 38px)',
                       color: 'var(--theme-text)',
+                      fontVariantNumeric: 'tabular-nums',
                     }}
                   >
                     {player.score}
@@ -212,6 +213,7 @@ export default function ScoreboardScreen() {
                       fontFamily: 'var(--font-inter)',
                       fontSize: 13,
                       color: 'var(--theme-text-secondary)',
+                      fontVariantNumeric: 'tabular-nums',
                     }}
                   >
                     pts

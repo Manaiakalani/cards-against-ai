@@ -25,7 +25,7 @@ export function SiteFooter() {
           className="inline-flex items-center gap-1.5 underline transition-colors hover:text-[var(--theme-text)]"
           style={{ color: 'var(--theme-text-secondary)' }}
         >
-          <Code2 className="h-3.5 w-3.5" strokeWidth={1.75} />
+          <Code2 className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
           GitHub ↗
         </a>
         <span style={{ color: 'var(--theme-text-muted)' }}>•</span>
@@ -36,7 +36,7 @@ export function SiteFooter() {
           className="inline-flex items-center gap-1.5 underline transition-colors hover:text-[var(--theme-text)]"
           style={{ color: 'var(--theme-text-secondary)' }}
         >
-          <MessageSquarePlus className="h-3.5 w-3.5" strokeWidth={1.75} />
+          <MessageSquarePlus className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
           Submit a Deck ↗
         </a>
         <span style={{ color: 'var(--theme-text-muted)' }}>•</span>
@@ -47,7 +47,7 @@ export function SiteFooter() {
           className="inline-flex items-center gap-1.5 underline transition-colors hover:text-[var(--theme-text)]"
           style={{ color: 'var(--theme-text-secondary)' }}
         >
-          <GitPullRequestArrow className="h-3.5 w-3.5" strokeWidth={1.75} />
+          <GitPullRequestArrow className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
           Contribute ↗
         </a>
       </div>
