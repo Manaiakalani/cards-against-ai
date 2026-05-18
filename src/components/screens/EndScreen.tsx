@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
+import React from 'react'
 import { m } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { PosterBackground } from '@/components/PosterBackground'
@@ -52,7 +53,7 @@ function buildConfetti(index: number): ConfettiConfig {
   }
 }
 
-function ConfettiPiece({ config }: { config: ConfettiConfig }) {
+const ConfettiPiece = React.memo(function ConfettiPiece({ config }: { config: ConfettiConfig }) {
   const { color, shape, left, size, delay, duration, drift, rotateSpeed } = config
 
   const shapeStyle: React.CSSProperties =
@@ -79,10 +80,10 @@ function ConfettiPiece({ config }: { config: ConfettiConfig }) {
         ease: 'easeIn',
       }}
       className="pointer-events-none fixed z-[5]"
-      style={{ left: `${left}%`, top: '-30px', ...shapeStyle }}
+      style={{ left: `${left}%`, top: '-30px', willChange: 'transform, opacity', ...shapeStyle }}
     />
   )
-}
+})
 
 // --- Animated count-up hook ---
 

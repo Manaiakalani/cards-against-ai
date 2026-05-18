@@ -124,6 +124,12 @@ button, a, [role="button"] {
   color: var(--black);
 }
 
+/* Global focus-visible outline for keyboard navigation */
+:focus-visible {
+  outline: 3px solid #66FF00;
+  outline-offset: 2px;
+}
+
 /* Respect user motion preferences */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

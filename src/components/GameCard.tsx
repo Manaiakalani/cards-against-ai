@@ -49,7 +49,7 @@ function renderCardText(text: string, isBlack: boolean) {
   })
 }
 
-export function GameCard({
+export const GameCard = React.memo(function GameCard({
   card,
   variant,
   isSelected = false,
@@ -133,4 +133,4 @@ export function GameCard({
       )}
     </m.div>
   )
-}
+})

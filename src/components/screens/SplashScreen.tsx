@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { m, AnimatePresence } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
+import { allDecks } from '@/data/cards'
 import { PosterBackground } from '@/components/PosterBackground'
 import { GameCard } from '@/components/GameCard'
 import { CardIcon } from '@/components/CardIcon'
@@ -29,6 +30,11 @@ export default function SplashScreen() {
   const [showFavorites, setShowFavorites] = useState(false)
   const [showJoin, setShowJoin] = useState(false)
   const [joinCode, setJoinCode] = useState('')
+
+  const totalCards = useMemo(
+    () => allDecks.reduce((sum, d) => sum + d.cards.blackCards.length + d.cards.whiteCards.length, 0),
+    []
+  )
 
   const handleEsc = useCallback((e: KeyboardEvent) => {
     if (e.key === 'Escape' && showJoin) setShowJoin(false)
@@ -185,7 +191,7 @@ export default function SplashScreen() {
             borderRadius: 4,
           }}
         >
-          189 Cards • 6 Decks • Unlimited Bad Takes
+          {totalCards} Cards • {allDecks.length} Decks • Unlimited Bad Takes
         </m.p>
 
         {/* Host / Join buttons */}

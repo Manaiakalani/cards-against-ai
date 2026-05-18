@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useEffect, useRef } from 'react'
+import React, { useMemo, useEffect, useRef } from 'react'
 import { m } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { PosterBackground } from '@/components/PosterBackground'
@@ -14,7 +14,7 @@ import { useSound } from '@/hooks/useSound'
 
 const CONFETTI_COLORS = ['#FF4242', '#66FF00', '#FFB6C1', '#111111', '#FFD700', '#87CEEB', '#DDA0DD']
 
-function ConfettiPiece({ index }: { index: number }) {
+const ConfettiPiece = React.memo(function ConfettiPiece({ index }: { index: number }) {
   const color = CONFETTI_COLORS[index % CONFETTI_COLORS.length]
   const left = 10 + (index * 13) % 80
   const delay = index * 0.15
@@ -44,10 +44,11 @@ function ConfettiPiece({ index }: { index: number }) {
         height: `${height}px`,
         backgroundColor: color,
         border: '2px solid var(--theme-border)',
+        willChange: 'transform, opacity',
       }}
     />
   )
-}
+})
 
 export default function ResultsScreen() {
   const { gameState, nextRound } = useGame()

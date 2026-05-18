@@ -79,7 +79,7 @@ export default function ScoreboardScreen() {
                 className="uppercase tracking-wider"
                 style={{
                   fontFamily: 'var(--font-inter)',
-                  fontSize: 11,
+                  fontSize: 12,
                   color: 'var(--theme-text-muted)',
                 }}
               >
@@ -273,7 +273,7 @@ export default function ScoreboardScreen() {
                   style={{
                     fontFamily: 'var(--font-inter)',
                     fontSize: 13,
-                    color: '#1A7A00',
+                    color: 'var(--theme-text-secondary)',
                     fontWeight: 700,
                   }}
                 >

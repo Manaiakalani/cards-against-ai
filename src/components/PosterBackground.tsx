@@ -1,11 +1,13 @@
 'use client'
 
+import React from 'react'
+
 interface PosterBackgroundProps {
   words: string[]
   opacity?: number
 }
 
-export function PosterBackground({ words, opacity }: PosterBackgroundProps) {
+export const PosterBackground = React.memo(function PosterBackground({ words, opacity }: PosterBackgroundProps) {
   // Repeat words enough times to fill the viewport vertically
   const rows = Array.from({ length: 12 }, (_, i) => ({
     word: words[i % words.length],
@@ -51,4 +53,4 @@ export function PosterBackground({ words, opacity }: PosterBackgroundProps) {
       </div>
     </div>
   )
-}
+})
