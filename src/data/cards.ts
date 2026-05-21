@@ -325,6 +325,11 @@ const intunedBlack: Card[] = [
   { id: 'it-b18', text: "The new \"Peekaboo\" feature works by _____.", type: 'black', blanks: 1, category: 'corporate' },
   { id: 'it-b19', text: "The CSAM just raised it to Sev 2. The actual problem? _____.", type: 'black', blanks: 1, category: 'corporate' },
   { id: 'it-b20', text: "Support just filed a SKU Sev 3 at EOD Friday. The issue: _____.", type: 'black', blanks: 1, category: 'corporate' },
+  { id: 'it-b21', text: "The Azure bill this month is _____ because someone forgot to _____.", type: 'black', blanks: 2, category: 'corporate' },
+  { id: 'it-b22', text: "The ICM bridge call has been going for 6 hours. The current theory is _____.", type: 'black', blanks: 1, category: 'corporate' },
+  { id: 'it-b23', text: "Copilot hallucinated _____ during a live customer demo.", type: 'black', blanks: 1, category: 'corporate' },
+  { id: 'it-b24', text: "Service Health says ✅ Healthy. Meanwhile, _____ is happening.", type: 'black', blanks: 1, category: 'corporate' },
+  { id: 'it-b25', text: "\"This will be a quick 5-minute sync\" — 2 hours later, we're debating _____.", type: 'black', blanks: 1, category: 'corporate' },
 ]
 
 const intunedWhite: Card[] = [
@@ -358,6 +363,58 @@ const intunedWhite: Card[] = [
   { id: 'it-w28', text: "A Copilot suggestion that's technically correct but politically catastrophic", type: 'white', category: 'corporate' },
   { id: 'it-w29', text: "Closing the bridge call and immediately reopening it with the same people", type: 'white', category: 'corporate' },
   { id: 'it-w30', text: "A feature flag that's been \"temporary\" for three years", type: 'white', category: 'corporate' },
+  { id: 'it-w31', text: "A Copilot-generated email that accidentally roasts the customer", type: 'white', category: 'corporate' },
+  { id: 'it-w32', text: "The Azure subscription that's been burning $40k/month since 2019", type: 'white', category: 'corporate' },
+  { id: 'it-w33', text: "An MFA prompt loop that locks out 10,000 users simultaneously", type: 'white', category: 'corporate' },
+  { id: 'it-w34', text: "Saying \"works on my machine\" during an LSI bridge", type: 'white', category: 'corporate' },
+  { id: 'it-w35', text: "Service Health showing green while Twitter is on fire", type: 'white', category: 'corporate' },
+  { id: 'it-w36', text: "A Teams channel with 200 members and zero messages", type: 'white', category: 'corporate' },
+  { id: 'it-w37', text: "Reverting the change and pretending it never happened", type: 'white', category: 'corporate' },
+  { id: 'it-w38', text: "An Azure resource group named \"test-delete-me\" running 14 VMs", type: 'white', category: 'corporate' },
+  { id: 'it-w39', text: "The DRI who changed their phone number and didn't tell anyone", type: 'white', category: 'corporate' },
+  { id: 'it-w40', text: "A postmortem that just says \"don't do that again\"", type: 'white', category: 'corporate' },
+]
+
+// ─── On-Call Nightmares (ICM bridges × pager duty × incident chaos) ───
+const oncallBlack: Card[] = [
+  { id: 'oc-b1', text: "The pager went off at 3 AM. The incident? _____.", type: 'black', blanks: 1, category: 'oncall' },
+  { id: 'oc-b2', text: "The DRI's first words on the bridge call: _____.", type: 'black', blanks: 1, category: 'oncall' },
+  { id: 'oc-b3', text: "Root cause analysis revealed the outage was caused by _____.", type: 'black', blanks: 1, category: 'oncall' },
+  { id: 'oc-b4', text: "The postmortem action item that nobody will ever complete: _____.", type: 'black', blanks: 1, category: 'oncall' },
+  { id: 'oc-b5', text: "The on-call engineer's excuse for missing the page: _____.", type: 'black', blanks: 1, category: 'oncall' },
+  { id: 'oc-b6', text: "The customer's support ticket just says _____.", type: 'black', blanks: 1, category: 'oncall' },
+  { id: 'oc-b7', text: "We thought it was a Sev 4. Then _____ happened and it became a Sev 1.", type: 'black', blanks: 1, category: 'oncall' },
+  { id: 'oc-b8', text: "Hour 4 of the bridge call. Someone just suggested _____.", type: 'black', blanks: 1, category: 'oncall' },
+  { id: 'oc-b9', text: "The monitoring dashboard shows _____ but everyone is pretending it's fine.", type: 'black', blanks: 1, category: 'oncall' },
+  { id: 'oc-b10', text: "The incident retrospective was going well until someone mentioned _____.", type: 'black', blanks: 1, category: 'oncall' },
+  { id: 'oc-b11', text: "The change that caused the outage was approved by _____ and _____.", type: 'black', blanks: 2, category: 'oncall' },
+  { id: 'oc-b12', text: "The runbook for this scenario just says _____.", type: 'black', blanks: 1, category: 'oncall' },
+  { id: 'oc-b13', text: "The real reason nobody wants on-call this sprint: _____.", type: 'black', blanks: 1, category: 'oncall' },
+  { id: 'oc-b14', text: "The auto-mitigation kicked in and did _____.", type: 'black', blanks: 1, category: 'oncall' },
+  { id: 'oc-b15', text: "The Sev 1 started because someone ran _____ in production.", type: 'black', blanks: 1, category: 'oncall' },
+]
+
+const oncallWhite: Card[] = [
+  { id: 'oc-w1', text: "A config change that deletes every user's profile photo", type: 'white', category: 'oncall' },
+  { id: 'oc-w2', text: "The on-call who's been asleep for 3 hours with the pager on silent", type: 'white', category: 'oncall' },
+  { id: 'oc-w3', text: "Rebooting the entire cluster and praying", type: 'white', category: 'oncall' },
+  { id: 'oc-w4', text: "\"I didn't think that pipeline ran in prod\"", type: 'white', category: 'oncall' },
+  { id: 'oc-w5', text: "A rollback that's somehow worse than the original outage", type: 'white', category: 'oncall' },
+  { id: 'oc-w6', text: "The monitoring alert that's been firing for 6 months and everyone ignores", type: 'white', category: 'oncall' },
+  { id: 'oc-w7', text: "DROP TABLE in a prod SQL window someone left open", type: 'white', category: 'oncall' },
+  { id: 'oc-w8', text: "The backup that hasn't actually worked since Q2", type: 'white', category: 'oncall' },
+  { id: 'oc-w9', text: "A certificate that expired because the reminder went to a former employee", type: 'white', category: 'oncall' },
+  { id: 'oc-w10', text: "The incident commander who keeps saying \"let's stay calm\" while panicking", type: 'white', category: 'oncall' },
+  { id: 'oc-w11', text: "An engineer ssh'd into prod who \"just wants to check one thing\"", type: 'white', category: 'oncall' },
+  { id: 'oc-w12', text: "The customer who live-tweets the outage faster than your comms team", type: 'white', category: 'oncall' },
+  { id: 'oc-w13', text: "A 200-page runbook that starts with \"Step 1: Don't panic\"", type: 'white', category: 'oncall' },
+  { id: 'oc-w14', text: "The executive who joins the bridge call to \"help\" by asking for ETAs every 30 seconds", type: 'white', category: 'oncall' },
+  { id: 'oc-w15', text: "A postmortem with 12 action items, 0 owners, and a due date of \"TBD\"", type: 'white', category: 'oncall' },
+  { id: 'oc-w16', text: "The auto-mitigation that mitigates the wrong thing", type: 'white', category: 'oncall' },
+  { id: 'oc-w17', text: "Blaming cosmic rays and closing the incident", type: 'white', category: 'oncall' },
+  { id: 'oc-w18', text: "The secondary on-call who's at Coachella", type: 'white', category: 'oncall' },
+  { id: 'oc-w19', text: "A Kusto query that's been running for 45 minutes and counting", type: 'white', category: 'oncall' },
+  { id: 'oc-w20', text: "\"Have you tried turning it off and on again?\" — the VP of Engineering", type: 'white', category: 'oncall' },
 ]
 
 // ─── Deck definitions ────────────────────────────────────────────────
@@ -424,6 +481,13 @@ export const allDecks: CardDeck[] = [
     description: 'Teams chaos, ADO nightmares, and Intune compliance disasters',
     icon: '🎯',
     cards: { blackCards: intunedBlack, whiteCards: intunedWhite },
+  },
+  {
+    id: 'oncall',
+    name: 'On-Call Nightmares',
+    description: 'ICM bridges, pager duty, and 3 AM prod incidents',
+    icon: '🚨',
+    cards: { blackCards: oncallBlack, whiteCards: oncallWhite },
   },
 ]
 
