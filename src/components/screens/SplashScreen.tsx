@@ -252,7 +252,7 @@ export default function SplashScreen() {
               fontSize: 14,
               fontWeight: 900,
               backgroundColor: '#FF4242',
-              color: '#FFF',
+              color: '#111',
               border: '2px solid var(--theme-border)',
             }}
           >

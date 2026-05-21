@@ -83,7 +83,7 @@ test.describe('Visual Audit — Fonts & Colors', () => {
   test('Inter loads on body text', async ({ page }) => {
     const tagline = page.getByText('The party game for chronically online people')
     const fontFamily = await tagline.evaluate((el) => getComputedStyle(el).fontFamily)
-    expect(fontFamily.toLowerCase()).toContain('inter')
+    expect(fontFamily.toLowerCase()).toContain('archivo')
   })
 
   test('fonts load on lobby screen', async ({ page }) => {
