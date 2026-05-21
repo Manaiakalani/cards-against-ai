@@ -394,11 +394,18 @@ export default function LobbyScreen() {
           transition={{ delay: 0.8 }}
           className="mt-6 w-full max-w-md"
         >
-          <div className="flex items-center justify-between">
+          <div
+            className="flex items-center justify-between rounded-xl px-5 py-4"
+            style={{
+              backgroundColor: 'var(--theme-surface)',
+              border: '3px solid var(--theme-border)',
+              boxShadow: '4px 4px 0px var(--theme-shadow-soft)',
+            }}
+          >
             <span
               style={{
                 fontFamily: 'var(--font-archivo)',
-                fontSize: '16px',
+                fontSize: '18px',
                 color: 'var(--theme-text)',
               }}
             >
@@ -406,15 +413,17 @@ export default function LobbyScreen() {
             </span>
             <button
               onClick={() => handleTimerToggle(!timerEnabled)}
-              className="cursor-pointer px-4 py-1 transition-transform hover:scale-105"
+              className="cursor-pointer px-5 py-2 transition-transform hover:scale-105"
               style={{
                 fontFamily: 'var(--font-archivo)',
-                fontSize: '14px',
+                fontSize: '15px',
+                fontWeight: 900,
                 border: '3px solid var(--theme-border)',
-                borderRadius: '10px',
-                backgroundColor: timerEnabled ? '#66FF00' : 'var(--theme-surface)',
+                borderRadius: '100px',
+                backgroundColor: timerEnabled ? '#66FF00' : 'var(--theme-surface-alt)',
                 color: 'var(--theme-text)',
                 boxShadow: timerEnabled ? '3px 3px 0px var(--theme-shadow)' : 'none',
+                minWidth: '72px',
               }}
             >
               {timerEnabled ? 'ON' : 'OFF'}
@@ -456,7 +465,7 @@ export default function LobbyScreen() {
             className="mb-3"
             style={{
               fontFamily: 'var(--font-archivo)',
-              fontSize: '16px',
+              fontSize: '18px',
               color: 'var(--theme-text)',
               letterSpacing: '2px',
               textTransform: 'uppercase',
@@ -466,23 +475,31 @@ export default function LobbyScreen() {
           </h2>
           <div className="flex flex-col gap-3">
             {/* Winner's Pick */}
-            <div className="flex items-center justify-between">
+            <div
+              className="flex items-center justify-between rounded-xl px-5 py-4"
+              style={{
+                backgroundColor: 'var(--theme-surface)',
+                border: '3px solid var(--theme-border)',
+                boxShadow: '4px 4px 0px var(--theme-shadow-soft)',
+              }}
+            >
               <div>
                 <span
                   style={{
                     fontFamily: 'var(--font-archivo)',
-                    fontSize: '14px',
+                    fontSize: '16px',
                     color: 'var(--theme-text)',
                   }}
                 >
                   👑 Winner&apos;s Pick
                 </span>
                 <p
-                  className="mt-0.5"
+                  className="mt-1"
                   style={{
                     fontFamily: 'var(--font-inter)',
-                    fontSize: '12px',
-                    color: 'var(--theme-text-muted)',
+                    fontSize: '13px',
+                    color: 'var(--theme-text-secondary)',
+                    lineHeight: 1.3,
                   }}
                 >
                   Round winner becomes next czar
@@ -490,15 +507,17 @@ export default function LobbyScreen() {
               </div>
               <button
                 onClick={() => handleWinnersPick(!winnersPick)}
-                className="cursor-pointer px-4 py-1 transition-transform hover:scale-105"
+                className="cursor-pointer px-5 py-2 transition-transform hover:scale-105"
                 style={{
                   fontFamily: 'var(--font-archivo)',
-                  fontSize: '14px',
+                  fontSize: '15px',
+                  fontWeight: 900,
                   border: '3px solid var(--theme-border)',
-                  borderRadius: '10px',
-                  backgroundColor: winnersPick ? '#66FF00' : 'var(--theme-surface)',
+                  borderRadius: '100px',
+                  backgroundColor: winnersPick ? '#66FF00' : 'var(--theme-surface-alt)',
                   color: 'var(--theme-text)',
                   boxShadow: winnersPick ? '3px 3px 0px var(--theme-shadow)' : 'none',
+                  minWidth: '72px',
                 }}
               >
                 {winnersPick ? 'ON' : 'OFF'}
@@ -506,23 +525,31 @@ export default function LobbyScreen() {
             </div>
 
             {/* Reboot the Universe */}
-            <div className="flex items-center justify-between">
+            <div
+              className="flex items-center justify-between rounded-xl px-5 py-4"
+              style={{
+                backgroundColor: 'var(--theme-surface)',
+                border: '3px solid var(--theme-border)',
+                boxShadow: '4px 4px 0px var(--theme-shadow-soft)',
+              }}
+            >
               <div>
                 <span
                   style={{
                     fontFamily: 'var(--font-archivo)',
-                    fontSize: '14px',
+                    fontSize: '16px',
                     color: 'var(--theme-text)',
                   }}
                 >
                   💥 Reboot the Universe
                 </span>
                 <p
-                  className="mt-0.5"
+                  className="mt-1"
                   style={{
                     fontFamily: 'var(--font-inter)',
-                    fontSize: '12px',
-                    color: 'var(--theme-text-muted)',
+                    fontSize: '13px',
+                    color: 'var(--theme-text-secondary)',
+                    lineHeight: 1.3,
                   }}
                 >
                   Spend 1 point to redraw entire hand
@@ -530,15 +557,17 @@ export default function LobbyScreen() {
               </div>
               <button
                 onClick={() => handleReboot(!rebootEnabled)}
-                className="cursor-pointer px-4 py-1 transition-transform hover:scale-105"
+                className="cursor-pointer px-5 py-2 transition-transform hover:scale-105"
                 style={{
                   fontFamily: 'var(--font-archivo)',
-                  fontSize: '14px',
+                  fontSize: '15px',
+                  fontWeight: 900,
                   border: '3px solid var(--theme-border)',
-                  borderRadius: '10px',
-                  backgroundColor: rebootEnabled ? '#66FF00' : 'var(--theme-surface)',
+                  borderRadius: '100px',
+                  backgroundColor: rebootEnabled ? '#66FF00' : 'var(--theme-surface-alt)',
                   color: 'var(--theme-text)',
                   boxShadow: rebootEnabled ? '3px 3px 0px var(--theme-shadow)' : 'none',
+                  minWidth: '72px',
                 }}
               >
                 {rebootEnabled ? 'ON' : 'OFF'}
