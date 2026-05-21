@@ -316,14 +316,18 @@ export default function LobbyScreen() {
               DECKS
             </h2>
             <span
+              className="inline-flex items-center gap-1.5 rounded-full px-3 py-1"
               style={{
-                fontFamily: 'var(--font-inter)',
+                fontFamily: 'var(--font-archivo)',
                 fontSize: '14px',
-                color: '#66FF00',
-                fontWeight: 600,
+                fontWeight: 900,
+                backgroundColor: '#66FF00',
+                color: '#111',
+                border: '2px solid var(--theme-border)',
+                fontVariantNumeric: 'tabular-nums',
               }}
             >
-              {totalCardsInPlay} cards in play
+              🃏 {totalCardsInPlay} cards in play
             </span>
           </div>
 
