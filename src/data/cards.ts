@@ -303,6 +303,48 @@ const startupWhite: Card[] = [
   { id: 'su-w15', text: "Putting \"AI-powered\" on everything including the bathroom", type: 'white', category: 'startup' },
 ]
 
+// ─── InTuneD (corporate chaos × customer escalations) ─────────────────
+const intunedBlack: Card[] = [
+  { id: 'it-b1', text: "A customer has escalated concerns about a change. Do you _____?", type: 'black', blanks: 1, category: 'corporate' },
+  { id: 'it-b2', text: "The deployment broke prod on a Friday at 4:59 PM. Your move: _____.", type: 'black', blanks: 1, category: 'corporate' },
+  { id: 'it-b3', text: "The client said \"per my last email\" which really means _____.", type: 'black', blanks: 1, category: 'corporate' },
+  { id: 'it-b4', text: "IT just sent a company-wide email that says _____.", type: 'black', blanks: 1, category: 'corporate' },
+  { id: 'it-b5', text: "The real reason the meeting could've been an email: _____.", type: 'black', blanks: 1, category: 'corporate' },
+  { id: 'it-b6', text: "HR launched a new \"culture initiative\" that's basically _____.", type: 'black', blanks: 1, category: 'corporate' },
+  { id: 'it-b7', text: "The quarterly review is in 10 minutes and your only achievement is _____.", type: 'black', blanks: 1, category: 'corporate' },
+  { id: 'it-b8', text: "The new CEO's first move was to replace _____ with _____.", type: 'black', blanks: 2, category: 'corporate' },
+  { id: 'it-b9', text: "We're not firing people, we're _____.", type: 'black', blanks: 1, category: 'corporate' },
+  { id: 'it-b10', text: "The Slack message that got someone fired: _____.", type: 'black', blanks: 1, category: 'corporate' },
+  { id: 'it-b11', text: "Customer satisfaction dropped 40% after we introduced _____.", type: 'black', blanks: 1, category: 'corporate' },
+  { id: 'it-b12', text: "The intern just CC'd the entire company on _____.", type: 'black', blanks: 1, category: 'corporate' },
+  { id: 'it-b13', text: "Our new ticketing system's first improvement: _____.", type: 'black', blanks: 1, category: 'corporate' },
+  { id: 'it-b14', text: "The support team's motto is officially _____.", type: 'black', blanks: 1, category: 'corporate' },
+  { id: 'it-b15', text: "_____ is the reason we lost our biggest client.", type: 'black', blanks: 1, category: 'corporate' },
+]
+
+const intunedWhite: Card[] = [
+  { id: 'it-w1', text: "Ignoring them until they give up and churn", type: 'white', category: 'corporate' },
+  { id: 'it-w2', text: "Telling them they're being ridiculous", type: 'white', category: 'corporate' },
+  { id: 'it-w3', text: "Telling them to move to Canada if they don't like it here", type: 'white', category: 'corporate' },
+  { id: 'it-w4', text: "Looping in every person you know to solve it", type: 'white', category: 'corporate' },
+  { id: 'it-w5', text: "Marking the ticket as \"resolved\" without reading it", type: 'white', category: 'corporate' },
+  { id: 'it-w6', text: "A 47-reply email chain where nobody takes ownership", type: 'white', category: 'corporate' },
+  { id: 'it-w7', text: "Blaming it on the previous team and walking away", type: 'white', category: 'corporate' },
+  { id: 'it-w8', text: "Sending a \"we value your feedback\" email directly to spam", type: 'white', category: 'corporate' },
+  { id: 'it-w9', text: "A calendar invite titled \"Alignment Sync\" with 38 attendees", type: 'white', category: 'corporate' },
+  { id: 'it-w10', text: "Accidentally replying-all with \"this client is unhinged\"", type: 'white', category: 'corporate' },
+  { id: 'it-w11', text: "The passive-aggressive thumbs-up emoji", type: 'white', category: 'corporate' },
+  { id: 'it-w12', text: "Creating a Jira ticket and never looking at it again", type: 'white', category: 'corporate' },
+  { id: 'it-w13', text: "Escalating to your manager who escalates to their manager who escalates to God", type: 'white', category: 'corporate' },
+  { id: 'it-w14', text: "A mandatory fun team-building escape room during layoffs", type: 'white', category: 'corporate' },
+  { id: 'it-w15', text: "Automating your entire job and telling nobody", type: 'white', category: 'corporate' },
+  { id: 'it-w16', text: "\"Let's take this offline\" (and never speak of it again)", type: 'white', category: 'corporate' },
+  { id: 'it-w17', text: "Deploying straight to prod while eating a burrito", type: 'white', category: 'corporate' },
+  { id: 'it-w18', text: "A Confluence page with the title \"DO NOT DELETE\" and zero content", type: 'white', category: 'corporate' },
+  { id: 'it-w19', text: "Saying \"that's a great question\" to buy time while panicking internally", type: 'white', category: 'corporate' },
+  { id: 'it-w20', text: "The VP who says \"we're a family\" right before the reorg", type: 'white', category: 'corporate' },
+]
+
 // ─── Deck definitions ────────────────────────────────────────────────
 export const allDecks: CardDeck[] = [
   {
@@ -360,6 +402,13 @@ export const allDecks: CardDeck[] = [
     description: 'Pitch decks, pivots, and ping pong tables',
     icon: '🚀',
     cards: { blackCards: startupBlack, whiteCards: startupWhite },
+  },
+  {
+    id: 'intuned',
+    name: 'InTuneD',
+    description: 'Customer escalations, corporate chaos, and reply-all disasters',
+    icon: '🎯',
+    cards: { blackCards: intunedBlack, whiteCards: intunedWhite },
   },
 ]
 
