@@ -166,33 +166,69 @@ export default function SplashScreen() {
           variants={fadeUp}
           className="mt-6 uppercase tracking-wider"
           style={{
-            fontFamily: 'var(--font-inter)',
-            fontSize: 18,
+            fontFamily: 'var(--font-archivo)',
+            fontSize: 'clamp(14px, 3vw, 18px)',
             color: 'var(--theme-text)',
-            fontWeight: 700,
-            backgroundColor: 'var(--theme-backdrop)',
-            padding: '6px 16px',
-            borderRadius: 6,
+            fontWeight: 900,
+            backgroundColor: 'var(--theme-surface)',
+            padding: '10px 20px',
+            borderRadius: 12,
+            border: '3px solid var(--theme-border)',
+            boxShadow: '4px 4px 0px var(--theme-shadow-soft)',
+            textAlign: 'center',
+            lineHeight: 1.3,
           }}
         >
           The party game for chronically online people
         </m.p>
 
         {/* Deck info */}
-        <m.p
+        <m.div
           variants={fadeUp}
-          className="mt-2"
-          style={{
-            fontFamily: 'var(--font-inter)',
-            fontSize: 14,
-            color: 'var(--theme-text-secondary)',
-            backgroundColor: 'var(--theme-backdrop)',
-            padding: '4px 12px',
-            borderRadius: 4,
-          }}
+          className="mt-3 flex flex-wrap items-center justify-center gap-2"
         >
-          {totalCards} Cards • {allDecks.length} Decks • Unlimited Bad Takes
-        </m.p>
+          <span
+            className="inline-flex items-center gap-1 rounded-full px-3 py-1"
+            style={{
+              fontFamily: 'var(--font-archivo)',
+              fontSize: 14,
+              fontWeight: 900,
+              backgroundColor: '#66FF00',
+              color: '#111',
+              border: '2px solid var(--theme-border)',
+              fontVariantNumeric: 'tabular-nums',
+            }}
+          >
+            🃏 {totalCards} Cards
+          </span>
+          <span
+            className="inline-flex items-center gap-1 rounded-full px-3 py-1"
+            style={{
+              fontFamily: 'var(--font-archivo)',
+              fontSize: 14,
+              fontWeight: 900,
+              backgroundColor: 'var(--theme-surface)',
+              color: 'var(--theme-text)',
+              border: '2px solid var(--theme-border)',
+              fontVariantNumeric: 'tabular-nums',
+            }}
+          >
+            📦 {allDecks.length} Decks
+          </span>
+          <span
+            className="inline-flex items-center gap-1 rounded-full px-3 py-1"
+            style={{
+              fontFamily: 'var(--font-archivo)',
+              fontSize: 14,
+              fontWeight: 900,
+              backgroundColor: '#FF4242',
+              color: '#FFF',
+              border: '2px solid var(--theme-border)',
+            }}
+          >
+            🔥 Unlimited Bad Takes
+          </span>
+        </m.div>
 
         {/* Host / Join buttons */}
         <m.div variants={fadeUp} className="mt-10 flex flex-col items-center gap-3 sm:flex-row">
