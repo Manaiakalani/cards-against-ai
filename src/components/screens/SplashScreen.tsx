@@ -299,20 +299,22 @@ export default function SplashScreen() {
         {/* Version footer */}
         <m.div
           variants={fadeUp}
-          className="mt-6 flex items-center gap-3"
-          style={{ color: 'var(--theme-text-muted)' }}
+          className="mt-6 flex items-center gap-2.5"
         >
-          <CardIcon color="var(--theme-text-muted)" size={10} />
           <span
+            className="footer-link inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[13px] font-medium"
             style={{
               fontFamily: 'var(--font-inter)',
-              fontSize: 12,
-              color: 'var(--theme-text-muted)',
+              backgroundColor: 'var(--_footer-bg, rgba(85,85,85,0.08))',
+              color: 'var(--_footer-fg, #555)',
+              border: '1.5px solid color-mix(in srgb, var(--_footer-fg, #555) 20%, transparent)',
+              ['--_footer-bg-dark' as string]: 'rgba(224,224,224,0.1)',
+              ['--_footer-fg-dark' as string]: '#E0E0E0',
             }}
           >
+            <CardIcon color="currentColor" size={12} />
             v1.0 MVP
           </span>
-          <CardIcon color="var(--theme-text-muted)" size={10} />
         </m.div>
 
         {/* Footer */}
