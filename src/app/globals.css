@@ -69,6 +69,12 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Footer link dark mode overrides */
+[data-theme="dark"] .footer-link {
+  --_footer-bg: var(--_footer-bg-dark);
+  --_footer-fg: var(--_footer-fg-dark);
+}
+
 /* Prevent double-tap zoom on interactive elements */
 button, a, [role="button"] {
   touch-action: manipulation;
