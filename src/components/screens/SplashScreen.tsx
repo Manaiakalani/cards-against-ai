@@ -241,13 +241,14 @@ export default function SplashScreen() {
             style={{
               fontFamily: 'var(--font-archivo)',
               fontSize: 'clamp(18px, 3vw, 24px)',
-              fontWeight: 400,
+              fontWeight: 900,
               backgroundColor: '#66FF00',
-              color: 'var(--theme-text)',
+              color: '#111',
               border: '4px solid var(--theme-border)',
               padding: 'clamp(14px, 2.5vw, 20px) clamp(36px, 7vw, 64px)',
               borderRadius: 100,
               boxShadow: '0px 8px 0px var(--theme-shadow)',
+              letterSpacing: '0.04em',
             }}
           >
             🎮 HOST GAME
