@@ -320,6 +320,11 @@ const intunedBlack: Card[] = [
   { id: 'it-b13', text: "Our new ADO board's first improvement: _____.", type: 'black', blanks: 1, category: 'corporate' },
   { id: 'it-b14', text: "The support team's Teams status is permanently set to _____.", type: 'black', blanks: 1, category: 'corporate' },
   { id: 'it-b15', text: "_____ is the reason the Entra ID tenant got compromised.", type: 'black', blanks: 1, category: 'corporate' },
+  { id: 'it-b16', text: "It's an LSI. Engineering says Sev 3. Support says Sev 1. The real severity is _____.", type: 'black', blanks: 1, category: 'corporate' },
+  { id: 'it-b17', text: "DogeComm just published _____ to every tenant without warning.", type: 'black', blanks: 1, category: 'corporate' },
+  { id: 'it-b18', text: "The new \"Peekaboo\" feature works by _____.", type: 'black', blanks: 1, category: 'corporate' },
+  { id: 'it-b19', text: "The CSAM just raised it to Sev 2. The actual problem? _____.", type: 'black', blanks: 1, category: 'corporate' },
+  { id: 'it-b20', text: "Support just filed a SKU Sev 3 at EOD Friday. The issue: _____.", type: 'black', blanks: 1, category: 'corporate' },
 ]
 
 const intunedWhite: Card[] = [
@@ -343,6 +348,16 @@ const intunedWhite: Card[] = [
   { id: 'it-w18', text: "A SharePoint page with the title \"DO NOT DELETE\" and zero content", type: 'white', category: 'corporate' },
   { id: 'it-w19', text: "Setting your Teams status to \"Focusing\" for 8 hours straight", type: 'white', category: 'corporate' },
   { id: 'it-w20', text: "The VP who says \"we're a family\" right before the reorg", type: 'white', category: 'corporate' },
+  { id: 'it-w21', text: "Downgrading it to Sev 4 and hoping nobody notices", type: 'white', category: 'corporate' },
+  { id: 'it-w22', text: "A DogeComm blast that just says \"Please disregard previous DogeComm\"", type: 'white', category: 'corporate' },
+  { id: 'it-w23', text: "The Peekaboo feature appearing in prod before anyone approved it", type: 'white', category: 'corporate' },
+  { id: 'it-w24', text: "The CSAM rage-typing a Sev 2 justification at 11 PM", type: 'white', category: 'corporate' },
+  { id: 'it-w25', text: "Filing a Sev 3 at 4:59 PM Friday and going straight to happy hour", type: 'white', category: 'corporate' },
+  { id: 'it-w26', text: "A conditional access policy that locks out the entire C-suite", type: 'white', category: 'corporate' },
+  { id: 'it-w27', text: "The on-call engineer who's been \"joining in 2 minutes\" for 45 minutes", type: 'white', category: 'corporate' },
+  { id: 'it-w28', text: "A Copilot suggestion that's technically correct but politically catastrophic", type: 'white', category: 'corporate' },
+  { id: 'it-w29', text: "Closing the bridge call and immediately reopening it with the same people", type: 'white', category: 'corporate' },
+  { id: 'it-w30', text: "A feature flag that's been \"temporary\" for three years", type: 'white', category: 'corporate' },
 ]
 
 // ─── Deck definitions ────────────────────────────────────────────────
