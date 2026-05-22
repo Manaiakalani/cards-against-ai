@@ -237,7 +237,7 @@ export function RoundHistory({
 
   const title = favoritesOnly ? 'FAVORITES' : 'ROUND HISTORY'
   const emptyMessage = favoritesOnly
-    ? 'No favorites yet — star your best combos!'
+    ? 'No favorites yet - star your best combos!'
     : 'No rounds played yet. Start a game!'
 
   // Build display entries (memoized to avoid recomputing on unrelated re-renders)

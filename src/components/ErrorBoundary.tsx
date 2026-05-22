@@ -54,7 +54,7 @@ export class ErrorBoundary extends Component<Props, State> {
               maxWidth: 360,
             }}
           >
-            The game hit an unexpected error. Try again — your stats are safe.
+            The game hit an unexpected error. Try again - your stats are safe.
           </p>
           <button
             onClick={this.handleReset}

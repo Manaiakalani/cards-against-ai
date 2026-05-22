@@ -171,7 +171,7 @@ export function useMultiplayer(options: UseMultiplayerOptions = {}) {
             setMpState((prev) => ({
               ...prev,
               connected: false,
-              error: 'Connection error — check your internet',
+              error: 'Connection error - check your internet',
             }))
             optionsRef.current.onError?.('Connection error')
           } else if (status === 'TIMED_OUT') {

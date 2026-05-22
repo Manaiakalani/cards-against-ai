@@ -433,7 +433,7 @@ export default function SplashScreen() {
               letterSpacing: '0.01em',
             }}
           >
-            Open source — submit new card decks via GitHub Issues or PR
+            Open source - submit new card decks via GitHub Issues or PR
           </p>
         </m.div>
       </m.div>

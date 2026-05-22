@@ -73,7 +73,7 @@ export function SiteFooter() {
           color: 'var(--theme-text-muted)',
         }}
       >
-        Open source — submit new card decks via GitHub Issues or PR
+        Open source - submit new card decks via GitHub Issues or PR
       </p>
     </footer>
   )

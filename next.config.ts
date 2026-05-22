@@ -6,8 +6,8 @@ const nextConfig: NextConfig = {
   output: 'export',
   images: { unoptimized: true },
   ...(isGithubPages && {
-    basePath: '/cards-against-sv',
-    assetPrefix: '/cards-against-sv/',
+    basePath: '/cards-against-ai',
+    assetPrefix: '/cards-against-ai/',
   }),
 };
 
