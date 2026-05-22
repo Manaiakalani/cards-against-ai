@@ -126,9 +126,10 @@ function useCountUp(target: number, durationMs = 1500, delayMs = 0): number {
 function pickBestCombo(
   roundHistory: RoundResult[],
   winnerId: string | undefined,
+  localPlayerId: string,
 ): RoundResult | null {
   if (roundHistory.length === 0) return null
-  const humanWin = roundHistory.find(r => r.winnerId === 'player-1')
+  const humanWin = roundHistory.find(r => r.winnerId === localPlayerId)
   if (humanWin) return humanWin
   if (winnerId) {
     const winnerWin = roundHistory.find(r => r.winnerId === winnerId)
@@ -140,7 +141,7 @@ function pickBestCombo(
 // --- Main component ---
 
 export default function EndScreen() {
-  const { gameState, newGame } = useGame()
+  const { gameState, newGame, myPlayerId } = useGame()
   const { stats: achStats, checkAndUnlock } = useAchievements()
   const { recordGameEnd } = useStats()
   const { play } = useSound()
@@ -160,11 +161,11 @@ export default function EndScreen() {
 
   const totalRounds = gameState.roundHistory.length
   const winnerRounds = gameState.roundHistory.filter(r => r.winnerId === winner?.id).length
-  const humanWon = winner?.id === 'player-1'
-  const humanLosses = gameState.roundHistory.filter(r => r.winnerId !== 'player-1').length
+  const humanWon = winner?.id === myPlayerId
+  const humanLosses = gameState.roundHistory.filter(r => r.winnerId !== myPlayerId).length
 
   const bestCombo = useMemo(
-    () => pickBestCombo(gameState.roundHistory, winner?.id),
+    () => pickBestCombo(gameState.roundHistory, winner?.id, myPlayerId),
     [gameState.roundHistory, winner?.id]
   )
   const bestComboPlayer = useMemo(

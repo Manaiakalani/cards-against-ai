@@ -128,35 +128,50 @@ export function useGameState() {
     let shuffledWhite = shuffle(whiteCards)
     const shuffledBlack = shuffle(blackCards)
 
-    const human = createHumanPlayer(playerName)
-    const roster = pickRandomBots(botCount)
-    const bots = Array.from({ length: botCount }, (_, i) => createBot(i, roster))
-    const allPlayers = [human, ...bots]
+    setGameState(prev => {
+      // Keep existing human players from lobby (host + remote)
+      const existingHumans = prev.players.filter(p => !p.isBot)
 
-    // Deal hands
-    for (const player of allPlayers) {
-      const { drawn, remaining } = drawCards(shuffledWhite, HAND_SIZE)
-      player.hand = drawn
-      shuffledWhite = remaining
-    }
+      let human: Player
+      if (existingHumans.length > 0 && existingHumans[0].id === 'player-1') {
+        // Host already in player list — update name
+        human = { ...existingHumans[0], name: playerName }
+      } else {
+        human = createHumanPlayer(playerName)
+      }
 
-    // First czar is a bot so the human gets to play right away
-    allPlayers[1].isCardCzar = true
-    const firstBlack = shuffledBlack[0]
+      const remotes = existingHumans.filter(p => p.id !== 'player-1')
+      const roster = pickRandomBots(botCount)
+      const bots = Array.from({ length: botCount }, (_, i) => createBot(i, roster))
+      const allPlayers = [human, ...remotes, ...bots]
 
-    setBlackCardPool(shuffledBlack.slice(1))
-    setWhiteCardPool(shuffledWhite)
+      // Deal hands
+      for (const player of allPlayers) {
+        const { drawn, remaining } = drawCards(shuffledWhite, HAND_SIZE)
+        player.hand = drawn
+        shuffledWhite = remaining
+      }
 
-    setGameState(prev => ({
-      ...prev,
-      phase: 'playing',
-      currentRound: 1,
-      currentBlackCard: firstBlack,
-      players: allPlayers,
-      submissions: [],
-      roundWinner: null,
-      czarId: allPlayers[1].id,
-    }))
+      // First czar: prefer a bot so human plays first, fallback to second player
+      const firstCzarIdx = allPlayers.findIndex(p => p.isBot)
+      const czarIdx = firstCzarIdx >= 0 ? firstCzarIdx : (allPlayers.length > 1 ? 1 : 0)
+      allPlayers[czarIdx].isCardCzar = true
+      const firstBlack = shuffledBlack[0]
+
+      setBlackCardPool(shuffledBlack.slice(1))
+      setWhiteCardPool(shuffledWhite)
+
+      return {
+        ...prev,
+        phase: 'playing',
+        currentRound: 1,
+        currentBlackCard: firstBlack,
+        players: allPlayers,
+        submissions: [],
+        roundWinner: null,
+        czarId: allPlayers[czarIdx].id,
+      }
+    })
   }, [])
 
   const redrawHand = useCallback((playerId: string) => {
@@ -404,6 +419,62 @@ export function useGameState() {
     setWhiteCardPool([])
   }, [])
 
+  /** Add a remote human player during lobby phase */
+  const addRemotePlayer = useCallback(
+    (info: { id: string; name: string; avatar: string; avatarBg: string }) => {
+      setGameState((prev) => {
+        if (prev.phase !== 'lobby') return prev
+        if (prev.players.some((p) => p.id === info.id)) return prev
+        if (prev.players.length >= prev.settings.maxPlayers) return prev
+        const newPlayer: Player = {
+          id: info.id,
+          name: info.name,
+          score: 0,
+          isHost: false,
+          isCardCzar: false,
+          isConnected: true,
+          avatar: info.avatar,
+          avatarBg: info.avatarBg,
+          hand: [],
+          selectedCard: null,
+          isBot: false,
+        }
+        return { ...prev, players: [...prev.players, newPlayer] }
+      })
+    },
+    []
+  )
+
+  /** Remove a remote player (disconnect) */
+  const removeRemotePlayer = useCallback((playerId: string) => {
+    setGameState((prev) => {
+      // In lobby, remove entirely
+      if (prev.phase === 'lobby') {
+        return {
+          ...prev,
+          players: prev.players.filter((p) => p.id !== playerId),
+        }
+      }
+      // During game, mark disconnected
+      return {
+        ...prev,
+        players: prev.players.map((p) =>
+          p.id === playerId ? { ...p, isConnected: false } : p
+        ),
+      }
+    })
+  }, [])
+
+  /** Override the room code (used when host creates a multiplayer room) */
+  const setRoomCode = useCallback((code: string) => {
+    setGameState((prev) => ({ ...prev, roomCode: code }))
+  }, [])
+
+  /** Direct state setter for client mode — receives host-broadcast state */
+  const setFullState = useCallback((state: GameState) => {
+    setGameState(state)
+  }, [])
+
   return {
     gameState,
     goToLobby,
@@ -420,6 +491,10 @@ export function useGameState() {
     nextRound,
     continueFromScoreboard,
     newGame,
+    addRemotePlayer,
+    removeRemotePlayer,
+    setRoomCode,
+    setFullState,
   }
 }
 

@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og'
 
-export const runtime = 'edge'
+export const dynamic = 'force-static'
 export const alt = 'Cards Against AI — The unhinged party card game for the chronically online'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
@@ -21,29 +21,6 @@ export default function OGImage() {
           overflow: 'hidden',
         }}
       >
-        {/* Background pattern words */}
-        {['SLAY', 'ICONIC', 'BRUH', 'NO CAP', 'GOAT', 'UNHINGED', 'YEET', 'BASED'].map(
-          (word, i) => (
-            <div
-              key={word}
-              style={{
-                position: 'absolute',
-                fontFamily: 'sans-serif',
-                fontSize: 120,
-                fontWeight: 900,
-                color: 'rgba(255,255,255,0.04)',
-                textTransform: 'uppercase',
-                transform: `rotate(-12deg)`,
-                top: `${-40 + (i % 4) * 180}px`,
-                left: `${-100 + Math.floor(i / 4) * 700}px`,
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {word}
-            </div>
-          ),
-        )}
-
         {/* Cards */}
         <div style={{ display: 'flex', gap: 32, marginBottom: 40 }}>
           {/* Black card */}
@@ -61,10 +38,10 @@ export default function OGImage() {
               boxShadow: '8px 8px 0px rgba(0,0,0,0.5)',
             }}
           >
-            <div style={{ color: '#fff', fontSize: 22, fontWeight: 700, fontFamily: 'sans-serif', lineHeight: 1.3 }}>
+            <div style={{ color: '#fff', fontSize: 22, fontWeight: 700, fontFamily: 'sans-serif', lineHeight: 1.3, display: 'flex' }}>
               What&apos;s the next big thing in AI?
             </div>
-            <div style={{ marginTop: 'auto', color: '#666', fontSize: 12, fontFamily: 'sans-serif' }}>
+            <div style={{ marginTop: 'auto', color: '#666', fontSize: 12, fontFamily: 'sans-serif', display: 'flex' }}>
               CARDS AGAINST AI
             </div>
           </div>
@@ -83,10 +60,10 @@ export default function OGImage() {
               boxShadow: '8px 8px 0px rgba(0,0,0,0.5)',
             }}
           >
-            <div style={{ color: '#111', fontSize: 22, fontWeight: 700, fontFamily: 'sans-serif', lineHeight: 1.3 }}>
+            <div style={{ color: '#111', fontSize: 22, fontWeight: 700, fontFamily: 'sans-serif', lineHeight: 1.3, display: 'flex' }}>
               A sentient toaster with strong opinions
             </div>
-            <div style={{ marginTop: 'auto', color: '#999', fontSize: 12, fontFamily: 'sans-serif' }}>
+            <div style={{ marginTop: 'auto', color: '#999', fontSize: 12, fontFamily: 'sans-serif', display: 'flex' }}>
               CARDS AGAINST AI
             </div>
           </div>
@@ -95,6 +72,7 @@ export default function OGImage() {
         {/* Title */}
         <div
           style={{
+            display: 'flex',
             fontFamily: 'sans-serif',
             fontSize: 72,
             fontWeight: 900,
@@ -111,6 +89,7 @@ export default function OGImage() {
         {/* Green accent bar */}
         <div
           style={{
+            display: 'flex',
             marginTop: 16,
             backgroundColor: '#66FF00',
             padding: '8px 32px',
@@ -120,6 +99,7 @@ export default function OGImage() {
         >
           <div
             style={{
+              display: 'flex',
               fontFamily: 'sans-serif',
               fontSize: 20,
               fontWeight: 900,

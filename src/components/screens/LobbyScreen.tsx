@@ -13,7 +13,7 @@ import { Sticker } from '@/components/Sticker'
 const MAX_PLAYERS = 6
 
 export default function LobbyScreen() {
-  const { gameState, startGame, updateSettings, newGame } = useGame()
+  const { gameState, startGame, updateSettings, newGame, isMultiplayer, isHost, isClient, presencePlayers, mpState } = useGame()
   const [playerName, setPlayerName] = useState('')
   const [botCount, setBotCount] = useState(3)
   const [selectedDecks, setSelectedDecks] = useState<string[]>(
@@ -35,12 +35,27 @@ export default function LobbyScreen() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const botRoster = useMemo(() => pickRandomBots(MAX_PLAYERS - 1), [])
 
-  const totalPlayers = 1 + botCount
+  // Remote human players from Presence (excluding self)
+  const remoteHumans = isMultiplayer
+    ? presencePlayers.filter((p) => p.id !== mpState.playerId)
+    : []
+
+  const totalPlayers = (playerName.trim() ? 1 : 0) + remoteHumans.length + botCount
   const slots = Array.from({ length: MAX_PLAYERS })
 
-  const filledSlots: { name: string; emoji: string; bg: string; role: string; isHost: boolean }[] = []
+  const filledSlots: { name: string; emoji: string; bg: string; role: string; isHost: boolean; isOnline?: boolean }[] = []
   if (playerName.trim()) {
-    filledSlots.push({ name: playerName, emoji: '🦄', bg: '#FFD700', role: 'Host', isHost: true })
+    filledSlots.push({ name: playerName, emoji: '🦄', bg: '#FFD700', role: isHost ? 'Host' : 'You', isHost: true, isOnline: true })
+  }
+  for (const remote of remoteHumans) {
+    filledSlots.push({
+      name: remote.name,
+      emoji: remote.avatar,
+      bg: remote.avatarBg,
+      role: remote.isHost ? 'Host' : 'Player',
+      isHost: remote.isHost,
+      isOnline: true,
+    })
   }
   for (let i = 0; i < botCount; i++) {
     const bot = botRoster[i]
@@ -196,7 +211,7 @@ export default function LobbyScreen() {
                       </div>
                     )}
                     <div
-                      className="flex items-center justify-center rounded-full"
+                      className="relative flex items-center justify-center rounded-full"
                       style={{
                         width: '72px',
                         height: '72px',
@@ -206,6 +221,20 @@ export default function LobbyScreen() {
                       }}
                     >
                       {player.emoji}
+                      {player.isOnline && (
+                        <span
+                          style={{
+                            position: 'absolute',
+                            bottom: 2,
+                            right: 2,
+                            width: 14,
+                            height: 14,
+                            borderRadius: '50%',
+                            backgroundColor: '#66FF00',
+                            border: '2px solid var(--theme-border)',
+                          }}
+                        />
+                      )}
                     </div>
                     <span
                       className="max-w-full truncate px-2"
@@ -275,7 +304,7 @@ export default function LobbyScreen() {
             >
               Bots:
             </span>
-            {[2, 3, 4, 5].map((count) => (
+            {Array.from({ length: MAX_PLAYERS - 1 - remoteHumans.length }, (_, i) => i).map((count) => (
               <button
                 key={count}
                 onClick={() => setBotCount(count)}
@@ -286,7 +315,7 @@ export default function LobbyScreen() {
                   border: '3px solid var(--theme-border)',
                   borderRadius: '10px',
                   backgroundColor: botCount === count ? '#66FF00' : 'var(--theme-surface)',
-                  color: 'var(--theme-text)',
+                  color: botCount === count ? '#111' : 'var(--theme-text)',
                   boxShadow: botCount === count ? '3px 3px 0px var(--theme-shadow)' : 'none',
                 }}
               >
@@ -294,6 +323,32 @@ export default function LobbyScreen() {
               </button>
             ))}
           </div>
+
+          {/* Multiplayer status */}
+          {isMultiplayer && (
+            <div
+              className="mt-2 flex items-center justify-center gap-2 rounded-full px-4 py-1.5"
+              style={{
+                fontFamily: 'var(--font-inter)',
+                fontSize: 13,
+                fontWeight: 600,
+                backgroundColor: mpState.connected ? 'rgba(102,255,0,0.15)' : 'rgba(255,66,66,0.15)',
+                color: mpState.connected ? '#166534' : '#9B2C2C',
+                border: `2px solid ${mpState.connected ? '#166534' : '#9B2C2C'}`,
+              }}
+            >
+              <span
+                style={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: '50%',
+                  backgroundColor: mpState.connected ? '#66FF00' : '#FF4242',
+                  display: 'inline-block',
+                }}
+              />
+              {mpState.connected ? `Room: ${gameState.roomCode}` : 'Connecting...'}
+            </div>
+          )}
         </m.div>
 
         {/* Deck Selector */}
@@ -591,13 +646,22 @@ export default function LobbyScreen() {
         >
           ← BACK
         </NavButton>
-        <NavButton
-          variant="primary"
-          onClick={handleStart}
-          disabled={!playerName.trim()}
-        >
-          LET&apos;S GO 🔥
-        </NavButton>
+        {isClient ? (
+          <NavButton
+            variant="primary"
+            disabled
+          >
+            ⏳ WAITING FOR HOST...
+          </NavButton>
+        ) : (
+          <NavButton
+            variant="primary"
+            onClick={handleStart}
+            disabled={!playerName.trim() || (totalPlayers < 2)}
+          >
+            LET&apos;S GO 🔥
+          </NavButton>
+        )}
       </BottomNav>
     </div>
   )

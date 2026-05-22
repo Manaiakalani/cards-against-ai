@@ -51,7 +51,7 @@ const ConfettiPiece = React.memo(function ConfettiPiece({ index }: { index: numb
 })
 
 export default function ResultsScreen() {
-  const { gameState, nextRound } = useGame()
+  const { gameState, nextRound, myPlayerId } = useGame()
   const { checkAndUnlock } = useAchievements()
   const { recordRoundWin, recordRoundLoss } = useStats()
   const { play } = useSound()
@@ -60,7 +60,7 @@ export default function ResultsScreen() {
   const latestResult = gameState.roundHistory[gameState.roundHistory.length - 1]
   const winner = gameState.players.find((p) => p.id === latestResult?.winnerId)
   const czar = gameState.players.find((p) => p.id === latestResult?.czarId)
-  const humanWon = latestResult?.winnerId === 'player-1'
+  const humanWon = latestResult?.winnerId === myPlayerId
 
   const confettiPieces = useMemo(() => Array.from({ length: 8 }, (_, i) => i), [])
 
@@ -75,16 +75,16 @@ export default function ResultsScreen() {
       // Count consecutive human wins for streak
       let streak = 0
       for (let i = gameState.roundHistory.length - 1; i >= 0; i--) {
-        if (gameState.roundHistory[i].winnerId === 'player-1') streak++
+        if (gameState.roundHistory[i].winnerId === myPlayerId) streak++
         else break
       }
       const isPick2 = (latestResult.blackCard.blanks ?? 1) >= 2
-      const totalHumanWins = gameState.roundHistory.filter(r => r.winnerId === 'player-1').length
+      const totalHumanWins = gameState.roundHistory.filter(r => r.winnerId === myPlayerId).length
       const newlyUnlocked = checkAndUnlock({
         roundsWon: totalHumanWins,
         roundsPlayed: gameState.roundHistory.length,
         currentStreak: streak,
-        ...(isPick2 ? { pick2Played: gameState.roundHistory.filter(r => r.winnerId === 'player-1' && (r.blackCard.blanks ?? 1) >= 2).length } : {}),
+        ...(isPick2 ? { pick2Played: gameState.roundHistory.filter(r => r.winnerId === myPlayerId && (r.blackCard.blanks ?? 1) >= 2).length } : {}),
       })
       if (newlyUnlocked.length > 0) pushToast(newlyUnlocked)
     } else {

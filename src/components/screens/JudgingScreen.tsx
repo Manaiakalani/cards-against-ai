@@ -12,11 +12,11 @@ import { NavButton } from '@/components/NavButton'
 import { Sticker } from '@/components/Sticker'
 
 export default function JudgingScreen() {
-  const { gameState, pickWinner, botPickWinner } = useGame()
+  const { gameState, pickWinner, botPickWinner, myPlayerId } = useGame()
   const { play } = useSound()
   const [selectedSubmissionIdx, setSelectedSubmissionIdx] = useState<number | null>(null)
 
-  const humanPlayer = gameState.players.find((p) => p.id === 'player-1')
+  const humanPlayer = gameState.players.find((p) => p.id === myPlayerId)
   const isHumanCzar = humanPlayer?.isCardCzar ?? false
   const czar = gameState.players.find((p) => p.id === gameState.czarId)
 

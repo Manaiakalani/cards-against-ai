@@ -105,7 +105,7 @@ const submittedTextStyle = {
 const bgStyle = { backgroundColor: 'var(--theme-bg)' } as const
 
 export default function PlayingScreen() {
-  const { gameState, submitCard, submitCards, botSubmit, redrawHand, rebootHand } = useGame()
+  const { gameState, submitCard, submitCards, botSubmit, redrawHand, rebootHand, myPlayerId } = useGame()
   const { play } = useSound()
   const { checkAndUnlock, stats: achStats } = useAchievements()
   const { recordCardPlayed, recordRedraw } = useStats()
@@ -118,7 +118,7 @@ export default function PlayingScreen() {
   const [isDealt, setIsDealt] = useState(false)
   const dealRotationsRef = useRef<number[]>([])
 
-  const humanPlayer = gameState.players.find((p) => p.id === 'player-1')
+  const humanPlayer = gameState.players.find((p) => p.id === myPlayerId)
   const isPlayerCzar = humanPlayer?.isCardCzar ?? false
   const blanks = gameState.currentBlackCard?.blanks ?? 1
   const { timerEnabled, timerSeconds } = gameState.settings
@@ -133,12 +133,12 @@ export default function PlayingScreen() {
     if (blanks === 1) {
       const randomCard = hand[Math.floor(Math.random() * hand.length)]
       setSubmitted(true)
-      submitCard('player-1', randomCard)
+      submitCard(myPlayerId, randomCard)
     } else {
       const shuffled = [...hand].sort(() => Math.random() - 0.5)
       const picks = shuffled.slice(0, Math.min(blanks, hand.length))
       setSubmitted(true)
-      submitCards('player-1', picks)
+      submitCards(myPlayerId, picks)
     }
 
     const delay = 500 + Math.random() * 1000
@@ -223,33 +223,33 @@ export default function PlayingScreen() {
     if (newlyUnlocked.length > 0) pushToast(newlyUnlocked)
 
     if (blanks === 1) {
-      submitCard('player-1', selectedCards[0])
+      submitCard(myPlayerId, selectedCards[0])
     } else {
-      submitCards('player-1', selectedCards)
+      submitCards(myPlayerId, selectedCards)
     }
 
     // Bots submit after a short random delay
     const delay = 500 + Math.random() * 1000
     botTimerRef.current = setTimeout(() => { botSubmit() }, delay)
-  }, [selectedCards, blanks, humanPlayer, submitCard, submitCards, botSubmit, timer, play, recordCardPlayed, checkAndUnlock, achStats.cardsPlayed])
+  }, [selectedCards, blanks, humanPlayer, submitCard, submitCards, botSubmit, timer, play, recordCardPlayed, checkAndUnlock, achStats.cardsPlayed, myPlayerId])
 
   const handleRedraw = useCallback(() => {
     if (hasRedrawn || submitted) return
-    redrawHand('player-1')
+    redrawHand(myPlayerId)
     setSelectedCards([])
     setHasRedrawn(true)
     recordRedraw()
     checkAndUnlock({ redrawsUsed: achStats.redrawsUsed + 1 })
-  }, [hasRedrawn, submitted, redrawHand, recordRedraw, checkAndUnlock, achStats.redrawsUsed])
+  }, [hasRedrawn, submitted, redrawHand, recordRedraw, checkAndUnlock, achStats.redrawsUsed, myPlayerId])
 
   const handleReboot = useCallback(() => {
     if (hasRebooted || submitted) return
     if (!humanPlayer || humanPlayer.score < 1) return
-    rebootHand('player-1')
+    rebootHand(myPlayerId)
     setSelectedCards([])
     setHasRebooted(true)
     play('submit')
-  }, [hasRebooted, submitted, humanPlayer, rebootHand, play])
+  }, [hasRebooted, submitted, humanPlayer, rebootHand, play, myPlayerId])
 
   // Czar waiting view
   if (isPlayerCzar) {

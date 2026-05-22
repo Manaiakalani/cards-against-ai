@@ -8,6 +8,7 @@ import { PosterBackground } from '@/components/PosterBackground'
 import { GameCard } from '@/components/GameCard'
 import { CardIcon } from '@/components/CardIcon'
 import { Code2, Sparkles, GitPullRequestArrow } from 'lucide-react'
+import { isSupabaseConfigured } from '@/lib/supabase'
 import dynamic from 'next/dynamic'
 
 const StatsScreen = dynamic(
@@ -54,12 +55,14 @@ const footerLinks = [
 ] as const
 
 export default function SplashScreen() {
-  const { goToLobby } = useGame()
+  const { goToLobby, hostGame, joinGame, mpState, isClient, gameState } = useGame()
   const [showStats, setShowStats] = useState(false)
   const [showAchievements, setShowAchievements] = useState(false)
   const [showFavorites, setShowFavorites] = useState(false)
   const [showJoin, setShowJoin] = useState(false)
   const [joinCode, setJoinCode] = useState('')
+  const [joinName, setJoinName] = useState('')
+  const [joining, setJoining] = useState(false)
 
   const totalCards = useMemo(
     () => allDecks.reduce((sum, d) => sum + d.cards.blackCards.length + d.cards.whiteCards.length, 0),
@@ -263,7 +266,13 @@ export default function SplashScreen() {
         {/* Host / Join buttons */}
         <m.div variants={fadeUp} className="mt-10 flex flex-col items-center gap-3 sm:flex-row">
           <m.button
-            onClick={goToLobby}
+            onClick={() => {
+              if (isSupabaseConfigured) {
+                hostGame({ name: '', avatar: '🦄', avatarBg: '#FFD700' })
+              } else {
+                goToLobby()
+              }
+            }}
             whileHover={{ y: 2, boxShadow: '0px 6px 0px var(--theme-shadow)' }}
             whileTap={{ y: 6, boxShadow: '0px 2px 0px var(--theme-shadow)' }}
             transition={{ type: 'spring', stiffness: 500, damping: 30 }}
@@ -283,26 +292,28 @@ export default function SplashScreen() {
           >
             🎮 HOST GAME
           </m.button>
-          <m.button
-            onClick={() => setShowJoin(true)}
-            whileHover={{ y: 2, boxShadow: '0px 6px 0px var(--theme-shadow)' }}
-            whileTap={{ y: 6, boxShadow: '0px 2px 0px var(--theme-shadow)' }}
-            transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-            className="cursor-pointer uppercase"
-            style={{
-              fontFamily: 'var(--font-archivo)',
-              fontSize: 'clamp(18px, 3vw, 24px)',
-              fontWeight: 400,
-              backgroundColor: 'var(--theme-surface)',
-              color: 'var(--theme-text)',
-              border: '4px solid var(--theme-border)',
-              padding: 'clamp(14px, 2.5vw, 20px) clamp(36px, 7vw, 64px)',
-              borderRadius: 100,
-              boxShadow: '0px 8px 0px var(--theme-shadow)',
-            }}
-          >
-            🔗 JOIN GAME
-          </m.button>
+          {isSupabaseConfigured && (
+            <m.button
+              onClick={() => setShowJoin(true)}
+              whileHover={{ y: 2, boxShadow: '0px 6px 0px var(--theme-shadow)' }}
+              whileTap={{ y: 6, boxShadow: '0px 2px 0px var(--theme-shadow)' }}
+              transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+              className="cursor-pointer uppercase"
+              style={{
+                fontFamily: 'var(--font-archivo)',
+                fontSize: 'clamp(18px, 3vw, 24px)',
+                fontWeight: 400,
+                backgroundColor: 'var(--theme-surface)',
+                color: 'var(--theme-text)',
+                border: '4px solid var(--theme-border)',
+                padding: 'clamp(14px, 2.5vw, 20px) clamp(36px, 7vw, 64px)',
+                borderRadius: 100,
+                boxShadow: '0px 8px 0px var(--theme-shadow)',
+              }}
+            >
+              🔗 JOIN GAME
+            </m.button>
+          )}
         </m.div>
 
         {/* Menu buttons row */}
@@ -445,7 +456,7 @@ export default function SplashScreen() {
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[200] flex items-center justify-center p-4"
             style={{ backgroundColor: 'rgba(0,0,0,0.6)' }}
-            onClick={() => setShowJoin(false)}
+            onClick={() => { if (!joining) setShowJoin(false) }}
           >
             <m.div
               initial={{ scale: 0.85, opacity: 0, y: 20 }}
@@ -463,7 +474,7 @@ export default function SplashScreen() {
               }}
             >
               <button
-                onClick={() => setShowJoin(false)}
+                onClick={() => { if (!joining) setShowJoin(false) }}
                 aria-label="Close join dialog"
                 className="absolute top-2 right-2 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full"
                 style={{
@@ -508,6 +519,7 @@ export default function SplashScreen() {
                 maxLength={6}
                 autoComplete="off"
                 spellCheck={false}
+                disabled={joining}
                 className="mb-4 w-full rounded-lg px-4 py-3 text-center tracking-[4px] uppercase"
                 style={{
                   fontFamily: 'var(--font-archivo)',
@@ -516,37 +528,74 @@ export default function SplashScreen() {
                   backgroundColor: 'var(--theme-surface)',
                   color: 'var(--theme-text)',
                   border: '3px solid var(--theme-border)',
+                  opacity: joining ? 0.5 : 1,
                 }}
               />
 
-              <div
-                className="rounded-lg p-4 text-center"
+              <label className="sr-only" htmlFor="join-player-name">Your name</label>
+              <input
+                id="join-player-name"
+                type="text"
+                value={joinName}
+                onChange={(e) => setJoinName(e.target.value.slice(0, 20))}
+                placeholder="Your name"
+                maxLength={20}
+                autoComplete="off"
+                spellCheck={false}
+                disabled={joining}
+                className="mb-6 w-full rounded-lg px-4 py-3 text-center"
                 style={{
-                  backgroundColor: 'var(--theme-surface-alt)',
-                  border: '2px solid var(--theme-border)',
+                  fontFamily: 'var(--font-archivo)',
+                  fontSize: 18,
+                  fontWeight: 700,
+                  backgroundColor: 'var(--theme-surface)',
+                  color: 'var(--theme-text)',
+                  border: '3px solid var(--theme-border)',
+                  opacity: joining ? 0.5 : 1,
                 }}
-              >
-                <p
+              />
+
+              {mpState.error && (
+                <div
+                  className="mb-4 rounded-lg p-3 text-center"
                   style={{
+                    backgroundColor: 'rgba(255,66,66,0.1)',
+                    border: '2px solid #FF4242',
                     fontFamily: 'var(--font-inter)',
                     fontSize: 13,
                     fontWeight: 600,
-                    color: 'var(--theme-text)',
+                    color: '#FF4242',
                   }}
                 >
-                  🚧 Multiplayer Coming Soon
-                </p>
-                <p
-                  className="mt-1"
-                  style={{
-                    fontFamily: 'var(--font-inter)',
-                    fontSize: 12,
-                    color: 'var(--theme-text-muted)',
-                  }}
-                >
-                  Online multiplayer is in development. For now, host a game and play with AI bots!
-                </p>
-              </div>
+                  {mpState.error}
+                </div>
+              )}
+
+              <button
+                onClick={() => {
+                  if (joinCode.length !== 6 || !joinName.trim()) return
+                  setJoining(true)
+                  joinGame(joinCode, {
+                    name: joinName.trim(),
+                    avatar: '🎮',
+                    avatarBg: '#87CEEB',
+                  })
+                }}
+                disabled={joinCode.length !== 6 || !joinName.trim() || joining}
+                className="w-full cursor-pointer rounded-full px-6 py-4 text-center uppercase"
+                style={{
+                  fontFamily: 'var(--font-archivo)',
+                  fontSize: 18,
+                  fontWeight: 900,
+                  backgroundColor: joinCode.length === 6 && joinName.trim() && !joining ? '#66FF00' : 'var(--theme-surface-alt)',
+                  color: joinCode.length === 6 && joinName.trim() && !joining ? '#111' : 'var(--theme-text-muted)',
+                  border: '3px solid var(--theme-border)',
+                  boxShadow: '0px 6px 0px var(--theme-shadow)',
+                  letterSpacing: '0.04em',
+                }}
+              >
+                {joining ? '⏳ Connecting...' : '🔗 JOIN'}
+              </button>
             </m.div>
           </m.div>
         )}
