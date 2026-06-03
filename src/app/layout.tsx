@@ -3,6 +3,7 @@ import { Archivo_Black, Inter } from "next/font/google";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { GameProvider } from "@/contexts/GameContext";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { Analytics } from "@/components/Analytics";
 import "./globals.css";
 
 const archivoBlack = Archivo_Black({
@@ -63,6 +64,7 @@ export default function RootLayout({
       className={`${archivoBlack.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <Analytics />
         <ThemeProvider>
           <ErrorBoundary>
             <GameProvider>{children}</GameProvider>
