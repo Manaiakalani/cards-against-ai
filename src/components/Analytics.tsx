@@ -12,7 +12,7 @@ export function Analytics() {
     const script = document.createElement("script");
     script.src = "https://analytics.manaiakalani.info/api/script.js";
     script.defer = true;
-    script.setAttribute("data-site-id", "undefined");
+    script.setAttribute("data-site-id", "c9d271d42b7f");
     document.head.appendChild(script);
     return () => {
       script.remove();
