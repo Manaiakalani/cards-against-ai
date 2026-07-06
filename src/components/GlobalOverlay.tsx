@@ -118,34 +118,38 @@ export function GlobalOverlay() {
         ?
       </m.button>
 
-      {/* Quit button — only during active game, inside HUD bar */}
-      <AnimatePresence>
-        {isInGame && !confirmQuit && (
-          <m.button
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            onClick={() => setConfirmQuit(true)}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            aria-label="Quit game"
-            className="fixed z-[150] flex cursor-pointer items-center justify-center rounded-full"
-            style={{
-              top: -2,
-              left: 10,
-              width: 44,
-              height: 44,
-              backgroundColor: '#C62828',
-              color: 'white',
-              border: '2px solid var(--theme-border)',
-              fontFamily: 'var(--font-inter)',
-              fontSize: 16,
-            }}
-          >
-            ✕
-          </m.button>
-        )}
-      </AnimatePresence>
+      {/* Quit button — only during active game, inside HUD bar. Stays
+          mounted (never unmounts) while the confirm dialog is open, driving
+          its enter/exit via `animate` instead of AnimatePresence, so the
+          focus trap can restore focus to this exact node afterward — an
+          unmounted-and-remounted button would be a stale ref on close. */}
+      {isInGame && (
+        <m.button
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: confirmQuit ? 0 : 1, scale: confirmQuit ? 0.8 : 1 }}
+          onClick={() => setConfirmQuit(true)}
+          whileHover={confirmQuit ? undefined : { scale: 1.1 }}
+          whileTap={confirmQuit ? undefined : { scale: 0.9 }}
+          aria-label="Quit game"
+          aria-hidden={confirmQuit}
+          tabIndex={confirmQuit ? -1 : 0}
+          className="fixed z-[150] flex cursor-pointer items-center justify-center rounded-full"
+          style={{
+            top: -2,
+            left: 10,
+            width: 44,
+            height: 44,
+            backgroundColor: '#C62828',
+            color: 'white',
+            border: '2px solid var(--theme-border)',
+            fontFamily: 'var(--font-inter)',
+            fontSize: 16,
+            pointerEvents: confirmQuit ? 'none' : 'auto',
+          }}
+        >
+          ✕
+        </m.button>
+      )}
 
       {/* Quit confirmation */}
       <AnimatePresence>
