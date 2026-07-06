@@ -1,4 +1,5 @@
 import { Card, CardDeck } from '@/types/game'
+import { deckMeta } from './deckMeta'
 
 // ─── Brainrot & AI Slop (startup × chronically online) ────────────────
 const brainrotBlack: Card[] = [
@@ -418,78 +419,29 @@ const oncallWhite: Card[] = [
 ]
 
 // ─── Deck definitions ────────────────────────────────────────────────
-export const allDecks: CardDeck[] = [
-  {
-    id: 'brainrot',
-    name: 'Brainrot & AI Slop',
-    description: 'Startup culture meets chronically online chaos',
-    icon: '🧠',
-    cards: { blackCards: brainrotBlack, whiteCards: brainrotWhite },
-  },
-  {
-    id: 'terminally-online',
-    name: 'Terminally Online',
-    description: 'Tech, memes, and the internet was a mistake',
-    icon: '💀',
-    cards: { blackCards: onlineBlack, whiteCards: onlineWhite },
-  },
-  {
-    id: 'gen-z',
-    name: 'Unhinged Gen Z',
-    description: 'Slay, situationships, and therapy-speak fluency',
-    icon: '✨',
-    cards: { blackCards: genZBlack, whiteCards: genZWhite },
-  },
-  {
-    id: 'millennial',
-    name: 'Elder Millennial',
-    description: 'Nostalgia, student loans, and "adulting is a scam"',
-    icon: '🫠',
-    cards: { blackCards: milBlack, whiteCards: milWhite },
-  },
-  {
-    id: 'ai-fever',
-    name: 'AI Fever Dream',
-    description: 'GPT wrappers, vibe coding, and sentient toasters',
-    icon: '🤖',
-    cards: { blackCards: aiFeverBlack, whiteCards: aiFeverWhite },
-  },
-  {
-    id: 'gaming',
-    name: 'Gamer Lore',
-    description: 'NPC behavior, rage quits, and RGB everything',
-    icon: '🎮',
-    cards: { blackCards: gamingBlack, whiteCards: gamingWhite },
-  },
-  {
-    id: 'crypto',
-    name: 'Crypto & Web3',
-    description: 'NFT disasters, blockchain bros, and diamond hands',
-    icon: '💎',
-    cards: { blackCards: cryptoBlack, whiteCards: cryptoWhite },
-  },
-  {
-    id: 'startup',
-    name: 'Startup Life',
-    description: 'Pitch decks, pivots, and ping pong tables',
-    icon: '🚀',
-    cards: { blackCards: startupBlack, whiteCards: startupWhite },
-  },
-  {
-    id: 'intuned',
-    name: 'InTuneD',
-    description: 'Teams chaos, ADO nightmares, and Intune compliance disasters',
-    icon: '🎯',
-    cards: { blackCards: intunedBlack, whiteCards: intunedWhite },
-  },
-  {
-    id: 'oncall',
-    name: 'On-Call Nightmares',
-    description: 'ICM bridges, pager duty, and 3 AM prod incidents',
-    icon: '🚨',
-    cards: { blackCards: oncallBlack, whiteCards: oncallWhite },
-  },
-]
+// id/name/description/icon come from `deckMeta.ts` (the lightweight
+// module UI code should prefer); this map attaches the actual card
+// content, which only `getAllCards()` below needs.
+const deckContent: Record<string, { blackCards: Card[]; whiteCards: Card[] }> = {
+  brainrot: { blackCards: brainrotBlack, whiteCards: brainrotWhite },
+  'terminally-online': { blackCards: onlineBlack, whiteCards: onlineWhite },
+  'gen-z': { blackCards: genZBlack, whiteCards: genZWhite },
+  millennial: { blackCards: milBlack, whiteCards: milWhite },
+  'ai-fever': { blackCards: aiFeverBlack, whiteCards: aiFeverWhite },
+  gaming: { blackCards: gamingBlack, whiteCards: gamingWhite },
+  crypto: { blackCards: cryptoBlack, whiteCards: cryptoWhite },
+  startup: { blackCards: startupBlack, whiteCards: startupWhite },
+  intuned: { blackCards: intunedBlack, whiteCards: intunedWhite },
+  oncall: { blackCards: oncallBlack, whiteCards: oncallWhite },
+}
+
+export const allDecks: CardDeck[] = deckMeta.map(({ id, name, description, icon }) => ({
+  id,
+  name,
+  description,
+  icon,
+  cards: deckContent[id],
+}))
 
 export function getAllCards(deckIds?: string[]) {
   const decks = deckIds
@@ -499,22 +451,5 @@ export function getAllCards(deckIds?: string[]) {
   return {
     blackCards: decks.flatMap(d => d.cards.blackCards),
     whiteCards: decks.flatMap(d => d.cards.whiteCards),
-  }
-}
-
-export function shuffle<T>(arr: T[]): T[] {
-  const a = [...arr]
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[a[i], a[j]] = [a[j], a[i]]
-  }
-  return a
-}
-
-export function drawCards(pool: Card[], count: number): { drawn: Card[]; remaining: Card[] } {
-  const shuffled = shuffle(pool)
-  return {
-    drawn: shuffled.slice(0, count),
-    remaining: shuffled.slice(count),
   }
 }

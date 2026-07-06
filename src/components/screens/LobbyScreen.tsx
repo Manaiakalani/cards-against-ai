@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { m } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
-import { allDecks } from '@/data/cards'
+import { deckMeta } from '@/data/deckMeta'
 import { BOT_POOL, pickRandomBots } from '@/hooks/useGameState'
 import { PosterBackground } from '@/components/PosterBackground'
 import { BottomNav } from '@/components/BottomNav'
@@ -34,6 +34,14 @@ export default function LobbyScreen() {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const botRoster = useMemo(() => pickRandomBots(MAX_PLAYERS - 1), [])
+
+  // Warm the deck-content chunk in the background as soon as the lobby
+  // mounts, so `startGame`'s dynamic import of `@/data/cards` (~350 cards
+  // of text, not needed until now) is normally already cached by the time
+  // the player actually clicks Start.
+  useEffect(() => {
+    import('@/data/cards')
+  }, [])
 
   // Remote human players from Presence (excluding self)
   const remoteHumans = isMultiplayer
@@ -96,9 +104,9 @@ export default function LobbyScreen() {
     updateSettings({ rebootEnabled: enabled })
   }
 
-  const totalCardsInPlay = allDecks
+  const totalCardsInPlay = deckMeta
     .filter((d) => selectedDecks.includes(d.id))
-    .reduce((sum, d) => sum + d.cards.blackCards.length + d.cards.whiteCards.length, 0)
+    .reduce((sum, d) => sum + d.blackCount + d.whiteCount, 0)
 
   return (
     <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>
@@ -388,9 +396,9 @@ export default function LobbyScreen() {
           </div>
 
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-            {allDecks.map((deck) => {
+            {deckMeta.map((deck) => {
               const isSelected = selectedDecks.includes(deck.id)
-              const cardCount = deck.cards.blackCards.length + deck.cards.whiteCards.length
+              const cardCount = deck.blackCount + deck.whiteCount
               return (
                 <button
                   key={deck.id}
