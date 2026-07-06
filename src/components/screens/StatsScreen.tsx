@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { m, AnimatePresence } from 'framer-motion'
 import { useStats, type GameStats } from '@/hooks/useStats'
-import { allDecks } from '@/data/cards'
+import { deckMeta } from '@/data/deckMeta'
 import { useFocusTrap } from '@/hooks/useFocusTrap'
 
 // ─── Helpers ─────────────────────────────────────────────────────────
@@ -32,7 +32,7 @@ function winRate(stats: GameStats): string {
 
 function getDeckDisplay(deckId: string): { name: string; icon: string } {
   if (!deckId) return { name: 'None yet', icon: '📦' }
-  const deck = allDecks.find((d) => d.id === deckId)
+  const deck = deckMeta.find((d) => d.id === deckId)
   if (!deck) return { name: deckId, icon: '📦' }
   return { name: deck.name, icon: deck.icon }
 }

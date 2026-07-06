@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react'
 import { GameState, Player, Card, Submission } from '@/types/game'
-import { getAllCards, shuffle, drawCards } from '@/data/cards'
+import { shuffle, drawCards } from '@/data/cardUtils'
 
 export const BOT_POOL = [
   // OGs
@@ -121,7 +121,14 @@ export function useGameState() {
   const selectedDecksRef = useRef(gameState.settings.selectedDecks)
   useEffect(() => { selectedDecksRef.current = gameState.settings.selectedDecks }, [gameState.settings.selectedDecks])
 
-  const startGame = useCallback((playerName: string, botCount: number = 3) => {
+  const startGame = useCallback(async (playerName: string, botCount: number = 3) => {
+    // Dynamically imported: the ~350 cards of deck text in `@/data/cards`
+    // are only needed once a game actually starts, so they shouldn't be
+    // part of the bundle that loads on first paint (this hook is mounted
+    // app-wide via GameProvider). LobbyScreen prefetches this same module
+    // on mount so the import below is normally already cached by the time
+    // the user clicks Start.
+    const { getAllCards } = await import('@/data/cards')
     const { blackCards, whiteCards } = getAllCards(selectedDecksRef.current)
     if (blackCards.length === 0 || whiteCards.length === 0) return
 

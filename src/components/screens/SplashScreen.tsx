@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { m, AnimatePresence } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
-import { allDecks } from '@/data/cards'
+import { deckMeta } from '@/data/deckMeta'
 import { PosterBackground } from '@/components/PosterBackground'
 import { GameCard } from '@/components/GameCard'
 import { CardIcon } from '@/components/CardIcon'
@@ -66,7 +66,7 @@ export default function SplashScreen() {
   const [joining, setJoining] = useState(false)
 
   const totalCards = useMemo(
-    () => allDecks.reduce((sum, d) => sum + d.cards.blackCards.length + d.cards.whiteCards.length, 0),
+    () => deckMeta.reduce((sum, d) => sum + d.blackCount + d.whiteCount, 0),
     []
   )
 
@@ -249,7 +249,7 @@ export default function SplashScreen() {
               fontVariantNumeric: 'tabular-nums',
             }}
           >
-            📦 {allDecks.length} Decks
+            📦 {deckMeta.length} Decks
           </span>
           <span
             className="inline-flex items-center gap-1 rounded-full px-3 py-1"

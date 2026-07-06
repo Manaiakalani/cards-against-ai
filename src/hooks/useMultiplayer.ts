@@ -2,6 +2,11 @@
 
 import { useState, useCallback, useRef, useEffect, useLayoutEffect } from 'react'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
+import {
+  parsePresencePlayer,
+  parseBroadcastGameState,
+  parseGameAction,
+} from '@/lib/wireProtocol'
 import type { RealtimeChannel } from '@supabase/supabase-js'
 import type {
   GameState,
@@ -9,7 +14,6 @@ import type {
   BroadcastGameState,
   MultiplayerState,
   PresencePlayer,
-  Card,
 } from '@/types/game'
 
 // `useLayoutEffect` warns during Next.js's static-export prerender (no DOM).
@@ -49,101 +53,6 @@ export function sanitizeStateForPlayer(
     czarId: state.czarId,
     yourHand: player?.hand ?? [],
     yourId: playerId,
-  }
-}
-
-// ── Runtime validation for untrusted Supabase Realtime payloads ──
-// Presence/broadcast messages arrive as `unknown` over the wire and may be
-// forged, truncated, or sent by a mismatched client version. Shape-check
-// before trusting them instead of blindly casting with `as`.
-
-function isCard(value: unknown): value is Card {
-  if (typeof value !== 'object' || value === null) return false
-  const v = value as Record<string, unknown>
-  return (
-    typeof v.id === 'string' &&
-    typeof v.text === 'string' &&
-    (v.type === 'black' || v.type === 'white')
-  )
-}
-
-function isPresencePlayer(value: unknown): value is PresencePlayer {
-  if (typeof value !== 'object' || value === null) return false
-  const v = value as Record<string, unknown>
-  return (
-    typeof v.id === 'string' &&
-    typeof v.name === 'string' &&
-    typeof v.avatar === 'string' &&
-    typeof v.avatarBg === 'string' &&
-    typeof v.isHost === 'boolean' &&
-    typeof v.onlineAt === 'string'
-  )
-}
-
-function isBroadcastGameState(value: unknown): value is BroadcastGameState {
-  if (typeof value !== 'object' || value === null) return false
-  const v = value as Record<string, unknown>
-  return (
-    typeof v.phase === 'string' &&
-    typeof v.currentRound === 'number' &&
-    Array.isArray(v.players) &&
-    Array.isArray(v.submissions) &&
-    Array.isArray(v.roundHistory) &&
-    typeof v.settings === 'object' && v.settings !== null &&
-    typeof v.roomCode === 'string' &&
-    typeof v.czarId === 'string' &&
-    Array.isArray(v.yourHand) && v.yourHand.every(isCard) &&
-    typeof v.yourId === 'string'
-  )
-}
-
-function isGameAction(value: unknown): value is GameAction {
-  if (typeof value !== 'object' || value === null) return false
-  const v = value as Record<string, unknown>
-  if (typeof v.type !== 'string' || typeof v.playerId !== 'string') return false
-
-  // `type` alone isn't enough — each variant's `payload` is dereferenced
-  // directly by the host's reducer (e.g. `action.payload.cards`), so a
-  // forged/truncated broadcast missing it would throw at runtime.
-  const payload = v.payload as Record<string, unknown> | undefined
-  switch (v.type) {
-    case 'player:join':
-      return (
-        typeof payload === 'object' && payload !== null &&
-        typeof payload.name === 'string' &&
-        typeof payload.avatar === 'string' &&
-        typeof payload.avatarBg === 'string'
-      )
-    case 'player:submit':
-      return (
-        typeof payload === 'object' && payload !== null &&
-        Array.isArray(payload.cards) && payload.cards.every(isCard)
-      )
-    case 'player:pick_winner':
-      return (
-        typeof payload === 'object' && payload !== null &&
-        typeof payload.winnerId === 'string'
-      )
-    case 'player:update_settings':
-      return (
-        typeof payload === 'object' && payload !== null &&
-        typeof payload.settings === 'object' && payload.settings !== null
-      )
-    case 'player:start_game':
-      // payload itself is optional; if present, botCount (if present) must be a number
-      return (
-        payload === undefined ||
-        (typeof payload === 'object' && payload !== null &&
-          (payload.botCount === undefined || typeof payload.botCount === 'number'))
-      )
-    case 'player:leave':
-    case 'player:reboot':
-    case 'player:next_round':
-    case 'player:continue':
-    case 'player:new_game':
-      return true
-    default:
-      return false
   }
 }
 
@@ -238,8 +147,8 @@ export function useMultiplayer(options: UseMultiplayerOptions = {}) {
         'presence',
         { event: 'join' },
         ({ newPresences }) => {
-          const joined = newPresences[0]
-          if (isPresencePlayer(joined)) optionsRef.current.onPlayerJoin?.(joined)
+          const joined = parsePresencePlayer(newPresences[0])
+          if (joined) optionsRef.current.onPlayerJoin?.(joined)
         }
       )
 
@@ -247,8 +156,8 @@ export function useMultiplayer(options: UseMultiplayerOptions = {}) {
         'presence',
         { event: 'leave' },
         ({ leftPresences }) => {
-          const left = leftPresences[0]
-          if (isPresencePlayer(left)) optionsRef.current.onPlayerLeave?.(left)
+          const left = parsePresencePlayer(leftPresences[0])
+          if (left) optionsRef.current.onPlayerLeave?.(left)
         }
       )
 
@@ -258,15 +167,15 @@ export function useMultiplayer(options: UseMultiplayerOptions = {}) {
       // player's hand briefly ends up in our local state (privacy leak +
       // visible flicker).
       channel.on('broadcast', { event: 'game:state' }, ({ payload }) => {
-        if (!isBroadcastGameState(payload)) return
-        if (payload.yourId !== playerId) return
-        optionsRef.current.onStateUpdate?.(payload)
+        const state = parseBroadcastGameState(payload)
+        if (!state || state.yourId !== playerId) return
+        optionsRef.current.onStateUpdate?.(state)
       })
 
       // Action broadcasts (clients → host)
       channel.on('broadcast', { event: 'game:action' }, ({ payload }) => {
-        if (!isGameAction(payload)) return
-        optionsRef.current.onAction?.(payload)
+        const action = parseGameAction(payload)
+        if (action) optionsRef.current.onAction?.(action)
       })
 
       channel
