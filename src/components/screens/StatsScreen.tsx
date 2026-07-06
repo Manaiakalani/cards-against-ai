@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { m, AnimatePresence } from 'framer-motion'
 import { useStats, type GameStats } from '@/hooks/useStats'
 import { allDecks } from '@/data/cards'
+import { useFocusTrap } from '@/hooks/useFocusTrap'
 
 // ─── Helpers ─────────────────────────────────────────────────────────
 
@@ -111,6 +112,8 @@ export function StatsScreen({ open, onClose }: StatsScreenProps) {
     }
   }, [open, handleEsc])
 
+  const trapRef = useFocusTrap<HTMLDivElement>(open)
+
   const cards = buildCards(stats)
 
   const handleReset = () => {
@@ -138,6 +141,8 @@ export function StatsScreen({ open, onClose }: StatsScreenProps) {
 
           {/* Modal */}
           <m.div
+            ref={trapRef}
+            tabIndex={-1}
             initial={{ opacity: 0, scale: 0.9, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 30 }}

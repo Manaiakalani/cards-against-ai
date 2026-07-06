@@ -18,6 +18,9 @@
   --theme-input-bg: #FFFFFF;
   --theme-poster-color: #FF4242;
   --theme-poster-opacity: 0.9;
+  /* Placeholder text needs its own 4.5:1-safe token — --theme-text-muted
+     alone fails contrast against --theme-input-bg in dark mode. */
+  --theme-placeholder: #6B6B6B;
 
   /* Legacy aliases */
   --background: var(--theme-bg);
@@ -45,6 +48,9 @@
   --theme-input-bg: #333333;
   --theme-poster-color: #FF4242;
   --theme-poster-opacity: 0.25;
+  /* Brighter than --theme-text-muted (#888) so placeholder text still
+     clears 4.5:1 against --theme-input-bg (#333) in dark mode (~4.7:1). */
+  --theme-placeholder: #9E9E9E;
 }
 
 @theme inline {

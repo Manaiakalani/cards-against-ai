@@ -86,19 +86,23 @@ export type GameActionType =
   | 'player:continue'
   | 'player:new_game'
 
-export interface GameAction {
-  type: GameActionType
-  playerId: string
-  payload?: {
-    name?: string
-    avatar?: string
-    avatarBg?: string
-    cards?: Card[]
-    winnerId?: string
-    settings?: Partial<GameSettings>
-    botCount?: number
-  }
-}
+/**
+ * Actions sent client → host over the Supabase Realtime channel.
+ * Modeled as a discriminated union (keyed by `type`) so each variant's
+ * `payload` is exactly what that action needs — no optional grab-bag,
+ * and the host's reducer switch can be checked for exhaustiveness.
+ */
+export type GameAction =
+  | { type: 'player:join'; playerId: string; payload: { name: string; avatar: string; avatarBg: string } }
+  | { type: 'player:leave'; playerId: string }
+  | { type: 'player:submit'; playerId: string; payload: { cards: Card[] } }
+  | { type: 'player:pick_winner'; playerId: string; payload: { winnerId: string } }
+  | { type: 'player:reboot'; playerId: string }
+  | { type: 'player:update_settings'; playerId: string; payload: { settings: Partial<GameSettings> } }
+  | { type: 'player:start_game'; playerId: string; payload?: { botCount?: number } }
+  | { type: 'player:next_round'; playerId: string }
+  | { type: 'player:continue'; playerId: string }
+  | { type: 'player:new_game'; playerId: string }
 
 /** State broadcast from host to clients — hands are per-player filtered */
 export interface BroadcastGameState extends Omit<GameState, 'players'> {

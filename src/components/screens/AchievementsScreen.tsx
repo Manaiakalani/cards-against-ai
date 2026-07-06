@@ -4,6 +4,7 @@ import { useEffect, useCallback } from 'react'
 import { m, AnimatePresence } from 'framer-motion'
 import { ACHIEVEMENTS, RARITY_COLORS, ACHIEVEMENT_TARGETS } from '@/data/achievements'
 import { useAchievements } from '@/hooks/useAchievements'
+import { useFocusTrap } from '@/hooks/useFocusTrap'
 
 interface AchievementsScreenProps {
   open: boolean
@@ -26,6 +27,8 @@ export function AchievementsScreen({ open, onClose }: AchievementsScreenProps) {
     }
   }, [open, handleEsc])
 
+  const trapRef = useFocusTrap<HTMLDivElement>(open)
+
   return (
     <AnimatePresence>
       {open && (
@@ -42,6 +45,8 @@ export function AchievementsScreen({ open, onClose }: AchievementsScreenProps) {
 
           {/* Modal */}
           <m.div
+            ref={trapRef}
+            tabIndex={-1}
             initial={{ opacity: 0, scale: 0.9, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 30 }}

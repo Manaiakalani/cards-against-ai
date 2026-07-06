@@ -2,6 +2,7 @@
 
 import { useEffect, useCallback } from 'react'
 import { m, AnimatePresence } from 'framer-motion'
+import { useFocusTrap } from '@/hooks/useFocusTrap'
 
 interface HelpModalProps {
   open: boolean
@@ -48,6 +49,8 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
     }
   }, [open, handleEsc])
 
+  const trapRef = useFocusTrap<HTMLDivElement>(open)
+
   return (
     <AnimatePresence>
       {open && (
@@ -64,6 +67,8 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
 
           {/* Modal */}
           <m.div
+            ref={trapRef}
+            tabIndex={-1}
             initial={{ opacity: 0, scale: 0.9, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 30 }}

@@ -4,7 +4,6 @@ import { createContext, useContext, useMemo, useCallback, useEffect, ReactNode }
 import { useGameState } from '@/hooks/useGameState'
 import {
   useMultiplayer,
-  sanitizeStateForPlayer,
   hydrateClientState,
 } from '@/hooks/useMultiplayer'
 import {
@@ -55,22 +54,16 @@ export function GameProvider({ children }: { children: ReactNode }) {
     (action: GameAction) => {
       switch (action.type) {
         case 'player:submit':
-          if (action.payload?.cards) {
-            engine.submitCards(action.playerId, action.payload.cards)
-          }
+          engine.submitCards(action.playerId, action.payload.cards)
           break
         case 'player:pick_winner':
-          if (action.payload?.winnerId) {
-            engine.pickWinner(action.payload.winnerId)
-          }
+          engine.pickWinner(action.payload.winnerId)
           break
         case 'player:reboot':
           engine.rebootHand(action.playerId)
           break
         case 'player:update_settings':
-          if (action.payload?.settings) {
-            engine.updateSettings(action.payload.settings)
-          }
+          engine.updateSettings(action.payload.settings)
           break
         case 'player:next_round':
           engine.nextRound()
@@ -78,6 +71,20 @@ export function GameProvider({ children }: { children: ReactNode }) {
         case 'player:continue':
           engine.continueFromScoreboard()
           break
+        case 'player:join':
+        case 'player:leave':
+        case 'player:start_game':
+        case 'player:new_game':
+          // Not sent over the wire in this app: joins/leaves are driven by
+          // Supabase Presence, and start/new-game are host-initiated only.
+          // Listed so the switch stays exhaustive if that ever changes.
+          break
+        default: {
+          // Compile-time guarantee: if a new GameActionType is added without
+          // a case above, this line fails to type-check.
+          const unhandled: never = action
+          void unhandled
+        }
       }
     },
     [engine]

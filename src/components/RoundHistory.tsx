@@ -3,6 +3,7 @@
 import { memo, useCallback, useEffect, useMemo, useSyncExternalStore } from 'react'
 import { m, AnimatePresence } from 'framer-motion'
 import type { RoundResult, Player } from '@/types/game'
+import { useFocusTrap } from '@/hooks/useFocusTrap'
 
 // ─── Favorites localStorage via useSyncExternalStore ─────────────────
 
@@ -235,6 +236,8 @@ export function RoundHistory({
     }
   }, [open, handleEsc])
 
+  const trapRef = useFocusTrap<HTMLDivElement>(open)
+
   const title = favoritesOnly ? 'FAVORITES' : 'ROUND HISTORY'
   const emptyMessage = favoritesOnly
     ? 'No favorites yet - star your best combos!'
@@ -277,6 +280,8 @@ export function RoundHistory({
 
           {/* Modal */}
           <m.div
+            ref={trapRef}
+            tabIndex={-1}
             initial={{ opacity: 0, scale: 0.9, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 30 }}

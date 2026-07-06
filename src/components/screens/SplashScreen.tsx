@@ -9,6 +9,7 @@ import { GameCard } from '@/components/GameCard'
 import { CardIcon } from '@/components/CardIcon'
 import { Code2, Sparkles, GitPullRequestArrow } from 'lucide-react'
 import { isSupabaseConfigured } from '@/lib/supabase'
+import { useFocusTrap } from '@/hooks/useFocusTrap'
 import dynamic from 'next/dynamic'
 
 const StatsScreen = dynamic(
@@ -79,6 +80,8 @@ export default function SplashScreen() {
       return () => document.removeEventListener('keydown', handleEsc)
     }
   }, [showJoin, handleEsc])
+
+  const joinTrapRef = useFocusTrap<HTMLDivElement>(showJoin)
 
   const stagger = {
     hidden: {},
@@ -459,6 +462,8 @@ export default function SplashScreen() {
             onClick={() => { if (!joining) setShowJoin(false) }}
           >
             <m.div
+              ref={joinTrapRef}
+              tabIndex={-1}
               initial={{ scale: 0.85, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.85, opacity: 0, y: 20 }}
