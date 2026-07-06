@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useRef, useEffect } from 'react'
+import { useState, useCallback, useRef, useEffect, useLayoutEffect } from 'react'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
 import type { RealtimeChannel } from '@supabase/supabase-js'
 import type {
@@ -11,6 +11,13 @@ import type {
   PresencePlayer,
   Card,
 } from '@/types/game'
+
+// `useLayoutEffect` warns during Next.js's static-export prerender (no DOM).
+// In the browser it's needed here: it flushes synchronously right after
+// commit, before the event loop yields to any external async event (e.g. a
+// Realtime broadcast), so `optionsRef` can never be read stale by a channel
+// handler. A plain `useEffect` doesn't give that guarantee.
+const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect
 
 function generatePlayerId(): string {
   return `player-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
@@ -93,7 +100,51 @@ function isBroadcastGameState(value: unknown): value is BroadcastGameState {
 function isGameAction(value: unknown): value is GameAction {
   if (typeof value !== 'object' || value === null) return false
   const v = value as Record<string, unknown>
-  return typeof v.type === 'string' && typeof v.playerId === 'string'
+  if (typeof v.type !== 'string' || typeof v.playerId !== 'string') return false
+
+  // `type` alone isn't enough — each variant's `payload` is dereferenced
+  // directly by the host's reducer (e.g. `action.payload.cards`), so a
+  // forged/truncated broadcast missing it would throw at runtime.
+  const payload = v.payload as Record<string, unknown> | undefined
+  switch (v.type) {
+    case 'player:join':
+      return (
+        typeof payload === 'object' && payload !== null &&
+        typeof payload.name === 'string' &&
+        typeof payload.avatar === 'string' &&
+        typeof payload.avatarBg === 'string'
+      )
+    case 'player:submit':
+      return (
+        typeof payload === 'object' && payload !== null &&
+        Array.isArray(payload.cards) && payload.cards.every(isCard)
+      )
+    case 'player:pick_winner':
+      return (
+        typeof payload === 'object' && payload !== null &&
+        typeof payload.winnerId === 'string'
+      )
+    case 'player:update_settings':
+      return (
+        typeof payload === 'object' && payload !== null &&
+        typeof payload.settings === 'object' && payload.settings !== null
+      )
+    case 'player:start_game':
+      // payload itself is optional; if present, botCount (if present) must be a number
+      return (
+        payload === undefined ||
+        (typeof payload === 'object' && payload !== null &&
+          (payload.botCount === undefined || typeof payload.botCount === 'number'))
+      )
+    case 'player:leave':
+    case 'player:reboot':
+    case 'player:next_round':
+    case 'player:continue':
+    case 'player:new_game':
+      return true
+    default:
+      return false
+  }
 }
 
 /** Reconstruct full GameState on client from broadcast + local hand */
@@ -138,7 +189,9 @@ export function useMultiplayer(options: UseMultiplayerOptions = {}) {
   const optionsRef = useRef(options)
   // Keep the ref in sync after every render (not during it) so callbacks
   // always see the latest options without making `setupChannel` unstable.
-  useEffect(() => {
+  // Layout effect (not passive) so this can't lose a race with an
+  // in-flight Realtime event — see useIsomorphicLayoutEffect above.
+  useIsomorphicLayoutEffect(() => {
     optionsRef.current = options
   })
 

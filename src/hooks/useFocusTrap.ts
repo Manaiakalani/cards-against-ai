@@ -51,7 +51,13 @@ export function useFocusTrap<T extends HTMLElement>(active: boolean) {
     document.addEventListener('keydown', handleKeyDown)
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
-      previouslyFocused.current?.focus?.()
+      // Guard against the previously-focused node having been unmounted
+      // while the dialog was open (e.g. a conditionally-rendered opener) —
+      // calling .focus() on a detached node is a silent no-op, so check
+      // first rather than relying on that.
+      if (previouslyFocused.current?.isConnected) {
+        previouslyFocused.current.focus()
+      }
     }
   }, [active])
 
