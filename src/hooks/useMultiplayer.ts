@@ -45,6 +45,57 @@ export function sanitizeStateForPlayer(
   }
 }
 
+// ── Runtime validation for untrusted Supabase Realtime payloads ──
+// Presence/broadcast messages arrive as `unknown` over the wire and may be
+// forged, truncated, or sent by a mismatched client version. Shape-check
+// before trusting them instead of blindly casting with `as`.
+
+function isCard(value: unknown): value is Card {
+  if (typeof value !== 'object' || value === null) return false
+  const v = value as Record<string, unknown>
+  return (
+    typeof v.id === 'string' &&
+    typeof v.text === 'string' &&
+    (v.type === 'black' || v.type === 'white')
+  )
+}
+
+function isPresencePlayer(value: unknown): value is PresencePlayer {
+  if (typeof value !== 'object' || value === null) return false
+  const v = value as Record<string, unknown>
+  return (
+    typeof v.id === 'string' &&
+    typeof v.name === 'string' &&
+    typeof v.avatar === 'string' &&
+    typeof v.avatarBg === 'string' &&
+    typeof v.isHost === 'boolean' &&
+    typeof v.onlineAt === 'string'
+  )
+}
+
+function isBroadcastGameState(value: unknown): value is BroadcastGameState {
+  if (typeof value !== 'object' || value === null) return false
+  const v = value as Record<string, unknown>
+  return (
+    typeof v.phase === 'string' &&
+    typeof v.currentRound === 'number' &&
+    Array.isArray(v.players) &&
+    Array.isArray(v.submissions) &&
+    Array.isArray(v.roundHistory) &&
+    typeof v.settings === 'object' && v.settings !== null &&
+    typeof v.roomCode === 'string' &&
+    typeof v.czarId === 'string' &&
+    Array.isArray(v.yourHand) && v.yourHand.every(isCard) &&
+    typeof v.yourId === 'string'
+  )
+}
+
+function isGameAction(value: unknown): value is GameAction {
+  if (typeof value !== 'object' || value === null) return false
+  const v = value as Record<string, unknown>
+  return typeof v.type === 'string' && typeof v.playerId === 'string'
+}
+
 /** Reconstruct full GameState on client from broadcast + local hand */
 export function hydrateClientState(broadcast: BroadcastGameState): GameState {
   return {
@@ -85,7 +136,11 @@ export function useMultiplayer(options: UseMultiplayerOptions = {}) {
 
   const channelRef = useRef<RealtimeChannel | null>(null)
   const optionsRef = useRef(options)
-  optionsRef.current = options
+  // Keep the ref in sync after every render (not during it) so callbacks
+  // always see the latest options without making `setupChannel` unstable.
+  useEffect(() => {
+    optionsRef.current = options
+  })
 
   /** Clean up channel on unmount */
   useEffect(() => {
@@ -130,8 +185,8 @@ export function useMultiplayer(options: UseMultiplayerOptions = {}) {
         'presence',
         { event: 'join' },
         ({ newPresences }) => {
-          const joined = newPresences[0] as unknown as PresencePlayer | undefined
-          if (joined) optionsRef.current.onPlayerJoin?.(joined)
+          const joined = newPresences[0]
+          if (isPresencePlayer(joined)) optionsRef.current.onPlayerJoin?.(joined)
         }
       )
 
@@ -139,19 +194,26 @@ export function useMultiplayer(options: UseMultiplayerOptions = {}) {
         'presence',
         { event: 'leave' },
         ({ leftPresences }) => {
-          const left = leftPresences[0] as unknown as PresencePlayer | undefined
-          if (left) optionsRef.current.onPlayerLeave?.(left)
+          const left = leftPresences[0]
+          if (isPresencePlayer(left)) optionsRef.current.onPlayerLeave?.(left)
         }
       )
 
-      // Game state broadcasts (host → clients)
+      // Game state broadcasts (host → clients). Every client on the shared
+      // channel receives every personalized broadcast, so we must drop any
+      // payload that isn't addressed to this client — otherwise another
+      // player's hand briefly ends up in our local state (privacy leak +
+      // visible flicker).
       channel.on('broadcast', { event: 'game:state' }, ({ payload }) => {
-        optionsRef.current.onStateUpdate?.(payload as BroadcastGameState)
+        if (!isBroadcastGameState(payload)) return
+        if (payload.yourId !== playerId) return
+        optionsRef.current.onStateUpdate?.(payload)
       })
 
       // Action broadcasts (clients → host)
       channel.on('broadcast', { event: 'game:action' }, ({ payload }) => {
-        optionsRef.current.onAction?.(payload as GameAction)
+        if (!isGameAction(payload)) return
+        optionsRef.current.onAction?.(payload)
       })
 
       channel

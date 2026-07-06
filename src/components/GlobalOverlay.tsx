@@ -6,6 +6,7 @@ import { Sun, Moon, Volume2, VolumeX } from 'lucide-react'
 import { useGame } from '@/contexts/GameContext'
 import { useTheme } from '@/contexts/ThemeContext'
 import { useSound } from '@/hooks/useSound'
+import { useFocusTrap } from '@/hooks/useFocusTrap'
 import dynamic from 'next/dynamic'
 
 const HelpModal = dynamic(
@@ -35,6 +36,8 @@ export function GlobalOverlay() {
       return () => document.removeEventListener('keydown', handleEsc)
     }
   }, [confirmQuit, handleEsc])
+
+  const quitTrapRef = useFocusTrap<HTMLDivElement>(confirmQuit)
 
   const isInGame = !['menu', 'lobby'].includes(gameState.phase)
 
@@ -157,6 +160,8 @@ export function GlobalOverlay() {
               style={{ backgroundColor: 'var(--theme-overlay)' }}
             />
             <m.div
+              ref={quitTrapRef}
+              tabIndex={-1}
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}

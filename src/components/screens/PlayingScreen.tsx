@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useEffect, useRef } from 'react'
+import { useState, useCallback, useEffect, useRef, memo } from 'react'
 import { m, AnimatePresence } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { useSound } from '@/hooks/useSound'
@@ -104,6 +104,71 @@ const submittedTextStyle = {
 
 const bgStyle = { backgroundColor: 'var(--theme-bg)' } as const
 
+// Extracted + memoized so a parent re-render (e.g. the per-second timer
+// tick) doesn't force every hand card to re-render — only cards whose own
+// props actually changed will re-render.
+const HandCard = memo(function HandCard({
+  card,
+  isSelected,
+  selectionIndex,
+  rotation,
+  isDealt,
+  submitted,
+  blanks,
+  onSelect,
+}: {
+  card: Card
+  isSelected: boolean
+  selectionIndex: number
+  rotation: number
+  isDealt: boolean
+  submitted: boolean
+  blanks: number
+  onSelect: (card: Card) => void
+}) {
+  return (
+    <m.div
+      custom={rotation}
+      variants={cardDealVariants}
+      initial={isDealt ? false : undefined}
+      animate={isDealt ? {
+        opacity: 1,
+        y: 0,
+        scale: isSelected ? 1.03 : 1,
+        rotate: 0,
+      } : undefined}
+      whileHover={{ scale: submitted ? 1 : 1.05 }}
+      transition={isDealt ? { type: 'spring', stiffness: 400, damping: 30 } : undefined}
+      className="relative"
+      style={{
+        filter: isSelected ? 'none' : undefined,
+        boxShadow: isSelected
+          ? '0 0 0 3px #66FF00, 6px 6px 0px var(--theme-shadow)'
+          : undefined,
+        borderRadius: '16px',
+      }}
+    >
+      <GameCard
+        card={card}
+        size="sm"
+        isSelected={isSelected}
+        onClick={() => onSelect(card)}
+      />
+      {isSelected && (
+        <m.div
+          initial={{ scale: 0, rotate: -12 }}
+          animate={{ scale: 1, rotate: -6 }}
+          className="absolute right-1 top-1 z-20"
+        >
+          <Sticker color="green" rotation={-6} className="!text-xs !px-2 !py-1">
+            {blanks > 1 ? `#${selectionIndex + 1}` : 'THIS ONE'}
+          </Sticker>
+        </m.div>
+      )}
+    </m.div>
+  )
+})
+
 export default function PlayingScreen() {
   const { gameState, submitCard, submitCards, botSubmit, redrawHand, rebootHand, myPlayerId } = useGame()
   const { play } = useSound()
@@ -114,9 +179,15 @@ export default function PlayingScreen() {
   const [hasRebooted, setHasRebooted] = useState(false)
   const [hasRedrawn, setHasRedrawn] = useState(false)
   const botTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const roundStartRef = useRef(Date.now())
+  const roundStartRef = useRef(0)
   const [isDealt, setIsDealt] = useState(false)
-  const dealRotationsRef = useRef<number[]>([])
+  // Lazy initializer: computed once at mount (React's sanctioned pattern for
+  // one-time random values), so we never read/write a ref during render and
+  // never call setState synchronously inside an effect body.
+  const [dealRotations] = useState<number[]>(() => {
+    const handSize = gameState.players.find((p) => p.id === myPlayerId)?.hand.length ?? 0
+    return Array.from({ length: handSize }, () => (Math.random() - 0.5) * 16)
+  })
 
   const humanPlayer = gameState.players.find((p) => p.id === myPlayerId)
   const isPlayerCzar = humanPlayer?.isCardCzar ?? false
@@ -151,8 +222,11 @@ export default function PlayingScreen() {
     onExpire: handleTimerExpire,
   })
 
-  // Start timer when playing phase begins
+  // Start timer when playing phase begins; stamp the round start time for
+  // "fastest submit" stat tracking (set here, not in the ref initializer,
+  // so mounting doesn't call Date.now() during render).
   useEffect(() => {
+    roundStartRef.current = Date.now()
     if (timerEnabled && !isPlayerCzar) {
       timer.start()
     }
@@ -165,13 +239,9 @@ export default function PlayingScreen() {
     }
   }, [])
 
-  // Generate random rotations for deal animation; mark dealt after stagger completes
+  // Mark dealt after the stagger animation completes
   useEffect(() => {
     const handSize = humanPlayer?.hand.length ?? 0
-    dealRotationsRef.current = Array.from(
-      { length: handSize },
-      () => (Math.random() - 0.5) * 16,
-    )
     const dealDuration = handSize * 60 + 500
     const t = setTimeout(() => setIsDealt(true), dealDuration)
     return () => clearTimeout(t)
@@ -371,46 +441,17 @@ export default function PlayingScreen() {
               const selectionIndex = selectedCards.findIndex(c => c.id === card.id)
               const isSelected = selectionIndex >= 0
               return (
-                <m.div
+                <HandCard
                   key={card.id}
-                  custom={dealRotationsRef.current[i] ?? 0}
-                  variants={cardDealVariants}
-                  initial={isDealt ? false : undefined}
-                  animate={isDealt ? {
-                    opacity: 1,
-                    y: 0,
-                    scale: isSelected ? 1.03 : 1,
-                    rotate: 0,
-                  } : undefined}
-                  whileHover={{ scale: submitted ? 1 : 1.05 }}
-                  transition={isDealt ? { type: 'spring', stiffness: 400, damping: 30 } : undefined}
-                  className="relative"
-                  style={{
-                    filter: isSelected ? 'none' : undefined,
-                    boxShadow: isSelected
-                      ? '0 0 0 3px #66FF00, 6px 6px 0px var(--theme-shadow)'
-                      : undefined,
-                    borderRadius: '16px',
-                  }}
-                >
-                  <GameCard
-                    card={card}
-                    size="sm"
-                    isSelected={isSelected}
-                    onClick={() => handleSelectCard(card)}
-                  />
-                  {isSelected && (
-                    <m.div
-                      initial={{ scale: 0, rotate: -12 }}
-                      animate={{ scale: 1, rotate: -6 }}
-                      className="absolute right-1 top-1 z-20"
-                    >
-                      <Sticker color="green" rotation={-6} className="!text-xs !px-2 !py-1">
-                        {blanks > 1 ? `#${selectionIndex + 1}` : 'THIS ONE'}
-                      </Sticker>
-                    </m.div>
-                  )}
-                </m.div>
+                  card={card}
+                  isSelected={isSelected}
+                  selectionIndex={selectionIndex}
+                  rotation={dealRotations[i] ?? 0}
+                  isDealt={isDealt}
+                  submitted={submitted}
+                  blanks={blanks}
+                  onSelect={handleSelectCard}
+                />
               )
             })}
           </AnimatePresence>

@@ -70,6 +70,7 @@ export const GameCard = React.memo(function GameCard({
     <m.div
       role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}
+      aria-pressed={onClick ? isSelected : undefined}
       onClick={onClick}
       onKeyDown={onClick ? (e: React.KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick() } } : undefined}
       whileHover={onClick ? { scale: 1.05, y: -10 } : undefined}

@@ -139,6 +139,7 @@ export default function JudgingScreen() {
                   key={sub.playerId}
                   role="button"
                   tabIndex={0}
+                  aria-pressed={isSelected}
                   initial={{ opacity: 0, y: 40 }}
                   animate={{
                     opacity: 1,

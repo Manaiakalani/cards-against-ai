@@ -284,7 +284,7 @@ export default function LobbyScreen() {
             onKeyDown={(e) => {
               if (e.key === 'Enter') handleStart()
             }}
-            className="w-full px-5 py-3 text-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#66FF00] placeholder:text-[var(--theme-text-muted)]"
+            className="w-full px-5 py-3 text-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#66FF00] placeholder:text-[var(--theme-placeholder)]"
             spellCheck={false}
             autoComplete="off"
             style={{
@@ -308,6 +308,7 @@ export default function LobbyScreen() {
               <button
                 key={count}
                 onClick={() => setBotCount(count)}
+                aria-pressed={botCount === count}
                 className="flex h-10 w-10 items-center justify-center transition-transform hover:scale-110 cursor-pointer"
                 style={{
                   fontFamily: 'var(--font-archivo)',
@@ -394,6 +395,7 @@ export default function LobbyScreen() {
                 <button
                   key={deck.id}
                   onClick={() => toggleDeck(deck.id)}
+                  aria-pressed={isSelected}
                   className="relative flex flex-col items-center gap-1 px-3 py-4 transition-transform hover:scale-[1.03] cursor-pointer"
                   style={{
                     border: isSelected
@@ -472,6 +474,7 @@ export default function LobbyScreen() {
             </span>
             <button
               onClick={() => handleTimerToggle(!timerEnabled)}
+              aria-pressed={timerEnabled}
               className="cursor-pointer px-5 py-2 transition-transform hover:scale-105"
               style={{
                 fontFamily: 'var(--font-archivo)',
@@ -495,6 +498,7 @@ export default function LobbyScreen() {
                 <button
                   key={s}
                   onClick={() => handleTimerSeconds(s)}
+                  aria-pressed={timerSeconds === s}
                   className="flex h-10 items-center justify-center px-4 transition-transform hover:scale-110 cursor-pointer"
                   style={{
                     fontFamily: 'var(--font-archivo)',
@@ -566,6 +570,7 @@ export default function LobbyScreen() {
               </div>
               <button
                 onClick={() => handleWinnersPick(!winnersPick)}
+                aria-pressed={winnersPick}
                 className="cursor-pointer px-5 py-2 transition-transform hover:scale-105"
                 style={{
                   fontFamily: 'var(--font-archivo)',
@@ -616,6 +621,7 @@ export default function LobbyScreen() {
               </div>
               <button
                 onClick={() => handleReboot(!rebootEnabled)}
+                aria-pressed={rebootEnabled}
                 className="cursor-pointer px-5 py-2 transition-transform hover:scale-105"
                 style={{
                   fontFamily: 'var(--font-archivo)',
