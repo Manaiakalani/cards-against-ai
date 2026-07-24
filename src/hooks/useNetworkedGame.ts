@@ -24,23 +24,37 @@ export function useNetworkedGame(engine: GameEngine) {
   // Handle remote actions (host receives from clients)
   const handleRemoteAction = useCallback(
     (action: GameAction) => {
+      // Security: verify the sender is a known player in the current game
+      const { players, czarId, phase } = engine.gameState
+      const sender = players.find(p => p.id === action.playerId)
+      if (!sender) return // unknown player — reject silently
+
       switch (action.type) {
         case 'player:submit':
+          // Only non-czar players may submit, and only during the playing phase
+          if (phase !== 'playing' || action.playerId === czarId) return
           engine.submitCards(action.playerId, action.payload.cards)
           break
         case 'player:pick_winner':
+          // Only the czar may pick a winner, and only during the judging phase
+          if (phase !== 'judging' || action.playerId !== czarId) return
           engine.pickWinner(action.payload.winnerId)
           break
         case 'player:reboot':
+          if (phase !== 'playing') return
           engine.rebootHand(action.playerId)
           break
         case 'player:update_settings':
+          // Only allow settings changes during the lobby phase
+          if (phase !== 'lobby') return
           engine.updateSettings(action.payload.settings)
           break
         case 'player:next_round':
+          if (phase !== 'results') return
           engine.nextRound()
           break
         case 'player:continue':
+          if (phase !== 'scoreboard') return
           engine.continueFromScoreboard()
           break
         case 'player:join':

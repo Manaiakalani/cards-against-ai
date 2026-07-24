@@ -63,6 +63,10 @@ export default function RootLayout({
       lang="en"
       className={`${archivoBlack.variable} ${inter.variable} h-full antialiased`}
     >
+      <head>
+        {/* Prevent dark-mode FOUC: apply saved theme before first paint */}
+        <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('cai-theme');if(!t){t=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'}document.documentElement.setAttribute('data-theme',t)}catch(e){}})()` }} />
+      </head>
       <body className="min-h-full flex flex-col">
         <Analytics />
         <ThemeProvider>

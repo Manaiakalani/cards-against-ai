@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useMemo, ReactNode } from 'react'
+import { createContext, useContext, useCallback, useMemo, ReactNode } from 'react'
 import { useGameState } from '@/hooks/useGameState'
 import { useNetworkedGame } from '@/hooks/useNetworkedGame'
 import {
@@ -49,6 +49,17 @@ export function GameProvider({ children }: { children: ReactNode }) {
   // useNetworkedGame.ts for details.
   const net = useNetworkedGame(engine)
 
+  // Bot orchestration must only run on the host — on clients, the host drives
+  // bot actions and broadcasts the resulting state. Running them on a client
+  // would mutate local state that then fights the next host broadcast.
+  const botSubmit = useCallback(() => {
+    if (!net.isClient) engine.botSubmit()
+  }, [net.isClient, engine.botSubmit])
+
+  const botPickWinner = useCallback(() => {
+    if (!net.isClient) engine.botPickWinner()
+  }, [net.isClient, engine.botPickWinner])
+
   const value = useMemo<GameContextType>(
     () => ({
       gameState: engine.gameState,
@@ -59,10 +70,10 @@ export function GameProvider({ children }: { children: ReactNode }) {
       rebootHand: net.rebootHand,
       submitCard: net.submitCard,
       submitCards: net.submitCards,
-      botSubmit: engine.botSubmit,
+      botSubmit,
       finishReveal: net.finishReveal,
       pickWinner: net.pickWinner,
-      botPickWinner: engine.botPickWinner,
+      botPickWinner,
       nextRound: net.nextRound,
       continueFromScoreboard: net.continueFromScoreboard,
       newGame: net.newGame,
@@ -82,8 +93,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
       engine.goToLobby,
       engine.startGame,
       engine.redrawHand,
-      engine.botSubmit,
-      engine.botPickWinner,
+      botSubmit,
+      botPickWinner,
       net,
     ]
   )

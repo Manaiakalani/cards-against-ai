@@ -78,8 +78,13 @@ test.describe('Cards Against AI — Full Game Flow', () => {
     await expect(page.getByText('STANDINGS')).toBeVisible({ timeout: 5000 })
     await expect(page.getByText(/after round 1/i)).toBeVisible()
 
-    // Continue to next round
-    await page.getByRole('button', { name: /keep going/i }).click()
+    // On mobile viewport, the Next.js dev overlay portal can intercept standard
+    // clicks. Dispatching a synthetic click event directly on the element bypasses
+    // both the overlay and mobile touch-event quirks.
+    await page.waitForTimeout(800)
+    const keepGoingBtn = page.getByRole('button', { name: /keep going/i })
+    await expect(keepGoingBtn).toBeVisible()
+    await keepGoingBtn.dispatchEvent('click')
 
     // Should be back in playing for round 2
     await expect(page.getByText(/R(OUND )?2/)).toBeVisible({ timeout: 5000 })
@@ -94,7 +99,7 @@ test.describe('Cards Against AI — Full Game Flow', () => {
     // Redraw button should be enabled
     const redrawBtn = page.getByRole('button', { name: /new hand/i })
     await expect(redrawBtn).toBeEnabled()
-    await redrawBtn.click()
+    await redrawBtn.dispatchEvent('click')
 
     // After redraw, button should show "DEALT" and be disabled
     await expect(page.getByRole('button', { name: /dealt/i })).toBeDisabled({ timeout: 2000 })

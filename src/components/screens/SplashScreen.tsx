@@ -81,6 +81,11 @@ export default function SplashScreen() {
     }
   }, [showJoin, handleEsc])
 
+  // When an error occurs while joining, the user must be able to dismiss the
+  // dialog or retry. We derive an "effectively joining" flag that becomes false
+  // when an error is present, without needing setState in an effect.
+  const effectivelyJoining = joining && !mpState.error
+
   const joinTrapRef = useFocusTrap<HTMLDivElement>(showJoin)
 
   const stagger = {
@@ -459,7 +464,7 @@ export default function SplashScreen() {
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[200] flex items-center justify-center p-4"
             style={{ backgroundColor: 'rgba(0,0,0,0.6)' }}
-            onClick={() => { if (!joining) setShowJoin(false) }}
+            onClick={() => { if (!effectivelyJoining) setShowJoin(false) }}
           >
             <m.div
               ref={joinTrapRef}
@@ -479,7 +484,7 @@ export default function SplashScreen() {
               }}
             >
               <button
-                onClick={() => { if (!joining) setShowJoin(false) }}
+                onClick={() => { if (!effectivelyJoining) setShowJoin(false) }}
                 aria-label="Close join dialog"
                 className="absolute top-2 right-2 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full"
                 style={{
@@ -533,7 +538,7 @@ export default function SplashScreen() {
                   backgroundColor: 'var(--theme-surface)',
                   color: 'var(--theme-text)',
                   border: '3px solid var(--theme-border)',
-                  opacity: joining ? 0.5 : 1,
+                  opacity: effectivelyJoining ? 0.5 : 1,
                 }}
               />
 
@@ -547,7 +552,7 @@ export default function SplashScreen() {
                 maxLength={20}
                 autoComplete="off"
                 spellCheck={false}
-                disabled={joining}
+                disabled={effectivelyJoining}
                 className="mb-6 w-full rounded-lg px-4 py-3 text-center"
                 style={{
                   fontFamily: 'var(--font-archivo)',
@@ -556,7 +561,7 @@ export default function SplashScreen() {
                   backgroundColor: 'var(--theme-surface)',
                   color: 'var(--theme-text)',
                   border: '3px solid var(--theme-border)',
-                  opacity: joining ? 0.5 : 1,
+                  opacity: effectivelyJoining ? 0.5 : 1,
                 }}
               />
 
@@ -586,20 +591,20 @@ export default function SplashScreen() {
                     avatarBg: '#87CEEB',
                   })
                 }}
-                disabled={joinCode.length !== 6 || !joinName.trim() || joining}
+                disabled={joinCode.length !== 6 || !joinName.trim() || effectivelyJoining}
                 className="w-full cursor-pointer rounded-full px-6 py-4 text-center uppercase"
                 style={{
                   fontFamily: 'var(--font-archivo)',
                   fontSize: 18,
                   fontWeight: 900,
-                  backgroundColor: joinCode.length === 6 && joinName.trim() && !joining ? '#66FF00' : 'var(--theme-surface-alt)',
-                  color: joinCode.length === 6 && joinName.trim() && !joining ? '#111' : 'var(--theme-text-muted)',
+                  backgroundColor: joinCode.length === 6 && joinName.trim() && !effectivelyJoining ? '#66FF00' : 'var(--theme-surface-alt)',
+                  color: joinCode.length === 6 && joinName.trim() && !effectivelyJoining ? '#111' : 'var(--theme-text-muted)',
                   border: '3px solid var(--theme-border)',
                   boxShadow: '0px 6px 0px var(--theme-shadow)',
                   letterSpacing: '0.04em',
                 }}
               >
-                {joining ? '⏳ Connecting...' : '🔗 JOIN'}
+                {effectivelyJoining ? '⏳ Connecting...' : '🔗 JOIN'}
               </button>
             </m.div>
           </m.div>

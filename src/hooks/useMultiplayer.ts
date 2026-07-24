@@ -40,12 +40,19 @@ export function sanitizeStateForPlayer(
   playerId: string
 ): BroadcastGameState {
   const player = state.players.find((p) => p.id === playerId)
+  // Redact submissions and selectedCard until judging/results/ended —
+  // otherwise a modified client can see everyone's cards before the reveal.
+  const revealPhases: GameState['phase'][] = ['judging', 'results', 'scoreboard', 'ended']
+  const shouldReveal = revealPhases.includes(state.phase)
   return {
     phase: state.phase,
     currentRound: state.currentRound,
     currentBlackCard: state.currentBlackCard,
-    players: state.players.map(({ hand, ...rest }) => rest),
-    submissions: state.submissions,
+    players: state.players.map(({ hand, selectedCard, ...rest }) => ({
+      ...rest,
+      selectedCard: shouldReveal ? selectedCard : null,
+    })),
+    submissions: shouldReveal ? state.submissions : [],
     roundWinner: state.roundWinner,
     roundHistory: state.roundHistory,
     settings: state.settings,

@@ -121,7 +121,13 @@ export function useGameState() {
   const selectedDecksRef = useRef(gameState.settings.selectedDecks)
   useEffect(() => { selectedDecksRef.current = gameState.settings.selectedDecks }, [gameState.settings.selectedDecks])
 
+  // Guard against double-click race during the async dynamic import
+  const isStartingRef = useRef(false)
+
   const startGame = useCallback(async (playerName: string, botCount: number = 3) => {
+    if (isStartingRef.current) return
+    isStartingRef.current = true
+    try {
     // Dynamically imported: the ~350 cards of deck text in `@/data/cards`
     // are only needed once a game actually starts, so they shouldn't be
     // part of the bundle that loads on first paint (this hook is mounted
@@ -179,6 +185,9 @@ export function useGameState() {
         czarId: allPlayers[czarIdx].id,
       }
     })
+    } finally {
+      isStartingRef.current = false
+    }
   }, [])
 
   const redrawHand = useCallback((playerId: string) => {

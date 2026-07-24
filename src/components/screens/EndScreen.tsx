@@ -149,7 +149,7 @@ export default function EndScreen() {
   const [showHistory, setShowHistory] = useState(false)
 
   const sortedPlayers = useMemo(
-    () => gameState.players.toSorted((a, b) => b.score - a.score),
+    () => [...gameState.players].sort((a, b) => b.score - a.score),
     [gameState.players]
   )
   const winner = sortedPlayers[0]
