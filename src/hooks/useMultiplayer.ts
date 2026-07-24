@@ -42,7 +42,7 @@ export function sanitizeStateForPlayer(
   const player = state.players.find((p) => p.id === playerId)
   // Redact submissions and selectedCard until judging/results/ended —
   // otherwise a modified client can see everyone's cards before the reveal.
-  const revealPhases: GameState['phase'][] = ['judging', 'results', 'scoreboard', 'ended']
+  const revealPhases: GameState['phase'][] = ['revealing', 'judging', 'results', 'scoreboard', 'ended']
   const shouldReveal = revealPhases.includes(state.phase)
   return {
     phase: state.phase,

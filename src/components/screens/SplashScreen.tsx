@@ -529,7 +529,7 @@ export default function SplashScreen() {
                 maxLength={6}
                 autoComplete="off"
                 spellCheck={false}
-                disabled={joining}
+                disabled={effectivelyJoining}
                 className="mb-4 w-full rounded-lg px-4 py-3 text-center tracking-[4px] uppercase"
                 style={{
                   fontFamily: 'var(--font-archivo)',
