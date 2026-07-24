@@ -18,7 +18,7 @@ export default function ScoreboardScreen() {
   const { players, currentRound, roundHistory, czarId } = gameState
   const [showHistory, setShowHistory] = useState(false)
 
-  const sortedPlayers = players.toSorted((a, b) => b.score - a.score)
+  const sortedPlayers = [...players].sort((a, b) => b.score - a.score)
   const leadScore = sortedPlayers[0]?.score ?? 0
   const lastResult = roundHistory[roundHistory.length - 1]
 
