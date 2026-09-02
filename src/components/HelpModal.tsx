@@ -232,24 +232,24 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
             {pane === 'privacy' && (
               <div className="flex flex-col gap-4 px-6 py-5">
                 <p style={legalBody}>
-                  No accounts. No email. No &quot;sign in with your real identity so we can sell it.&quot;
+                  No accounts. No email. Pick a fake name. We are not HR.
                 </p>
                 <div>
                   <p style={legalHead}>On your device</p>
                   <p style={legalBody}>
-                    Stats, achievements, mute/theme, and which async tables you joined stay in this browser&apos;s local storage. Clear site data and they vanish.
+                    Stats, mute, and saved tables stay in this browser. Clear the site and they&apos;re gone.
                   </p>
                 </div>
                 <div>
                   <p style={legalHead}>Multiplayer</p>
                   <p style={legalBody}>
-                    Live and async rooms go through Supabase: room code, display name, avatar, and the cards you play. Use a fake name. We are not HR.
+                    We only keep what the table needs: the room code, the name on your avatar, and the cards you play.
                   </p>
                 </div>
                 <div>
-                  <p style={legalHead}>Analytics</p>
+                  <p style={legalHead}>Visits</p>
                   <p style={legalBody}>
-                    The live site loads a privacy-oriented tracker (Rybbit) for page views. No ad network. Localhost is not tracked.
+                    We count page views so we know the game is alive. No ads. We don&apos;t sell your data.
                   </p>
                 </div>
               </div>

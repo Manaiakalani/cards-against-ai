@@ -42,7 +42,7 @@ test.describe('Async play UI', () => {
     await expect(dialog.getByRole('link', { name: /submit a deck/i })).toBeVisible()
     await dialog.getByRole('button', { name: /^privacy$/i }).click()
     await expect(dialog.getByRole('heading', { name: 'Privacy' })).toBeVisible()
-    await expect(dialog.getByText(/rybbit/i)).toBeVisible()
+    await expect(dialog.getByText(/no ads/i)).toBeVisible()
     await dialog.getByRole('button', { name: /^license$/i }).click()
     await expect(dialog.getByRole('heading', { name: 'License' })).toBeVisible()
     await expect(dialog.getByText(/MIT License/i)).toBeVisible()
