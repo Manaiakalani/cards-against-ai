@@ -313,7 +313,7 @@ export default function SplashScreen() {
         </m.div>
 
         {/* Host / Join buttons */}
-        <m.div variants={fadeUp} className="flex flex-col items-center gap-2 sm:flex-row">
+        <m.div variants={fadeUp} className="mt-1 flex flex-col items-center gap-2 sm:flex-row">
           <m.button
             onPointerEnter={preloadPlayChunks}
             onFocus={preloadPlayChunks}
@@ -375,7 +375,7 @@ export default function SplashScreen() {
         {isSupabaseConfigured && (
           <m.div
             variants={fadeUp}
-            className="flex w-full max-w-md flex-col items-center gap-1.5 px-3 py-2"
+            className="mt-3 flex w-full max-w-md flex-col items-center gap-3 px-4 py-3"
             style={{
               backgroundColor: 'var(--theme-surface)',
               border: '3px solid var(--theme-border)',
@@ -411,12 +411,12 @@ export default function SplashScreen() {
               {asyncBusy ? '⏳ OPENING TABLE…' : '⏳ PLAY ASYNC'}
             </m.button>
             <p
-              className="max-w-sm text-center uppercase tracking-wide"
+              className="max-w-sm px-1 text-center uppercase tracking-wide"
               style={{
                 fontFamily: 'var(--font-archivo)',
                 fontSize: 'clamp(11px, 1.8vh, 13px)',
                 color: 'var(--theme-text)',
-                lineHeight: 1.35,
+                lineHeight: 1.45,
               }}
             >
               Take turns on your own time. Share a code, play a card, come back later.

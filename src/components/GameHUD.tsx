@@ -22,28 +22,27 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode, timer }
 
   return (
     <div
-      className="relative z-50 flex shrink-0 flex-col"
+      className="relative z-50 shrink-0"
       style={{
-        backgroundColor: 'var(--theme-backdrop)',
-        backdropFilter: 'blur(8px)',
+        backgroundColor: 'var(--theme-surface)',
         borderBottom: '3px solid var(--theme-border)',
       }}
     >
       <div
-        className="flex flex-wrap items-center gap-x-3 gap-y-1"
+        className="flex items-center gap-2 sm:gap-3"
         style={{
-          minHeight: 44,
-          paddingLeft: 'clamp(48px, 6vw, 56px)',
-          paddingRight: 'clamp(148px, 24vw, 168px)',
-          paddingTop: 6,
-          paddingBottom: 6,
+          minHeight: 52,
+          paddingLeft: 'clamp(52px, 7vw, 60px)',
+          paddingRight: 'clamp(152px, 24vw, 172px)',
+          paddingTop: 10,
+          paddingBottom: 10,
         }}
       >
         <div
           className="flex items-center rounded px-2 py-0.5"
           style={{
             border: '2px solid var(--theme-border)',
-            backgroundColor: 'var(--theme-surface)',
+            backgroundColor: 'var(--theme-bg)',
           }}
         >
           <span
@@ -89,7 +88,13 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode, timer }
           )}
         </div>
 
-        <div className="flex w-full min-w-0 flex-wrap items-center gap-1 sm:w-auto" tabIndex={0} role="region" aria-label="Player scores">
+        <div
+          className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto"
+          style={{ scrollbarWidth: 'none' }}
+          tabIndex={0}
+          role="region"
+          aria-label="Player scores"
+        >
           {players.map((player) => {
             const isCzar = player.id === czarId
             const isLeader = player.score === leadScore && leadScore > 0

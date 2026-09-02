@@ -67,7 +67,7 @@ const czarSubtitleStyle = {
 
 const handTitleStyle = {
   fontFamily: 'var(--font-archivo)',
-  fontSize: 'clamp(16px, 2.8vh, 28px)',
+  fontSize: 'clamp(20px, 3.6vw, 34px)',
   color: 'var(--theme-text)',
   lineHeight: 1.1,
 } as const
@@ -140,7 +140,7 @@ const HandCard = memo(function HandCard({
       } : undefined}
       whileHover={{ scale: submitted ? 1 : 1.05 }}
       transition={isDealt ? { type: 'spring', stiffness: 400, damping: 30 } : undefined}
-      className="relative h-full min-h-0 min-w-0"
+      className="relative min-w-0"
       style={{
         filter: isSelected ? 'none' : undefined,
         boxShadow: isSelected
@@ -152,7 +152,6 @@ const HandCard = memo(function HandCard({
       <GameCard
         card={card}
         size="sm"
-        fill
         isSelected={isSelected}
         onClick={() => onSelect(card)}
       />
@@ -364,7 +363,7 @@ export default function PlayingScreen() {
 
       <div className="relative z-10 flex min-h-0 flex-1 flex-col px-4 pt-2 sm:px-6">
         {/* Top Section: Title + Mini Black Card */}
-        <div className="mb-1 flex flex-shrink-0 flex-row items-start justify-between gap-2 sm:mb-2 sm:gap-4">
+        <div className="mb-3 flex flex-shrink-0 flex-col gap-2 sm:mb-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
           <div>
             <h2
               style={handTitleStyle}
@@ -405,10 +404,10 @@ export default function PlayingScreen() {
           )}
         </div>
 
-        {/* Card Grid — scrollable area */}
-        <div className="min-h-0 flex-1 overflow-hidden overscroll-contain">
+        {/* Card Grid — portrait cards, 2/3/4 columns, scroll if needed */}
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain" style={{ WebkitOverflowScrolling: 'touch' }}>
           <m.div
-            className="grid h-full min-h-0 grid-cols-4 grid-rows-2 gap-1.5 px-1 pt-1 pb-1 sm:gap-2 [&>*]:min-h-0 [&>*]:min-w-0 [&>*]:overflow-hidden"
+            className="mx-auto grid w-full max-w-[52rem] grid-cols-2 justify-items-center gap-3 px-3 pt-4 pb-6 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4 lg:gap-4 [&>*]:min-w-0"
             variants={containerVariants}
           initial="hidden"
           animate="show"
