@@ -246,7 +246,7 @@ export default function EndScreen() {
         <ConfettiPiece key={i} config={cfg} />
       ))}
 
-      <div className="screen-body flex flex-col items-center px-4 py-6">
+      <div className="screen-body flex flex-col items-center px-4 pb-6 pt-16">
         {/* Trophy */}
         <m.div
           initial={{ scale: 0, rotate: -10 }}
@@ -279,7 +279,8 @@ export default function EndScreen() {
           style={{
             fontFamily: 'var(--font-archivo)',
             fontSize: 'clamp(36px, 8vw, 72px)',
-            lineHeight: 0.95,
+            lineHeight: 1.08,
+            paddingTop: '0.06em',
             textTransform: 'uppercase',
             color: humanWon ? '#66FF00' : '#FF4242',
             WebkitTextStroke: '2px var(--theme-shadow)',

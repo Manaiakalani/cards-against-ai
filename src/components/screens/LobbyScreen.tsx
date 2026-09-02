@@ -129,7 +129,7 @@ export default function LobbyScreen() {
   return (
     <ScreenShell
       words={['touch', 'grass', 'never']}
-      bodyClassName="flex flex-col items-center px-3 pb-3 pt-16 sm:px-4 sm:pb-4"
+      bodyClassName="flex flex-col items-center px-3 pb-3 pt-20 sm:px-4 sm:pb-4"
       footer={
         <BottomNav>
           <NavButton variant="secondary" onClick={newGame}>
@@ -153,14 +153,15 @@ export default function LobbyScreen() {
     >
         {/* Title + room */}
         <m.h1
-          initial={{ y: -40, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ duration: 0.5, ease: 'easeOut' }}
           className="mb-2 text-center"
           style={{
             fontFamily: 'var(--font-archivo)',
             fontSize: 'clamp(28px, min(8vw, 7vh), 64px)',
-            lineHeight: 1,
+            lineHeight: 1.08,
+            paddingTop: '0.06em',
             color: 'white',
             WebkitTextStroke: '2px var(--theme-shadow)',
             textShadow: '6px 6px 0px var(--theme-shadow)',

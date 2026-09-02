@@ -106,7 +106,7 @@ export default function JudgingScreen() {
       <div className="flex w-full flex-col items-center">
         {/* Status Badge */}
         <m.div
-          initial={{ y: -20, opacity: 0 }}
+          initial={{ opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           className="mb-8 inline-block px-5 py-2"
           style={{

@@ -48,7 +48,7 @@ export default function RevealScreen() {
       <div className="relative z-10 flex min-h-0 flex-1 flex-col items-center overflow-y-auto px-4 pt-4 pb-8">
         {/* Title */}
         <m.div
-          initial={{ y: -20, opacity: 0 }}
+          initial={{ opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           className="mb-4"
         >

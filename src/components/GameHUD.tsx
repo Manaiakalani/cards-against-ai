@@ -105,25 +105,23 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode, timer }
                 }}
               >
                 <div
-                  className="relative flex items-center justify-center rounded-full"
+                  className="flex items-center justify-center rounded-full"
                   style={{
                     width: 20,
                     height: 20,
                     backgroundColor: player.avatarBg,
                     border: '2px solid var(--theme-border)',
                     fontSize: 12,
+                    lineHeight: 1,
                   }}
                 >
                   {player.avatar}
-                  {isCzar && (
-                    <span
-                      className="absolute"
-                      style={{ top: -6, right: -6, fontSize: 11, lineHeight: 1 }}
-                    >
-                      👑
-                    </span>
-                  )}
                 </div>
+                {isCzar && (
+                  <span style={{ fontSize: 11, lineHeight: 1 }} aria-hidden="true">
+                    👑
+                  </span>
+                )}
                 <span
                   style={{
                     fontFamily: 'var(--font-archivo)',

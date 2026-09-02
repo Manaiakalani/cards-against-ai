@@ -109,7 +109,7 @@ export default function ResultsScreen() {
 
       <div className="relative z-10 flex min-h-0 flex-1 flex-col">
         {/* Scrollable content */}
-        <div className="flex min-h-0 flex-1 flex-col items-center overflow-y-auto px-4 pt-8 pb-4" tabIndex={0} role="region" aria-label="Round results">
+        <div className="flex min-h-0 flex-1 flex-col items-center overflow-y-auto px-4 pt-16 pb-4" tabIndex={0} role="region" aria-label="Round results">
           {/* Title */}
           <m.h1
             initial={{ scale: 0.5, opacity: 0 }}
@@ -119,7 +119,8 @@ export default function ResultsScreen() {
             style={{
               fontFamily: 'var(--font-archivo)',
               fontSize: 'clamp(28px, 7vw, 56px)',
-              lineHeight: 1,
+              lineHeight: 1.08,
+              paddingTop: '0.06em',
               color: 'var(--theme-text)',
               filter: 'drop-shadow(4px 4px 0px var(--theme-shadow-soft))',
               textWrap: 'balance',

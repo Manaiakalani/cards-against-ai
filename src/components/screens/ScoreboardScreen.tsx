@@ -36,7 +36,7 @@ export default function ScoreboardScreen() {
 
       <div className="relative z-10 flex min-h-0 flex-1 flex-col">
         {/* Scrollable content */}
-        <div className="flex min-h-0 flex-1 flex-col items-center overflow-y-auto overscroll-contain px-6 pt-8 pb-4 sm:px-8" tabIndex={0} role="region" aria-label="Scoreboard">
+        <div className="flex min-h-0 flex-1 flex-col items-center overflow-y-auto overscroll-contain px-6 pt-16 pb-4 sm:px-8" tabIndex={0} role="region" aria-label="Scoreboard">
         {/* Header */}
         <div className="flex w-full max-w-[800px] flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -48,7 +48,8 @@ export default function ScoreboardScreen() {
                 fontFamily: 'var(--font-archivo)',
                 fontSize: 'clamp(48px, 10vw, 84px)',
                 fontWeight: 400,
-                lineHeight: 0.9,
+                lineHeight: 1.08,
+                paddingTop: '0.06em',
                 color: 'var(--theme-text)',
                 textWrap: 'balance',
               }}

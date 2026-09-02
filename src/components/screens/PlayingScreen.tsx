@@ -361,7 +361,7 @@ export default function PlayingScreen() {
       <PosterBackground words={['no cap', 'fr fr', 'lowkey']} opacity={0.15} />
       <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} timer={timerEnabled ? { timeLeft: timer.timeLeft, progress: timer.progress, isUrgent: timer.isUrgent } : undefined} />
 
-      <div className="relative z-10 flex min-h-0 flex-1 flex-col px-4 sm:px-6">
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col px-4 pt-2 sm:px-6">
         {/* Top Section: Title + Mini Black Card */}
         <div className="mb-3 flex flex-shrink-0 flex-col gap-2 sm:mb-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
           <div>

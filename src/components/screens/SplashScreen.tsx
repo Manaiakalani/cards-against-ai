@@ -124,7 +124,7 @@ export default function SplashScreen() {
       words={['slay', 'brainrot', 'unhinged']}
       posterOpacity={0.9}
       overlay={<SplashDeckFloaters />}
-      bodyClassName="flex flex-col items-center px-3 pb-3 pt-16 sm:px-4 sm:pb-4"
+      bodyClassName="flex flex-col items-center px-3 pb-3 pt-20 sm:px-4 sm:pb-4"
     >
       {/* Main content — my-auto centers when it fits, and lets you scroll
           from the top when the stack is taller than the viewport (flex
