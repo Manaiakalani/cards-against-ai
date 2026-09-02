@@ -67,7 +67,7 @@ const czarSubtitleStyle = {
 
 const handTitleStyle = {
   fontFamily: 'var(--font-archivo)',
-  fontSize: 'clamp(22px, 4vw, 36px)',
+  fontSize: 'clamp(16px, 2.8vh, 28px)',
   color: 'var(--theme-text)',
   lineHeight: 1.1,
 } as const
@@ -140,7 +140,7 @@ const HandCard = memo(function HandCard({
       } : undefined}
       whileHover={{ scale: submitted ? 1 : 1.05 }}
       transition={isDealt ? { type: 'spring', stiffness: 400, damping: 30 } : undefined}
-      className="relative min-w-0"
+      className="relative h-full min-h-0 min-w-0"
       style={{
         filter: isSelected ? 'none' : undefined,
         boxShadow: isSelected
@@ -152,6 +152,7 @@ const HandCard = memo(function HandCard({
       <GameCard
         card={card}
         size="sm"
+        fill
         isSelected={isSelected}
         onClick={() => onSelect(card)}
       />
@@ -363,7 +364,7 @@ export default function PlayingScreen() {
 
       <div className="relative z-10 flex min-h-0 flex-1 flex-col px-4 pt-2 sm:px-6">
         {/* Top Section: Title + Mini Black Card */}
-        <div className="mb-3 flex flex-shrink-0 flex-col gap-2 sm:mb-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
+        <div className="mb-1 flex flex-shrink-0 flex-row items-start justify-between gap-2 sm:mb-2 sm:gap-4">
           <div>
             <h2
               style={handTitleStyle}
@@ -405,9 +406,9 @@ export default function PlayingScreen() {
         </div>
 
         {/* Card Grid — scrollable area */}
-        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain" style={{ WebkitOverflowScrolling: 'touch' }}>
+        <div className="min-h-0 flex-1 overflow-hidden overscroll-contain">
           <m.div
-            className="grid grid-cols-2 gap-2 px-3 pt-4 pb-6 sm:grid-cols-3 sm:gap-3 sm:px-2 lg:grid-cols-4 lg:gap-4 [&>*]:min-w-0"
+            className="grid h-full min-h-0 grid-cols-4 grid-rows-2 gap-1.5 px-1 pt-1 pb-1 sm:gap-2 [&>*]:min-h-0 [&>*]:min-w-0 [&>*]:overflow-hidden"
             variants={containerVariants}
           initial="hidden"
           animate="show"
@@ -453,8 +454,8 @@ export default function PlayingScreen() {
 
         {/* Bottom Nav — pinned at bottom of flex column */}
         <div
-          className="flex shrink-0 items-center justify-center px-4 pt-3"
-          style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}
+          className="flex shrink-0 items-center justify-center px-3 pt-1"
+          style={{ paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom))' }}
         >
           <div
             className="flex flex-wrap items-center justify-center gap-2 rounded-full p-2"

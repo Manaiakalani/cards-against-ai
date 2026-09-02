@@ -174,7 +174,7 @@ body {
   gap: clamp(0.25rem, 1vh, 1rem);
 }
 
-@media (max-height: 740px) {
+@media (max-height: 799px) {
   .hide-short {
     display: none !important;
   }
@@ -183,19 +183,19 @@ body {
   }
 }
 
-@media (max-height: 600px) {
+@media (max-height: 699px) {
   .hide-shorter {
     display: none !important;
   }
 }
 
-@container screen (max-height: 740px) {
+@container screen (max-height: 799px) {
   .hide-short {
     display: none !important;
   }
 }
 
-@container screen (max-height: 600px) {
+@container screen (max-height: 699px) {
   .hide-shorter {
     display: none !important;
   }

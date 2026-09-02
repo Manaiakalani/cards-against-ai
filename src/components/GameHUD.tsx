@@ -32,11 +32,11 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode, timer }
       <div
         className="flex flex-wrap items-center gap-x-3 gap-y-1"
         style={{
-          minHeight: 48,
+          minHeight: 44,
           paddingLeft: 'clamp(48px, 6vw, 56px)',
           paddingRight: 'clamp(148px, 24vw, 168px)',
-          paddingTop: 10,
-          paddingBottom: 8,
+          paddingTop: 6,
+          paddingBottom: 6,
         }}
       >
         <div

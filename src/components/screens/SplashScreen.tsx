@@ -4,8 +4,6 @@ import { useState, useEffect, useCallback, useMemo } from 'react'
 import { m, AnimatePresence } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { deckMeta } from '@/data/deckMeta'
-import { CardIcon } from '@/components/CardIcon'
-import { Code2, Sparkles, GitPullRequestArrow } from 'lucide-react'
 import { isSupabaseConfigured } from '@/lib/supabase'
 import { SITE_LINKS, SITE_VERSION } from '@/lib/tokens'
 import { getMembership } from '@/lib/asyncStorage'
@@ -27,12 +25,6 @@ const RoundHistory = dynamic(
   () => import('@/components/RoundHistory').then((mod) => mod.RoundHistory),
   { ssr: false }
 )
-
-const footerIcons = {
-  GitHub: Code2,
-  'Submit a Deck': Sparkles,
-  Contribute: GitPullRequestArrow,
-} as const
 
 function readRoomParam(): string {
   if (typeof window === 'undefined') return ''
@@ -125,6 +117,76 @@ export default function SplashScreen() {
       posterOpacity={0.9}
       overlay={<SplashDeckFloaters />}
       bodyClassName="overlay-pad flex flex-col items-center px-3 pb-3 sm:px-4 sm:pb-4"
+      footer={
+        <div className="flex max-w-3xl flex-wrap items-center justify-center gap-2 px-2">
+          <button
+            type="button"
+            onClick={() => setShowStats(true)}
+            className="cursor-pointer uppercase"
+            style={{
+              fontFamily: 'var(--font-archivo)',
+              fontSize: 13,
+              backgroundColor: 'var(--theme-surface)',
+              color: 'var(--theme-text)',
+              border: '3px solid var(--theme-border)',
+              padding: '6px 12px',
+              minHeight: 40,
+              borderRadius: 12,
+              boxShadow: '3px 3px 0px var(--theme-shadow-soft)',
+            }}
+          >
+            📊 Stats
+          </button>
+          <button
+            type="button"
+            onClick={() => setShowAchievements(true)}
+            className="cursor-pointer uppercase"
+            style={{
+              fontFamily: 'var(--font-archivo)',
+              fontSize: 13,
+              backgroundColor: 'var(--theme-surface)',
+              color: 'var(--theme-text)',
+              border: '3px solid var(--theme-border)',
+              padding: '6px 12px',
+              minHeight: 40,
+              borderRadius: 12,
+              boxShadow: '3px 3px 0px var(--theme-shadow-soft)',
+            }}
+          >
+            🏆 Achievements
+          </button>
+          <button
+            type="button"
+            onClick={() => setShowFavorites(true)}
+            className="cursor-pointer uppercase"
+            style={{
+              fontFamily: 'var(--font-archivo)',
+              fontSize: 13,
+              backgroundColor: 'var(--theme-surface)',
+              color: 'var(--theme-text)',
+              border: '3px solid var(--theme-border)',
+              padding: '6px 12px',
+              minHeight: 40,
+              borderRadius: 12,
+              boxShadow: '3px 3px 0px var(--theme-shadow-soft)',
+            }}
+          >
+            ⭐ Favorites
+          </button>
+          <a
+            href={SITE_LINKS[0].href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="footer-link inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-bold no-underline"
+            style={{
+              fontFamily: 'var(--font-inter)',
+              color: 'var(--theme-text-muted)',
+            }}
+          >
+            {SITE_VERSION}
+          </a>
+        </div>
+      }
     >
       {/* Main content — my-auto centers when it fits, and lets you scroll
           from the top when the stack is taller than the viewport (flex
@@ -140,7 +202,7 @@ export default function SplashScreen() {
           <h1
             style={{
               fontFamily: 'var(--font-archivo)',
-              fontSize: 'clamp(40px, min(14vw, 11vh), 120px)',
+              fontSize: 'clamp(28px, min(10vw, 7vh), 72px)',
               fontWeight: 400,
               lineHeight: 1.05,
               paddingTop: '0.08em',
@@ -158,7 +220,7 @@ export default function SplashScreen() {
             className="inline-block px-4 py-0.5 sm:px-5 sm:py-1"
             style={{
               fontFamily: 'var(--font-archivo)',
-              fontSize: 'clamp(20px, min(6vw, 5vh), 48px)',
+              fontSize: 'clamp(14px, min(4vw, 3.2vh), 28px)',
               fontWeight: 400,
               lineHeight: 1.1,
               color: 'var(--theme-bg)',
@@ -174,7 +236,7 @@ export default function SplashScreen() {
           <h2
             style={{
               fontFamily: 'var(--font-archivo)',
-              fontSize: 'clamp(32px, min(12vw, 9vh), 96px)',
+              fontSize: 'clamp(22px, min(8vw, 5.5vh), 52px)',
               fontWeight: 400,
               lineHeight: 1.05,
               color: '#66FF00',
@@ -312,7 +374,7 @@ export default function SplashScreen() {
         {isSupabaseConfigured && (
           <m.div
             variants={fadeUp}
-            className="flex w-full max-w-md flex-col items-center gap-2.5 px-4 py-3"
+            className="flex w-full max-w-md flex-col items-center gap-1.5 px-3 py-2"
             style={{
               backgroundColor: 'var(--theme-surface)',
               border: '3px solid var(--theme-border)',
@@ -396,131 +458,9 @@ export default function SplashScreen() {
           </m.p>
         )}
 
-        <YourGames />
-
-        {/* Menu buttons row */}
-        <m.div variants={fadeUp} className="hide-shorter flex flex-wrap justify-center gap-2">
-          <m.button
-            onClick={() => setShowStats(true)}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="cursor-pointer uppercase"
-            style={{
-              fontFamily: 'var(--font-archivo)',
-              fontSize: '14px',
-              backgroundColor: 'var(--theme-surface)',
-              color: 'var(--theme-text)',
-              border: '3px solid var(--theme-border)',
-              padding: '8px 14px',
-              minHeight: 44,
-              borderRadius: 12,
-              boxShadow: '4px 4px 0px var(--theme-shadow-soft)',
-            }}
-          >
-            📊 Stats
-          </m.button>
-          <m.button
-            onClick={() => setShowAchievements(true)}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="cursor-pointer uppercase"
-            style={{
-              fontFamily: 'var(--font-archivo)',
-              fontSize: '14px',
-              backgroundColor: 'var(--theme-surface)',
-              color: 'var(--theme-text)',
-              border: '3px solid var(--theme-border)',
-              padding: '8px 14px',
-              borderRadius: 12,
-              boxShadow: '4px 4px 0px var(--theme-shadow-soft)',
-            }}
-          >
-            🏆 Achievements
-          </m.button>
-          <m.button
-            onClick={() => setShowFavorites(true)}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="cursor-pointer uppercase"
-            style={{
-              fontFamily: 'var(--font-archivo)',
-              fontSize: '14px',
-              backgroundColor: 'var(--theme-surface)',
-              color: 'var(--theme-text)',
-              border: '3px solid var(--theme-border)',
-              padding: '8px 14px',
-              borderRadius: 12,
-              boxShadow: '4px 4px 0px var(--theme-shadow-soft)',
-            }}
-          >
-            ⭐ Favorites
-          </m.button>
-        </m.div>
-
-        {/* Footer card */}
-        <m.div
-          variants={fadeUp}
-          className="hide-shorter flex w-full max-w-md flex-col items-center gap-2 px-3 py-3"
-          style={{
-            backgroundColor: 'var(--theme-surface)',
-            border: '3px solid var(--theme-border)',
-            borderRadius: 16,
-            boxShadow: '0px 6px 0px var(--theme-shadow)',
-          }}
-        >
-          {/* Version + links row */}
-          <div className="flex flex-wrap items-center justify-center gap-2.5">
-            <span
-              className="footer-link inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-bold"
-              style={{
-                fontFamily: 'var(--font-inter)',
-                backgroundColor: 'var(--_footer-bg, rgba(85,85,85,0.12))',
-                color: 'var(--_footer-fg, #333)',
-                border: '2px solid color-mix(in srgb, var(--_footer-fg, #333) 25%, transparent)',
-                ['--_footer-bg-dark' as string]: 'rgba(224,224,224,0.15)',
-                ['--_footer-fg-dark' as string]: '#E0E0E0',
-              }}
-            >
-              <CardIcon color="currentColor" size={14} />
-              {SITE_VERSION}
-            </span>
-            {SITE_LINKS.map(({ href, label, color, darkColor, bg, darkBg }) => {
-              const Icon = footerIcons[label]
-              return (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="footer-link group inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-bold no-underline transition-all duration-150 hover:scale-105 active:scale-95"
-                style={{
-                  fontFamily: 'var(--font-inter)',
-                  backgroundColor: `var(--_footer-bg, ${bg})`,
-                  color: `var(--_footer-fg, ${color})`,
-                  border: `2px solid color-mix(in srgb, var(--_footer-fg, ${color}) 25%, transparent)`,
-                  ['--_footer-bg-dark' as string]: darkBg,
-                  ['--_footer-fg-dark' as string]: darkColor,
-                }}
-              >
-                <Icon className="h-4 w-4" strokeWidth={2.5} aria-hidden="true" />
-                {label}
-              </a>
-              )
-            })}
-          </div>
-          <p
-            className="hidden text-center sm:block"
-            style={{
-              fontFamily: 'var(--font-inter)',
-              fontSize: 12,
-              fontWeight: 600,
-              color: 'var(--theme-text-muted)',
-              letterSpacing: '0.01em',
-            }}
-          >
-            Open source - submit new card decks via GitHub Issues or PR
-          </p>
-        </m.div>
+        <div className="hide-short w-full">
+          <YourGames />
+        </div>
       </m.div>
 
       {/* Modals */}

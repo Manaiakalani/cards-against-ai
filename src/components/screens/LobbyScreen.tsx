@@ -420,7 +420,7 @@ export default function LobbyScreen() {
             </span>
           </div>
 
-          <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">
+          <div className="grid grid-cols-3 gap-1.5">
             {deckMeta.map((deck) => {
               const isSelected = selectedDecks.includes(deck.id)
               const cardCount = deck.blackCount + deck.whiteCount
@@ -546,7 +546,7 @@ export default function LobbyScreen() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.9 }}
-          className="hide-shorter mt-2 w-full max-w-md pb-2"
+          className="hide-short mt-2 w-full max-w-md pb-2"
         >
           <h2
             className="mb-2"

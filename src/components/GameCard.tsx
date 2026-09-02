@@ -20,6 +20,8 @@ interface GameCardProps {
   size?: 'sm' | 'md' | 'lg'
   rotation?: number
   className?: string
+  /** Fill the parent cell instead of a fixed max width (hand grid). */
+  fill?: boolean
 }
 
 const sizeMap = {
@@ -61,6 +63,7 @@ export const GameCard = React.memo(function GameCard({
   size = 'md',
   rotation = 0,
   className = '',
+  fill = false,
 }: GameCardProps) {
   const effectiveVariant = variant ?? card.type
   const isBlack = effectiveVariant === 'black'
@@ -73,7 +76,7 @@ export const GameCard = React.memo(function GameCard({
       aria-pressed={onClick ? isSelected : undefined}
       onClick={onClick}
       onKeyDown={onClick ? (e: React.KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick() } } : undefined}
-      whileHover={onClick ? { scale: 1.05, y: -10 } : undefined}
+      whileHover={onClick ? { scale: 1.03, y: fill ? -2 : -6 } : undefined}
       whileTap={onClick ? { scale: 0.98 } : undefined}
       transition={{ type: 'spring', stiffness: 400, damping: 25 }}
       className={`
@@ -84,10 +87,15 @@ export const GameCard = React.memo(function GameCard({
       `}
       style={{
         width: '100%',
-        maxWidth: dims.w,
+        height: fill ? '100%' : undefined,
+        maxWidth: fill ? 'none' : dims.w,
+        maxHeight: fill ? '100%' : undefined,
         minWidth: 0,
-        aspectRatio: `${dims.w} / ${dims.h}`,
-        padding: `${dims.pt}px ${dims.px}px ${dims.px}px`,
+        minHeight: 0,
+        aspectRatio: fill ? undefined : `${dims.w} / ${dims.h}`,
+        padding: fill
+          ? 'clamp(6px, 1.2vh, 16px) clamp(6px, 1.2vh, 16px) clamp(6px, 1vh, 12px)'
+          : `${dims.pt}px ${dims.px}px ${dims.px}px`,
         borderRadius: 18,
         backgroundColor: isBlack ? '#111111' : '#FFFFFF',
         color: isBlack ? '#FFFFFF' : '#111111',
@@ -108,7 +116,7 @@ export const GameCard = React.memo(function GameCard({
       <div
         style={{
           fontFamily: 'var(--font-inter)',
-          fontSize: dims.fontSize,
+          fontSize: fill ? 'clamp(10px, 1.7vh, 16px)' : dims.fontSize,
           fontWeight: 700,
           lineHeight: 1.3,
           overflowWrap: 'break-word',
