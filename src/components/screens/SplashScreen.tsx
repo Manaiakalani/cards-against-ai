@@ -356,13 +356,15 @@ export default function SplashScreen() {
               style={{
                 fontFamily: 'var(--font-archivo)',
                 fontSize: 'clamp(16px, min(3vw, 2.4vh), 24px)',
-                fontWeight: 400,
-                backgroundColor: 'var(--theme-surface)',
-                color: 'var(--theme-text)',
+                fontWeight: 900,
+                backgroundColor: '#87CEEB',
+                color: '#111111',
                 border: '4px solid var(--theme-border)',
                 padding: 'clamp(10px, 1.6vh, 20px) clamp(28px, 7vw, 64px)',
+                minHeight: 44,
                 borderRadius: 100,
                 boxShadow: '0px 8px 0px var(--theme-shadow)',
+                letterSpacing: '0.04em',
               }}
             >
               🔗 JOIN GAME
