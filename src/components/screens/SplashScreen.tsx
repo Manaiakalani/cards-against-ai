@@ -153,13 +153,13 @@ export default function SplashScreen() {
       bodyClassName="overlay-pad flex flex-col items-center px-3 pb-3 sm:px-4 sm:pb-4"
       footer={
         <div className="flex max-w-3xl flex-wrap items-center justify-center gap-2 px-2">
-          <SplashChip onClick={() => setShowStats(true)} bg="var(--theme-surface)">
+          <SplashChip onClick={() => setShowStats(true)} bg="#DDA0DD" color="#111111">
             📊 Stats
           </SplashChip>
-          <SplashChip onClick={() => setShowAchievements(true)} bg="var(--theme-surface)">
+          <SplashChip onClick={() => setShowAchievements(true)} bg="#FFD700" color="#111111">
             🏆 Achievements
           </SplashChip>
-          <SplashChip onClick={() => setShowFavorites(true)} bg="var(--theme-surface)">
+          <SplashChip onClick={() => setShowFavorites(true)} bg="#FFB6C1" color="#111111">
             ⭐ Favorites
           </SplashChip>
           <span
