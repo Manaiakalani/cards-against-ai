@@ -118,8 +118,9 @@ test.describe('Boundary Audit — Content Visibility', () => {
     await navigateToPlaying(page)
     // HUD is at top, fixed position
     const hudBottom = await page.evaluate(() => {
-      const hud = document.querySelector('[class*="fixed"][class*="top-0"]')
-      return hud ? hud.getBoundingClientRect().bottom : 0
+      const scores = document.querySelector('[aria-label="Player scores"]')
+      const row = scores?.parentElement
+      return row ? row.getBoundingClientRect().bottom : 0
     })
     // "Your Hand" text should be below the HUD
     const yourHand = await page.getByText('Your Hand').boundingBox()

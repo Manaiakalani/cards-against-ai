@@ -32,11 +32,11 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode, timer }
       <div
         className="flex flex-wrap items-center gap-x-3 gap-y-1"
         style={{
-          minHeight: 40,
-          paddingLeft: 'clamp(44px, 6vw, 52px)',
+          minHeight: 48,
+          paddingLeft: 'clamp(48px, 6vw, 56px)',
           paddingRight: 'clamp(148px, 24vw, 168px)',
-          paddingTop: 4,
-          paddingBottom: 4,
+          paddingTop: 10,
+          paddingBottom: 8,
         }}
       >
         <div
@@ -118,7 +118,7 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode, timer }
                   {isCzar && (
                     <span
                       className="absolute"
-                      style={{ top: -8, right: -6, fontSize: 12 }}
+                      style={{ top: -6, right: -6, fontSize: 11, lineHeight: 1 }}
                     >
                       👑
                     </span>

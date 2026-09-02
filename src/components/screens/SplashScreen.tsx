@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback, useMemo } from 'react'
 import { m, AnimatePresence } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { deckMeta } from '@/data/deckMeta'
-import { GameCard } from '@/components/GameCard'
 import { CardIcon } from '@/components/CardIcon'
 import { Code2, Sparkles, GitPullRequestArrow } from 'lucide-react'
 import { isSupabaseConfigured } from '@/lib/supabase'
@@ -13,6 +12,7 @@ import { getMembership } from '@/lib/asyncStorage'
 import { useFocusTrap } from '@/hooks/useFocusTrap'
 import { YourGames } from '@/components/YourGames'
 import { ScreenShell } from '@/components/ScreenShell'
+import { SplashDeckFloaters } from '@/components/SplashDeckFloaters'
 import dynamic from 'next/dynamic'
 
 const StatsScreen = dynamic(
@@ -123,46 +123,14 @@ export default function SplashScreen() {
     <ScreenShell
       words={['slay', 'brainrot', 'unhinged']}
       posterOpacity={0.9}
-      bodyClassName="flex items-center justify-center px-3 pb-3 pt-12 sm:px-4 sm:pb-4"
+      overlay={<SplashDeckFloaters />}
+      bodyClassName="flex flex-col items-center px-3 pb-3 pt-16 sm:px-4 sm:pb-4"
     >
-
-      {/* Decorative floating cards — hidden on mobile */}
-      <div
-        className="pointer-events-none absolute hidden md:block"
-        style={{
-          top: '15%',
-          left: '10%',
-          transform: 'rotate(-8deg)',
-          opacity: 0.8,
-          zIndex: 1,
-        }}
-      >
-        <GameCard
-          card={{ id: 'splash-black', text: 'The next _____ will be my entire personality.', type: 'black' }}
-          size="sm"
-          showFooter
-        />
-      </div>
-      <div
-        className="pointer-events-none absolute hidden md:block"
-        style={{
-          top: '20%',
-          right: '8%',
-          transform: 'rotate(6deg)',
-          opacity: 0.8,
-          zIndex: 1,
-        }}
-      >
-        <GameCard
-          card={{ id: 'splash-white', text: 'Vibe coding at 3 AM with zero tests', type: 'white' }}
-          size="sm"
-          showFooter
-        />
-      </div>
-
-      {/* Main content */}
+      {/* Main content — my-auto centers when it fits, and lets you scroll
+          from the top when the stack is taller than the viewport (flex
+          justify-center + overflow clips the title). */}
       <m.div
-        className="stack-tight relative z-10 w-full max-w-lg text-center"
+        className="stack-tight relative z-10 my-auto w-full max-w-lg text-center"
         variants={stagger}
         initial="hidden"
         animate="show"
@@ -174,7 +142,8 @@ export default function SplashScreen() {
               fontFamily: 'var(--font-archivo)',
               fontSize: 'clamp(40px, min(14vw, 11vh), 120px)',
               fontWeight: 400,
-              lineHeight: 0.9,
+              lineHeight: 1.05,
+              paddingTop: '0.08em',
               color: 'white',
               WebkitTextStroke: '3px var(--theme-shadow)',
               textShadow: '8px 8px 0px var(--theme-shadow)',
@@ -207,7 +176,7 @@ export default function SplashScreen() {
               fontFamily: 'var(--font-archivo)',
               fontSize: 'clamp(32px, min(12vw, 9vh), 96px)',
               fontWeight: 400,
-              lineHeight: 1,
+              lineHeight: 1.05,
               color: '#66FF00',
               WebkitTextStroke: '2px var(--theme-shadow)',
               textShadow: '6px 6px 0px var(--theme-shadow)',
@@ -397,15 +366,15 @@ export default function SplashScreen() {
               style={{
                 fontFamily: 'var(--font-archivo)',
                 fontSize: 13,
-                backgroundColor: 'var(--theme-surface-alt)',
-                color: 'var(--theme-text)',
+                backgroundColor: '#FFD700',
+                color: '#111111',
                 border: '3px solid var(--theme-border)',
                 padding: '8px 14px',
                 borderRadius: 12,
                 boxShadow: '3px 3px 0px var(--theme-shadow-soft)',
               }}
             >
-              or play solo with bots
+              🤖 or play solo with bots
             </m.button>
           </m.div>
         )}

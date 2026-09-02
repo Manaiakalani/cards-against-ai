@@ -129,7 +129,7 @@ export default function LobbyScreen() {
   return (
     <ScreenShell
       words={['touch', 'grass', 'never']}
-      bodyClassName="flex flex-col items-center px-3 pb-3 pt-12 sm:px-4 sm:pb-4"
+      bodyClassName="flex flex-col items-center px-3 pb-3 pt-16 sm:px-4 sm:pb-4"
       footer={
         <BottomNav>
           <NavButton variant="secondary" onClick={newGame}>

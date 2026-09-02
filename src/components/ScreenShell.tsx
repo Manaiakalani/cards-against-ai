@@ -7,6 +7,7 @@ interface ScreenShellProps {
   children: ReactNode
   header?: ReactNode
   footer?: ReactNode
+  overlay?: ReactNode
   words?: string[]
   posterOpacity?: number
   /** Extra class on the outer shell */
@@ -23,6 +24,7 @@ export function ScreenShell({
   children,
   header,
   footer,
+  overlay,
   words,
   posterOpacity,
   className = '',
@@ -33,6 +35,9 @@ export function ScreenShell({
       {words ? <PosterBackground words={words} opacity={posterOpacity} /> : null}
       {header}
       <div className={`screen-body ${bodyClassName}`}>{children}</div>
+      {overlay ? (
+        <div className="pointer-events-none absolute inset-0 z-20">{overlay}</div>
+      ) : null}
       {footer ? <div className="screen-footer">{footer}</div> : null}
     </div>
   )

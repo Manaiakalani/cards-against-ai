@@ -41,9 +41,12 @@ export function GlobalOverlay() {
 
   const isInGame = !['menu', 'lobby'].includes(gameState.phase)
 
-  // Always 44px for WCAG touch-target minimum; center in 40px HUD bar when in-game
+  // Always 44px for WCAG touch-target minimum. Sit below the safe area so
+  // the top of the pills is never clipped by overflow:hidden on .screen.
   const btnSize = 44
-  const btnTop = isInGame ? -2 : 16
+  const btnTop = isInGame
+    ? 'calc(env(safe-area-inset-top, 0px) + 6px)'
+    : 'calc(env(safe-area-inset-top, 0px) + 12px)'
 
   return (
     <>
@@ -135,7 +138,7 @@ export function GlobalOverlay() {
           tabIndex={confirmQuit ? -1 : 0}
           className="fixed z-[150] flex cursor-pointer items-center justify-center rounded-full"
           style={{
-            top: -2,
+            top: btnTop,
             left: 10,
             width: 44,
             height: 44,
