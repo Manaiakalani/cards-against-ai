@@ -42,6 +42,18 @@ export const metadata: Metadata = {
     title: "Cards Against AI",
     description: "The unhinged party card game for the chronically online",
   },
+  icons: {
+    shortcut: "/favicon.ico",
+    icon: [
+      { url: "/favicon.ico", sizes: "32x32", type: "image/x-icon" },
+      { url: "/icon.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon.svg", type: "image/svg+xml" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+      { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
   manifest: "/manifest.json",
 };
 

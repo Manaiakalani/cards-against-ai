@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="7" fill="#F4F4EE"/>
+  <!-- hard shadow -->
+  <rect x="11" y="8.5" width="15" height="20" rx="2.5" fill="#111" transform="rotate(11 18.5 18.5)"/>
+  <!-- black prompt card -->
+  <g transform="rotate(-16 11 17)">
+    <rect x="3" y="5.5" width="15" height="21" rx="2.5" fill="#111"/>
+    <rect x="5.4" y="8.6" width="10" height="2.1" rx="0.7" fill="#F4F4EE"/>
+    <rect x="5.4" y="12.2" width="7" height="2.1" rx="0.7" fill="#66FF00"/>
+    <rect x="5.4" y="15.8" width="9" height="2.1" rx="0.7" fill="#F4F4EE" opacity="0.45"/>
+  </g>
+  <!-- white answer card -->
+  <g transform="rotate(12 21 18)">
+    <rect x="13.5" y="6.5" width="15" height="21" rx="2.5" fill="#fff" stroke="#111" stroke-width="2"/>
+    <rect x="16" y="10" width="10" height="2.1" rx="0.7" fill="#111"/>
+    <rect x="16" y="13.6" width="6.5" height="2.1" rx="0.7" fill="#111" opacity="0.35"/>
+  </g>
+  <!-- lime "!" sticker -->
+  <circle cx="25.2" cy="7.4" r="6.3" fill="#66FF00" stroke="#111" stroke-width="2"/>
+  <rect x="24.2" y="3.7" width="2" height="5.1" rx="1" fill="#111"/>
+  <circle cx="25.2" cy="10.6" r="1.15" fill="#111"/>
+</svg>

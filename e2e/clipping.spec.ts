@@ -134,7 +134,8 @@ test.describe('Top chrome is not clipped', () => {
     await page.waitForLoadState('networkidle')
     const black = page.getByRole('button', { name: /spin this card/i }).first()
     await expect(black).toBeVisible()
-    await black.click()
+    // Idle float animation never reports "stable" to Playwright.
+    await black.click({ force: true })
     await expect(black).toBeVisible()
   })
 })

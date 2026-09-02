@@ -6,5 +6,12 @@
       "/assets/*",
       "/*.{css,js,ico,png,svg,jpg,woff,woff2,webmanifest,json}"
     ]
+  },
+  "mimeTypes": {
+    ".ico": "image/x-icon",
+    ".png": "image/png",
+    ".svg": "image/svg+xml",
+    ".webp": "image/webp",
+    ".json": "application/json"
   }
 }

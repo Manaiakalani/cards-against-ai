@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback, useMemo, type CSSProperties, type ReactNode } from 'react'
 import { m, AnimatePresence } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { deckMeta } from '@/data/deckMeta'
+import { CardIcon } from '@/components/CardIcon'
 import { isSupabaseConfigured } from '@/lib/supabase'
 import { SITE_LINKS, SITE_VERSION } from '@/lib/tokens'
 import { getMembership } from '@/lib/asyncStorage'
@@ -52,6 +53,46 @@ function shouldOpenJoin(): boolean {
 }
 
 const DEFAULT_HOST = { name: 'Host', avatar: '🦄', avatarBg: '#FFD700' }
+
+function SplashChip({
+  children,
+  onClick,
+  href,
+  bg,
+  color = 'var(--theme-text)',
+}: {
+  children: ReactNode
+  onClick?: () => void
+  href?: string
+  bg: string
+  color?: string
+}) {
+  const style: CSSProperties = {
+    fontFamily: 'var(--font-archivo)',
+    fontSize: 12,
+    backgroundColor: bg,
+    color,
+    border: '3px solid var(--theme-border)',
+    padding: '6px 11px',
+    minHeight: 40,
+    borderRadius: 12,
+    boxShadow: '3px 3px 0px var(--theme-shadow-soft)',
+    letterSpacing: '0.03em',
+  }
+  const className = 'inline-flex items-center gap-1.5 cursor-pointer uppercase no-underline'
+  if (href) {
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer" className={className} style={style}>
+        {children}
+      </a>
+    )
+  }
+  return (
+    <button type="button" onClick={onClick} className={className} style={style}>
+      {children}
+    </button>
+  )
+}
 
 export default function SplashScreen() {
   const { goToLobby, hostGame, hostAsyncGame, joinGame, resumeAsyncGame, mpState, asyncError } = useGame()
@@ -119,72 +160,39 @@ export default function SplashScreen() {
       bodyClassName="overlay-pad flex flex-col items-center px-3 pb-3 sm:px-4 sm:pb-4"
       footer={
         <div className="flex max-w-3xl flex-wrap items-center justify-center gap-2 px-2">
-          <button
-            type="button"
-            onClick={() => setShowStats(true)}
-            className="cursor-pointer uppercase"
-            style={{
-              fontFamily: 'var(--font-archivo)',
-              fontSize: 13,
-              backgroundColor: 'var(--theme-surface)',
-              color: 'var(--theme-text)',
-              border: '3px solid var(--theme-border)',
-              padding: '6px 12px',
-              minHeight: 40,
-              borderRadius: 12,
-              boxShadow: '3px 3px 0px var(--theme-shadow-soft)',
-            }}
-          >
+          <SplashChip onClick={() => setShowStats(true)} bg="var(--theme-surface)">
             📊 Stats
-          </button>
-          <button
-            type="button"
-            onClick={() => setShowAchievements(true)}
-            className="cursor-pointer uppercase"
-            style={{
-              fontFamily: 'var(--font-archivo)',
-              fontSize: 13,
-              backgroundColor: 'var(--theme-surface)',
-              color: 'var(--theme-text)',
-              border: '3px solid var(--theme-border)',
-              padding: '6px 12px',
-              minHeight: 40,
-              borderRadius: 12,
-              boxShadow: '3px 3px 0px var(--theme-shadow-soft)',
-            }}
-          >
+          </SplashChip>
+          <SplashChip onClick={() => setShowAchievements(true)} bg="var(--theme-surface)">
             🏆 Achievements
-          </button>
-          <button
-            type="button"
-            onClick={() => setShowFavorites(true)}
-            className="cursor-pointer uppercase"
+          </SplashChip>
+          <SplashChip onClick={() => setShowFavorites(true)} bg="var(--theme-surface)">
+            ⭐ Favorites
+          </SplashChip>
+          <span
+            className="inline-flex items-center gap-1.5 uppercase"
             style={{
               fontFamily: 'var(--font-archivo)',
-              fontSize: 13,
-              backgroundColor: 'var(--theme-surface)',
-              color: 'var(--theme-text)',
+              fontSize: 12,
+              backgroundColor: '#66FF00',
+              color: '#111111',
               border: '3px solid var(--theme-border)',
-              padding: '6px 12px',
+              padding: '6px 11px',
               minHeight: 40,
               borderRadius: 12,
               boxShadow: '3px 3px 0px var(--theme-shadow-soft)',
+              letterSpacing: '0.03em',
             }}
           >
-            ⭐ Favorites
-          </button>
-          <a
-            href={SITE_LINKS[0].href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="footer-link inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-bold no-underline"
-            style={{
-              fontFamily: 'var(--font-inter)',
-              color: 'var(--theme-text-muted)',
-            }}
-          >
+            <CardIcon color="#111111" size={12} />
             {SITE_VERSION}
-          </a>
+          </span>
+          <SplashChip href={SITE_LINKS[0].href} bg="var(--theme-surface)">
+            GitHub
+          </SplashChip>
+          <SplashChip href={SITE_LINKS[1].href} bg="#FFB6C1" color="#111111">
+            Submit a Deck
+          </SplashChip>
         </div>
       }
     >
@@ -202,7 +210,7 @@ export default function SplashScreen() {
           <h1
             style={{
               fontFamily: 'var(--font-archivo)',
-              fontSize: 'clamp(28px, min(10vw, 7vh), 72px)',
+              fontSize: 'clamp(40px, min(14vw, 10vh), 104px)',
               fontWeight: 400,
               lineHeight: 1.05,
               paddingTop: '0.08em',
@@ -220,7 +228,7 @@ export default function SplashScreen() {
             className="inline-block px-4 py-0.5 sm:px-5 sm:py-1"
             style={{
               fontFamily: 'var(--font-archivo)',
-              fontSize: 'clamp(14px, min(4vw, 3.2vh), 28px)',
+              fontSize: 'clamp(18px, min(5.5vw, 4.4vh), 40px)',
               fontWeight: 400,
               lineHeight: 1.1,
               color: 'var(--theme-bg)',
@@ -236,7 +244,7 @@ export default function SplashScreen() {
           <h2
             style={{
               fontFamily: 'var(--font-archivo)',
-              fontSize: 'clamp(22px, min(8vw, 5.5vh), 52px)',
+              fontSize: 'clamp(30px, min(11vw, 8vh), 84px)',
               fontWeight: 400,
               lineHeight: 1.05,
               color: '#66FF00',
@@ -410,7 +418,7 @@ export default function SplashScreen() {
               {asyncBusy ? '⏳ OPENING TABLE…' : '⏳ PLAY ASYNC'}
             </m.button>
             <p
-              className="hide-short max-w-sm text-center uppercase tracking-wide"
+              className="max-w-sm text-center uppercase tracking-wide"
               style={{
                 fontFamily: 'var(--font-archivo)',
                 fontSize: 'clamp(11px, 1.8vh, 13px)',
