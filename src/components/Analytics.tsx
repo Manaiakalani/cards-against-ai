@@ -2,7 +2,10 @@
 
 import { useEffect } from "react";
 
-const ALLOWED_HOSTNAMES = ["manaiakalani.github.io"];
+const ALLOWED_HOSTNAMES = [
+  "manaiakalani.github.io",
+  "cards.tinyinternet.company",
+];
 
 export function Analytics() {
   useEffect(() => {

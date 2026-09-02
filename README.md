@@ -7,7 +7,7 @@
 [![Deploy to GitHub Pages](https://github.com/Manaiakalani/cards-against-ai/actions/workflows/deploy.yml/badge.svg)](https://github.com/Manaiakalani/cards-against-ai/actions/workflows/deploy.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**[Play Now](https://manaiakalani.github.io/cards-against-ai/)** | **[Submit a Deck](https://github.com/Manaiakalani/cards-against-ai/issues/new)**
+**[Play Now](https://cards.tinyinternet.company/)** | **[Submit a Deck](https://github.com/Manaiakalani/cards-against-ai/issues/new)**
 
 ---
 
