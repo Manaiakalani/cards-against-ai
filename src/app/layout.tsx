@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo_Black, Inter } from "next/font/google";
+import { prefetchDNS } from "react-dom";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { GameProvider } from "@/contexts/GameContext";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -11,11 +12,15 @@ const archivoBlack = Archivo_Black({
   weight: "400",
   variable: "--font-archivo",
   subsets: ["latin"],
+  display: "swap",
+  preload: true,
 });
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
+  display: "swap",
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -73,6 +78,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  prefetchDNS("https://analytics.manaiakalani.info");
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (supabaseUrl) {
+    try {
+      prefetchDNS(new URL(supabaseUrl).origin);
+    } catch {
+      /* ignore invalid env */
+    }
+  }
   return (
     <html
       lang="en"

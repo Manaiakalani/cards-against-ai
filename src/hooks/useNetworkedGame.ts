@@ -351,15 +351,20 @@ export function useNetworkedGame(engine: GameEngine) {
 
   const asyncGames = useSyncExternalStore(subscribeGames, listAsyncGames, getEmptyAsyncGames)
 
-  const mpState = isAsync
-    ? {
-        role: 'async' as const,
-        connected: true,
-        roomCode: engine.gameState.roomCode,
-        playerId: asyncGame.playerId,
-        error: asyncGame.error ?? mp.mpState.error,
-      }
-    : mp.mpState
+  const asyncRoomCode = engine.gameState.roomCode
+  const mpState = useMemo(
+    () =>
+      isAsync
+        ? {
+            role: 'async' as const,
+            connected: true,
+            roomCode: asyncRoomCode,
+            playerId: asyncGame.playerId,
+            error: asyncGame.error ?? mp.mpState.error,
+          }
+        : mp.mpState,
+    [isAsync, asyncRoomCode, asyncGame.playerId, asyncGame.error, mp.mpState],
+  )
 
   return useMemo(
     () => ({

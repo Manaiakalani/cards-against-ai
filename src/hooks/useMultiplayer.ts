@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback, useRef, useEffect, useLayoutEffect } from 'react'
-import { supabase, isSupabaseConfigured } from '@/lib/supabase'
+import { getSupabase, loadSupabase } from '@/lib/supabase'
 import {
   parsePresencePlayer,
   parseBroadcastGameState,
@@ -110,6 +110,7 @@ export function useMultiplayer(options: UseMultiplayerOptions = {}) {
   const [presencePlayers, setPresencePlayers] = useState<PresencePlayer[]>([])
 
   const channelRef = useRef<RealtimeChannel | null>(null)
+  const setupIdRef = useRef(0)
   const optionsRef = useRef(options)
   // Keep the ref in sync after every render (not during it) so callbacks
   // always see the latest options without making `setupChannel` unstable.
@@ -122,8 +123,10 @@ export function useMultiplayer(options: UseMultiplayerOptions = {}) {
   /** Clean up channel on unmount */
   useEffect(() => {
     return () => {
-      if (channelRef.current && supabase) {
-        supabase.removeChannel(channelRef.current)
+      setupIdRef.current += 1
+      const sb = getSupabase()
+      if (channelRef.current && sb) {
+        sb.removeChannel(channelRef.current)
         channelRef.current = null
       }
     }
@@ -136,14 +139,17 @@ export function useMultiplayer(options: UseMultiplayerOptions = {}) {
       playerInfo: { name: string; avatar: string; avatarBg: string },
       isHost: boolean
     ) => {
-      // Clean up existing channel
-      if (channelRef.current && supabase) {
-        supabase.removeChannel(channelRef.current)
+      const setupId = ++setupIdRef.current
+      const existing = getSupabase()
+      if (channelRef.current && existing) {
+        existing.removeChannel(channelRef.current)
+        channelRef.current = null
       }
 
-      if (!supabase) return
+      void loadSupabase().then((sb) => {
+        if (!sb || setupId !== setupIdRef.current) return
 
-      const channel = supabase.channel(`room:${roomCode}`, {
+      const channel = sb.channel(`room:${roomCode}`, {
         config: { broadcast: { self: false }, presence: { key: playerId } },
       })
 
@@ -224,6 +230,7 @@ export function useMultiplayer(options: UseMultiplayerOptions = {}) {
         })
 
       channelRef.current = channel
+      })
     },
     []
   )
@@ -310,8 +317,10 @@ export function useMultiplayer(options: UseMultiplayerOptions = {}) {
 
   /** Disconnect and clean up */
   const disconnect = useCallback(() => {
-    if (channelRef.current && supabase) {
-      supabase.removeChannel(channelRef.current)
+    setupIdRef.current += 1
+    const sb = getSupabase()
+    if (channelRef.current && sb) {
+      sb.removeChannel(channelRef.current)
       channelRef.current = null
     }
     setMpState({

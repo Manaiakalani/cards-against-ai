@@ -6,6 +6,7 @@ import { useGame } from '@/contexts/GameContext'
 import { deckMeta } from '@/data/deckMeta'
 import { CardIcon } from '@/components/CardIcon'
 import { isSupabaseConfigured } from '@/lib/supabase'
+import { preloadPlayChunks, scheduleIdle } from '@/lib/preload'
 import { SITE_VERSION } from '@/lib/tokens'
 import { getMembership } from '@/lib/asyncStorage'
 import { useFocusTrap } from '@/hooks/useFocusTrap'
@@ -53,6 +54,22 @@ function shouldOpenJoin(): boolean {
 }
 
 const DEFAULT_HOST = { name: 'Host', avatar: '🦄', avatarBg: '#FFD700' }
+
+const stagger = {
+  hidden: {},
+  show: {
+    transition: { staggerChildren: 0.12 },
+  },
+}
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { type: 'spring' as const, stiffness: 200, damping: 20 },
+  },
+}
 
 function SplashChip({
   children,
@@ -126,21 +143,7 @@ export default function SplashScreen() {
 
   const joinTrapRef = useFocusTrap<HTMLDivElement>(showJoin)
 
-  const stagger = {
-    hidden: {},
-    show: {
-      transition: { staggerChildren: 0.12 },
-    },
-  }
-
-  const fadeUp = {
-    hidden: { opacity: 0, y: 30 },
-    show: {
-      opacity: 1,
-      y: 0,
-      transition: { type: 'spring' as const, stiffness: 200, damping: 20 },
-    },
-  }
+  useEffect(() => scheduleIdle(preloadPlayChunks), [])
 
   return (
     <ScreenShell
@@ -312,6 +315,8 @@ export default function SplashScreen() {
         {/* Host / Join buttons */}
         <m.div variants={fadeUp} className="flex flex-col items-center gap-2 sm:flex-row">
           <m.button
+            onPointerEnter={preloadPlayChunks}
+            onFocus={preloadPlayChunks}
             onClick={() => {
               if (isSupabaseConfigured) {
                 hostGame(DEFAULT_HOST)
@@ -341,6 +346,8 @@ export default function SplashScreen() {
           </m.button>
           {isSupabaseConfigured && (
             <m.button
+              onPointerEnter={preloadPlayChunks}
+              onFocus={preloadPlayChunks}
               onClick={() => setShowJoin(true)}
               whileHover={{ y: 2, boxShadow: '0px 6px 0px var(--theme-shadow)' }}
               whileTap={{ y: 6, boxShadow: '0px 2px 0px var(--theme-shadow)' }}

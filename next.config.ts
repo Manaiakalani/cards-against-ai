@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
   output: 'export',
   images: { unoptimized: true },
   devIndicators: false,
+  experimental: {
+    optimizePackageImports: ['lucide-react'],
+  },
   ...(isGithubPages && {
     basePath: '/cards-against-ai',
     assetPrefix: '/cards-against-ai/',

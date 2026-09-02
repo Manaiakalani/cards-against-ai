@@ -80,9 +80,9 @@ export const GameCard = React.memo(function GameCard({
       whileTap={onClick ? { scale: 0.98 } : undefined}
       transition={{ type: 'spring', stiffness: 400, damping: 25 }}
       className={`
-        relative flex flex-col justify-between
+        cai-card relative flex flex-col justify-between
         ${onClick ? 'cursor-pointer focus-visible:ring-4 focus-visible:ring-[#66FF00] focus-visible:outline-none' : ''}
-        ${isSelected ? 'ring-[6px] ring-[#66FF00]' : ''}
+        ${isSelected ? 'cai-card-selected ring-[6px] ring-[#66FF00]' : ''}
         ${className}
       `}
       style={{
@@ -104,9 +104,6 @@ export const GameCard = React.memo(function GameCard({
           : isBlack
             ? '3px solid var(--theme-border-light)'
             : '3px solid var(--theme-border)',
-        boxShadow: isSelected
-          ? '0 0 30px rgba(102, 255, 0, 0.3), 15px 25px 45px var(--theme-shadow-soft)'
-          : '15px 25px 45px var(--theme-shadow-soft)',
         transform: `rotate(${rotation}deg)${isSelected ? ' translateY(-8px)' : ''}`,
         userSelect: 'none',
         touchAction: onClick ? 'manipulation' : undefined,

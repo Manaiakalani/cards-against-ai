@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { supabase } from '@/lib/supabase'
+import { getSupabase, loadSupabase } from '@/lib/supabase'
 import {
   createAsyncGame,
   fetchAsyncGame,
@@ -42,8 +42,9 @@ export function useAsyncGame(gameEngine: GameEngine) {
   }, [gameEngine.gameState])
 
   const teardownChannel = useCallback(() => {
-    if (channelRef.current && supabase) {
-      supabase.removeChannel(channelRef.current)
+    const sb = getSupabase()
+    if (channelRef.current && sb) {
+      sb.removeChannel(channelRef.current)
       channelRef.current = null
     }
   }, [])
@@ -92,15 +93,17 @@ export function useAsyncGame(gameEngine: GameEngine) {
   const setupChannel = useCallback(
     (roomCode: string) => {
       teardownChannel()
-      if (!supabase) return
-      const channel = supabase.channel(`async:${roomCode}`, {
-        config: { broadcast: { self: false } },
+      void loadSupabase().then((sb) => {
+        if (!sb || roomRef.current !== roomCode) return
+        const channel = sb.channel(`async:${roomCode}`, {
+          config: { broadcast: { self: false } },
+        })
+        channel.on('broadcast', { event: 'async:update' }, () => {
+          void refetch()
+        })
+        channel.subscribe()
+        channelRef.current = channel
       })
-      channel.on('broadcast', { event: 'async:update' }, () => {
-        void refetch()
-      })
-      channel.subscribe()
-      channelRef.current = channel
     },
     [refetch, teardownChannel],
   )

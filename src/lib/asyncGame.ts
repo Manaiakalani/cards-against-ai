@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { supabase, isSupabaseConfigured } from '@/lib/supabase'
+import { isSupabaseConfigured, loadSupabase } from '@/lib/supabase'
 import { parseGameState } from '@/lib/wireProtocol'
 import type { GameState } from '@/types/game'
 
@@ -51,6 +51,7 @@ export function isAsyncBackendReady(): boolean {
 }
 
 export async function fetchAsyncGame(roomCode: string): Promise<AsyncSnapshot | null> {
+  const supabase = await loadSupabase()
   if (!supabase) return null
   const { data, error } = await supabase.rpc('get_async_game', {
     p_code: roomCode.toUpperCase(),
@@ -68,6 +69,7 @@ export async function fetchAsyncGame(roomCode: string): Promise<AsyncSnapshot | 
 }
 
 export async function createAsyncGame(roomCode: string, state: GameState): Promise<AsyncSnapshot> {
+  const supabase = await loadSupabase()
   if (!supabase) throw new Error('Supabase is not configured')
   assertCreateAllowed()
   const { data, error } = await supabase.rpc('create_async_game', {
@@ -95,6 +97,7 @@ export async function saveAsyncGame(
   expectedVersion: number,
   state: GameState,
 ): Promise<{ ok: true; version: number } | { ok: false; version: number; state: GameState }> {
+  const supabase = await loadSupabase()
   if (!supabase) throw new Error('Supabase is not configured')
   const { data, error } = await supabase.rpc('save_async_game', {
     p_code: roomCode.toUpperCase(),
