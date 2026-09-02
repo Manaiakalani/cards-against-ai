@@ -70,12 +70,12 @@ export default function RootLayout({
       <head>
         {/* Prevent dark-mode FOUC: apply saved theme before first paint */}
         <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('cai-theme');if(!t){t=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'}document.documentElement.setAttribute('data-theme',t)}catch(e){}})()` }} />
+        <Analytics />
       </head>
       <body>
         <a href="#main-content" className="skip-link">
           Skip to game
         </a>
-        <Analytics />
         <ThemeProvider>
           <ErrorBoundary>
             <GameProvider>
