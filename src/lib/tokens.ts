@@ -11,6 +11,7 @@ export const COLOR = {
 } as const
 
 export const GITHUB_REPO = 'https://github.com/Manaiakalani/cards-against-ai'
+export const LICENSE_URL = `${GITHUB_REPO}/blob/main/LICENSE`
 export const SITE_URL = 'https://cards.tinyinternet.company/'
 export const SITE_VERSION = 'v1.1'
 

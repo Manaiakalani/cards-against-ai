@@ -29,8 +29,6 @@ function Floater({ side, card }: { side: 'left' | 'right'; card: Card }) {
   const reduceMotion = useReducedMotion()
   const [spins, setSpins] = useState(0)
   const restRotate = side === 'left' ? -8 : 6
-  const floatY = side === 'left' ? [0, -14, 0] : [0, -10, 0]
-  const floatDuration = side === 'left' ? 3.6 : 4.4
 
   const spin = useCallback(() => {
     setSpins((n) => n + 1)
@@ -48,39 +46,30 @@ function Floater({ side, card }: { side: 'left' | 'right'; card: Card }) {
       }}
     >
       <m.div
-        animate={reduceMotion ? undefined : { y: floatY }}
+        role="button"
+        tabIndex={0}
+        aria-label="Spin this card"
+        onClick={spin}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            spin()
+          }
+        }}
+        whileHover={reduceMotion ? undefined : { scale: 1.04 }}
+        animate={{
+          rotateY: reduceMotion ? 0 : spins * 360,
+          rotateZ: restRotate,
+        }}
         transition={
           reduceMotion
             ? { duration: 0.01 }
-            : { duration: floatDuration, repeat: Infinity, ease: 'easeInOut' }
+            : { type: 'spring', stiffness: 80, damping: 14, mass: 0.8 }
         }
+        className="select-none"
+        style={{ cursor: 'pointer', transformStyle: 'preserve-3d' }}
       >
-        <m.div
-          role="button"
-          tabIndex={0}
-          aria-label="Spin this card"
-          onClick={spin}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault()
-              spin()
-            }
-          }}
-          whileHover={reduceMotion ? undefined : { scale: 1.04 }}
-          animate={{
-            rotateY: reduceMotion ? 0 : spins * 360,
-            rotateZ: restRotate,
-          }}
-          transition={
-            reduceMotion
-              ? { duration: 0.01 }
-              : { type: 'spring', stiffness: 80, damping: 14, mass: 0.8 }
-          }
-          className="select-none"
-          style={{ cursor: 'pointer', transformStyle: 'preserve-3d' }}
-        >
-          <GameCard card={card} size="sm" showFooter />
-        </m.div>
+        <GameCard card={card} size="sm" showFooter />
       </m.div>
     </div>
   )

@@ -6,7 +6,7 @@ import { useGame } from '@/contexts/GameContext'
 import { deckMeta } from '@/data/deckMeta'
 import { CardIcon } from '@/components/CardIcon'
 import { isSupabaseConfigured } from '@/lib/supabase'
-import { SITE_LINKS, SITE_VERSION } from '@/lib/tokens'
+import { SITE_VERSION } from '@/lib/tokens'
 import { getMembership } from '@/lib/asyncStorage'
 import { useFocusTrap } from '@/hooks/useFocusTrap'
 import { YourGames } from '@/components/YourGames'
@@ -57,13 +57,11 @@ const DEFAULT_HOST = { name: 'Host', avatar: '🦄', avatarBg: '#FFD700' }
 function SplashChip({
   children,
   onClick,
-  href,
   bg,
   color = 'var(--theme-text)',
 }: {
   children: ReactNode
-  onClick?: () => void
-  href?: string
+  onClick: () => void
   bg: string
   color?: string
 }) {
@@ -79,16 +77,8 @@ function SplashChip({
     boxShadow: '3px 3px 0px var(--theme-shadow-soft)',
     letterSpacing: '0.03em',
   }
-  const className = 'inline-flex items-center gap-1.5 cursor-pointer uppercase no-underline'
-  if (href) {
-    return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className={className} style={style}>
-        {children}
-      </a>
-    )
-  }
   return (
-    <button type="button" onClick={onClick} className={className} style={style}>
+    <button type="button" onClick={onClick} className="inline-flex items-center gap-1.5 cursor-pointer uppercase" style={style}>
       {children}
     </button>
   )
@@ -187,12 +177,6 @@ export default function SplashScreen() {
             <CardIcon color="#111111" size={12} />
             {SITE_VERSION}
           </span>
-          <SplashChip href={SITE_LINKS[0].href} bg="var(--theme-surface)">
-            GitHub
-          </SplashChip>
-          <SplashChip href={SITE_LINKS[1].href} bg="#FFB6C1" color="#111111">
-            Submit a Deck
-          </SplashChip>
         </div>
       }
     >
@@ -210,7 +194,7 @@ export default function SplashScreen() {
           <h1
             style={{
               fontFamily: 'var(--font-archivo)',
-              fontSize: 'clamp(40px, min(14vw, 10vh), 104px)',
+              fontSize: 'clamp(44px, min(16vw, 12vh), 120px)',
               fontWeight: 400,
               lineHeight: 1.05,
               paddingTop: '0.08em',
@@ -228,7 +212,7 @@ export default function SplashScreen() {
             className="inline-block px-4 py-0.5 sm:px-5 sm:py-1"
             style={{
               fontFamily: 'var(--font-archivo)',
-              fontSize: 'clamp(18px, min(5.5vw, 4.4vh), 40px)',
+              fontSize: 'clamp(20px, min(6.5vw, 5.2vh), 48px)',
               fontWeight: 400,
               lineHeight: 1.1,
               color: 'var(--theme-bg)',
@@ -244,7 +228,7 @@ export default function SplashScreen() {
           <h2
             style={{
               fontFamily: 'var(--font-archivo)',
-              fontSize: 'clamp(30px, min(11vw, 8vh), 84px)',
+              fontSize: 'clamp(34px, min(13vw, 9.5vh), 96px)',
               fontWeight: 400,
               lineHeight: 1.05,
               color: '#66FF00',

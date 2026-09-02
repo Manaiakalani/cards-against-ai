@@ -1,14 +1,17 @@
 'use client'
 
-import { useEffect, useCallback } from 'react'
+import { useEffect, useCallback, useState, type CSSProperties, type ReactNode } from 'react'
 import { m, AnimatePresence } from 'framer-motion'
 import { useFocusTrap } from '@/hooks/useFocusTrap'
 import { deckMeta } from '@/data/deckMeta'
+import { LICENSE_URL, SITE_LINKS } from '@/lib/tokens'
 
 interface HelpModalProps {
   open: boolean
   onClose: () => void
 }
+
+type HelpPane = 'rules' | 'privacy' | 'license'
 
 const RULES = [
   {
@@ -45,13 +48,65 @@ const RULES = [
 
 const totalCards = deckMeta.reduce((sum, d) => sum + d.blackCount + d.whiteCount, 0)
 
+const TITLES: Record<HelpPane, string> = {
+  rules: 'How to Play',
+  privacy: 'Privacy',
+  license: 'License',
+}
+
+function MenuChip({
+  children,
+  href,
+  onClick,
+  bg,
+  color = 'var(--theme-text)',
+  active = false,
+}: {
+  children: ReactNode
+  href?: string
+  onClick?: () => void
+  bg: string
+  color?: string
+  active?: boolean
+}) {
+  const style: CSSProperties = {
+    fontFamily: 'var(--font-archivo)',
+    fontSize: 11,
+    backgroundColor: bg,
+    color,
+    border: '3px solid var(--theme-border)',
+    padding: '6px 10px',
+    minHeight: 40,
+    borderRadius: 12,
+    boxShadow: active ? '1px 1px 0px var(--theme-shadow-soft)' : '3px 3px 0px var(--theme-shadow-soft)',
+    transform: active ? 'translate(2px, 2px)' : undefined,
+    letterSpacing: '0.03em',
+  }
+  const className = 'inline-flex items-center justify-center cursor-pointer uppercase no-underline'
+  if (href) {
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer" className={className} style={style}>
+        {children}
+      </a>
+    )
+  }
+  return (
+    <button type="button" onClick={onClick} className={className} style={style} aria-pressed={active}>
+      {children}
+    </button>
+  )
+}
+
 export function HelpModal({ open, onClose }: HelpModalProps) {
+  const [pane, setPane] = useState<HelpPane>('rules')
+
   const handleEsc = useCallback((e: KeyboardEvent) => {
     if (e.key === 'Escape') onClose()
   }, [onClose])
 
   useEffect(() => {
     if (open) {
+      setPane('rules')
       document.addEventListener('keydown', handleEsc)
       return () => document.removeEventListener('keydown', handleEsc)
     }
@@ -59,11 +114,14 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
 
   const trapRef = useFocusTrap<HTMLDivElement>(open)
 
+  useEffect(() => {
+    trapRef.current?.scrollTo({ top: 0 })
+  }, [pane])
+
   return (
     <AnimatePresence>
       {open && (
         <>
-          {/* Backdrop */}
           <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -73,7 +131,6 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
             style={{ backgroundColor: 'var(--theme-overlay)' }}
           />
 
-          {/* Modal */}
           <m.div
             ref={trapRef}
             tabIndex={-1}
@@ -92,21 +149,39 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
               borderRadius: 24,
             }}
           >
-            {/* Header */}
             <div
               className="flex items-center justify-between px-6 py-4"
               style={{ borderBottom: '3px solid var(--theme-border)' }}
             >
-              <h2
-                id="help-modal-title"
-                style={{
-                  fontFamily: 'var(--font-archivo)',
-                  fontSize: 28,
-                  color: 'var(--theme-text)',
-                }}
-              >
-                How to Play
-              </h2>
+              <div>
+                {pane !== 'rules' && (
+                  <button
+                    type="button"
+                    onClick={() => setPane('rules')}
+                    className="mb-1 cursor-pointer uppercase"
+                    style={{
+                      fontFamily: 'var(--font-archivo)',
+                      fontSize: 11,
+                      color: 'var(--theme-text-muted)',
+                      background: 'none',
+                      border: 'none',
+                      padding: 0,
+                    }}
+                  >
+                    ← How to Play
+                  </button>
+                )}
+                <h2
+                  id="help-modal-title"
+                  style={{
+                    fontFamily: 'var(--font-archivo)',
+                    fontSize: 28,
+                    color: 'var(--theme-text)',
+                  }}
+                >
+                  {TITLES[pane]}
+                </h2>
+              </div>
               <button
                 onClick={onClose}
                 aria-label="Close help"
@@ -123,39 +198,96 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
               </button>
             </div>
 
-            {/* Rules */}
-            <div className="flex flex-col gap-4 px-6 py-5">
-              {RULES.map((rule, i) => (
-                <div key={i} className="flex gap-3">
-                  <span className="flex-shrink-0 text-2xl">{rule.emoji}</span>
-                  <div>
-                    <p
-                      style={{
-                        fontFamily: 'var(--font-archivo)',
-                        fontSize: 16,
-                        color: 'var(--theme-text)',
-                      }}
-                    >
-                      {rule.title}
-                    </p>
-                    <p
-                      style={{
-                        fontFamily: 'var(--font-inter)',
-                        fontSize: 14,
-                        color: 'var(--theme-text-secondary)',
-                        lineHeight: 1.5,
-                      }}
-                    >
-                      {rule.body}
-                    </p>
+            {pane === 'rules' && (
+              <div className="flex flex-col gap-4 px-6 py-5">
+                {RULES.map((rule, i) => (
+                  <div key={i} className="flex gap-3">
+                    <span className="flex-shrink-0 text-2xl">{rule.emoji}</span>
+                    <div>
+                      <p
+                        style={{
+                          fontFamily: 'var(--font-archivo)',
+                          fontSize: 16,
+                          color: 'var(--theme-text)',
+                        }}
+                      >
+                        {rule.title}
+                      </p>
+                      <p
+                        style={{
+                          fontFamily: 'var(--font-inter)',
+                          fontSize: 14,
+                          color: 'var(--theme-text-secondary)',
+                          lineHeight: 1.5,
+                        }}
+                      >
+                        {rule.body}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
 
-            {/* Footer */}
+            {pane === 'privacy' && (
+              <div className="flex flex-col gap-4 px-6 py-5">
+                <p style={legalBody}>
+                  No accounts. No email. No &quot;sign in with your real identity so we can sell it.&quot;
+                </p>
+                <div>
+                  <p style={legalHead}>On your device</p>
+                  <p style={legalBody}>
+                    Stats, achievements, mute/theme, and which async tables you joined stay in this browser&apos;s local storage. Clear site data and they vanish.
+                  </p>
+                </div>
+                <div>
+                  <p style={legalHead}>Multiplayer</p>
+                  <p style={legalBody}>
+                    Live and async rooms go through Supabase: room code, display name, avatar, and the cards you play. Use a fake name. We are not HR.
+                  </p>
+                </div>
+                <div>
+                  <p style={legalHead}>Analytics</p>
+                  <p style={legalBody}>
+                    The live site loads a privacy-oriented tracker (Rybbit) for page views. No ad network. Localhost is not tracked.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {pane === 'license' && (
+              <div className="flex flex-col gap-4 px-6 py-5">
+                <p style={legalHead}>MIT License</p>
+                <p style={legalBody}>
+                  Copyright 2026 Manaiakalani. Do whatever you want with the code, just don&apos;t blame us when HR gets involved.
+                </p>
+                <p style={legalBody}>
+                  This is not Cards Against Humanity. CAH is someone else&apos;s trademark. We are a fan-made party game about AI brainrot.
+                </p>
+                <a
+                  href={LICENSE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex w-fit cursor-pointer uppercase no-underline"
+                  style={{
+                    fontFamily: 'var(--font-archivo)',
+                    fontSize: 13,
+                    backgroundColor: '#FFD700',
+                    color: '#111111',
+                    border: '3px solid var(--theme-border)',
+                    padding: '8px 12px',
+                    minHeight: 40,
+                    borderRadius: 12,
+                    boxShadow: '3px 3px 0px var(--theme-shadow-soft)',
+                  }}
+                >
+                  Full license on GitHub
+                </a>
+              </div>
+            )}
+
             <div
-              className="px-6 py-4 text-center"
+              className="flex flex-col items-center gap-3 px-6 py-4"
               style={{ borderTop: '3px solid var(--theme-border)' }}
             >
               <p
@@ -167,10 +299,48 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
               >
                 {totalCards} cards • {deckMeta.length} decks • infinite chaos
               </p>
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                <MenuChip href={SITE_LINKS[0].href} bg="var(--theme-surface)">
+                  GitHub
+                </MenuChip>
+                <MenuChip href={SITE_LINKS[1].href} bg="#FFB6C1" color="#111111">
+                  Submit a Deck
+                </MenuChip>
+                <MenuChip
+                  onClick={() => setPane('privacy')}
+                  bg="#66FF00"
+                  color="#111111"
+                  active={pane === 'privacy'}
+                >
+                  Privacy
+                </MenuChip>
+                <MenuChip
+                  onClick={() => setPane('license')}
+                  bg="#FFD700"
+                  color="#111111"
+                  active={pane === 'license'}
+                >
+                  License
+                </MenuChip>
+              </div>
             </div>
           </m.div>
         </>
       )}
     </AnimatePresence>
   )
+}
+
+const legalHead: CSSProperties = {
+  fontFamily: 'var(--font-archivo)',
+  fontSize: 16,
+  color: 'var(--theme-text)',
+  marginBottom: 4,
+}
+
+const legalBody: CSSProperties = {
+  fontFamily: 'var(--font-inter)',
+  fontSize: 14,
+  color: 'var(--theme-text-secondary)',
+  lineHeight: 1.5,
 }
