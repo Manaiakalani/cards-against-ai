@@ -14,7 +14,10 @@ import { useStats } from '@/hooks/useStats'
 import { pushToast } from '@/components/AchievementToast'
 import { useSound } from '@/hooks/useSound'
 import { RoundHistory } from '@/components/RoundHistory'
+import { SITE_URL } from '@/lib/tokens'
 import type { RoundResult } from '@/types/game'
+
+const PLAY_URL = SITE_URL.replace(/^https?:\/\//, '').replace(/\/$/, '')
 
 // --- Enhanced confetti system ---
 
@@ -213,7 +216,7 @@ export default function EndScreen() {
         .map((p, i) => `${i === 0 ? '👑' : `#${i + 1}`} ${p.name}: ${p.score}`)
         .join('\n'),
       ``,
-      `Play → cards-against-ai.vercel.app`,
+      `Play → ${PLAY_URL}`,
     ]
     const text = lines.join('\n')
 
@@ -537,74 +540,68 @@ export default function EndScreen() {
           </div>
         </m.div>
 
-        {/* Play Again + History Buttons */}
-        <m.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.4 }}
-          className="mt-12 mb-4 flex flex-col items-center gap-4"
+        <SiteFooter />
+      </div>
+
+      <div className="screen-footer flex flex-col items-center gap-3">
+        <m.button
+          onClick={newGame}
+          whileHover={{ y: 2, boxShadow: '0px 6px 0px var(--theme-shadow)' }}
+          whileTap={{ y: 6, boxShadow: '0px 2px 0px var(--theme-shadow)' }}
+          className="cursor-pointer"
+          style={{
+            fontFamily: 'var(--font-archivo)',
+            fontSize: 'clamp(18px, 4vw, 24px)',
+            textTransform: 'uppercase',
+            backgroundColor: '#66FF00',
+            color: '#111111',
+            padding: 'clamp(12px, 2.4vw, 20px) clamp(28px, 7vw, 56px)',
+            borderRadius: '100px',
+            border: '4px solid var(--theme-border)',
+            boxShadow: '0px 8px 0px var(--theme-shadow)',
+          }}
         >
+          RUN IT BACK
+        </m.button>
+        <div className="flex gap-3">
           <m.button
-            onClick={newGame}
-            whileHover={{ y: 2, boxShadow: '0px 6px 0px var(--theme-shadow)' }}
-            whileTap={{ y: 6, boxShadow: '0px 2px 0px var(--theme-shadow)' }}
-            className="cursor-pointer"
+            onClick={handleShare}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="cursor-pointer uppercase"
             style={{
               fontFamily: 'var(--font-archivo)',
-              fontSize: '24px',
-              textTransform: 'uppercase',
-              backgroundColor: '#66FF00',
-              color: '#111111',
-              padding: 'clamp(16px, 3vw, 24px) clamp(36px, 8vw, 60px)',
-              borderRadius: '100px',
-              border: '4px solid var(--theme-border)',
-              boxShadow: '0px 8px 0px var(--theme-shadow)',
+              fontSize: '14px',
+              backgroundColor: 'var(--theme-surface)',
+              color: 'var(--theme-text)',
+              border: '3px solid var(--theme-border)',
+              padding: '10px 20px',
+              borderRadius: 12,
+              boxShadow: '4px 4px 0px var(--theme-shadow-soft)',
             }}
           >
-            RUN IT BACK
+            <Share2 className="mr-1.5 inline-block h-4 w-4" aria-hidden="true" />
+            {shared ? 'Copied!' : 'Share'}
           </m.button>
-          <div className="flex gap-3">
-            <m.button
-              onClick={handleShare}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="cursor-pointer uppercase"
-              style={{
-                fontFamily: 'var(--font-archivo)',
-                fontSize: '14px',
-                backgroundColor: 'var(--theme-surface)',
-                color: 'var(--theme-text)',
-                border: '3px solid var(--theme-border)',
-                padding: '10px 20px',
-                borderRadius: 12,
-                boxShadow: '4px 4px 0px var(--theme-shadow-soft)',
-              }}
-            >
-              <Share2 className="mr-1.5 inline-block h-4 w-4" aria-hidden="true" />
-              {shared ? 'Copied!' : 'Share'}
-            </m.button>
-            <m.button
-              onClick={() => setShowHistory(true)}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="cursor-pointer uppercase"
-              style={{
-                fontFamily: 'var(--font-archivo)',
-                fontSize: '14px',
-                backgroundColor: 'var(--theme-surface)',
-                color: 'var(--theme-text)',
-                border: '3px solid var(--theme-border)',
-                padding: '10px 20px',
-                borderRadius: 12,
-                boxShadow: '4px 4px 0px var(--theme-shadow-soft)',
-              }}
-            >
-              📜 History
-            </m.button>
-          </div>
-        </m.div>
-
-        <SiteFooter />
+          <m.button
+            onClick={() => setShowHistory(true)}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="cursor-pointer uppercase"
+            style={{
+              fontFamily: 'var(--font-archivo)',
+              fontSize: '14px',
+              backgroundColor: 'var(--theme-surface)',
+              color: 'var(--theme-text)',
+              border: '3px solid var(--theme-border)',
+              padding: '10px 20px',
+              borderRadius: 12,
+              boxShadow: '4px 4px 0px var(--theme-shadow-soft)',
+            }}
+          >
+            📜 History
+          </m.button>
+        </div>
       </div>
 
       {/* Round History Modal */}

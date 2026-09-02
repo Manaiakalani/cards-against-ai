@@ -21,4 +21,16 @@ test.describe('Async play UI', () => {
     await page.getByRole('button', { name: /HOST GAME/i }).click()
     await expect(page.getByRole('button', { name: /InTuneD/i })).toBeVisible()
   })
+
+  test('splash has a skip link and version badge', async ({ page }) => {
+    await page.goto('/')
+    await expect(page.getByRole('link', { name: /skip to game/i })).toBeAttached()
+    await expect(page.getByText('v1.1')).toBeVisible()
+  })
+
+  test('help mentions YOUR TURN on the home list', async ({ page }) => {
+    await page.goto('/')
+    await page.getByRole('button', { name: 'How to play' }).click()
+    await expect(page.getByRole('dialog').getByText(/YOUR TURN/)).toBeVisible()
+  })
 })

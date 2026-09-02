@@ -5,6 +5,7 @@ import { PosterBackground } from '@/components/PosterBackground'
 
 interface ScreenShellProps {
   children: ReactNode
+  header?: ReactNode
   footer?: ReactNode
   words?: string[]
   posterOpacity?: number
@@ -20,6 +21,7 @@ interface ScreenShellProps {
  */
 export function ScreenShell({
   children,
+  header,
   footer,
   words,
   posterOpacity,
@@ -29,6 +31,7 @@ export function ScreenShell({
   return (
     <div className={`screen ${className}`} style={{ backgroundColor: 'var(--theme-bg)' }}>
       {words ? <PosterBackground words={words} opacity={posterOpacity} /> : null}
+      {header}
       <div className={`screen-body ${bodyClassName}`}>{children}</div>
       {footer ? <div className="screen-footer">{footer}</div> : null}
     </div>

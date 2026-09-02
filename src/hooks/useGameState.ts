@@ -165,8 +165,11 @@ export function useGameState() {
     setGameState(state)
   }, [])
 
+  const getState = useCallback(() => stateRef.current, [])
+
   return {
     gameState,
+    getState,
     apply,
     goToLobby,
     updateSettings,

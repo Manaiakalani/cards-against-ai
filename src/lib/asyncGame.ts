@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
+import { parseGameState } from '@/lib/wireProtocol'
 import type { GameState } from '@/types/game'
 
 const AsyncSnapshotSchema = z.object({
@@ -23,16 +24,26 @@ export interface AsyncSnapshot {
   updatedAt?: string
 }
 
-function isGameState(value: unknown): value is GameState {
-  if (!value || typeof value !== 'object') return false
-  const v = value as Record<string, unknown>
-  return (
-    typeof v.phase === 'string' &&
-    typeof v.roomCode === 'string' &&
-    Array.isArray(v.players) &&
-    Array.isArray(v.blackCardPool) &&
-    Array.isArray(v.whiteCardPool)
-  )
+let lastCreateAt = 0
+const CREATE_COOLDOWN_MS = 3000
+const CREATE_WINDOW_MS = 15 * 60 * 1000
+const CREATE_MAX_PER_WINDOW = 6
+let createTimes: number[] = []
+
+function assertCreateAllowed() {
+  const now = Date.now()
+  createTimes = createTimes.filter((t) => now - t < CREATE_WINDOW_MS)
+  if (now - lastCreateAt < CREATE_COOLDOWN_MS) {
+    throw new Error('Hang on — give that last table a second.')
+  }
+  if (createTimes.length >= CREATE_MAX_PER_WINDOW) {
+    throw new Error('Slow down — too many tables in a short span.')
+  }
+  lastCreateAt = now
+}
+
+function recordCreate() {
+  createTimes.push(Date.now())
 }
 
 export function isAsyncBackendReady(): boolean {
@@ -46,16 +57,19 @@ export async function fetchAsyncGame(roomCode: string): Promise<AsyncSnapshot | 
   })
   if (error || data == null) return null
   const parsed = AsyncSnapshotSchema.safeParse(data)
-  if (!parsed.success || !isGameState(parsed.data.state)) return null
+  if (!parsed.success) return null
+  const state = parseGameState(parsed.data.state)
+  if (!state) return null
   return {
     version: parsed.data.version,
-    state: parsed.data.state,
+    state,
     updatedAt: parsed.data.updatedAt,
   }
 }
 
 export async function createAsyncGame(roomCode: string, state: GameState): Promise<AsyncSnapshot> {
   if (!supabase) throw new Error('Supabase is not configured')
+  assertCreateAllowed()
   const { data, error } = await supabase.rpc('create_async_game', {
     p_code: roomCode.toUpperCase(),
     p_state: state,
@@ -67,9 +81,11 @@ export async function createAsyncGame(roomCode: string, state: GameState): Promi
         : error.message,
     )
   }
+  recordCreate()
   const parsed = AsyncSnapshotSchema.safeParse(data)
-  if (parsed.success && isGameState(parsed.data.state)) {
-    return { version: parsed.data.version, state: parsed.data.state }
+  if (parsed.success) {
+    const stateParsed = parseGameState(parsed.data.state)
+    if (stateParsed) return { version: parsed.data.version, state: stateParsed }
   }
   return { version: 1, state }
 }
@@ -89,8 +105,9 @@ export async function saveAsyncGame(
   const parsed = SaveResultSchema.safeParse(data)
   if (!parsed.success) throw new Error('Unexpected save response')
   if (parsed.data.ok) return { ok: true, version: parsed.data.version }
-  if (!isGameState(parsed.data.state)) throw new Error('Corrupt async game')
-  return { ok: false, version: parsed.data.version, state: parsed.data.state }
+  const conflict = parseGameState(parsed.data.state)
+  if (!conflict) throw new Error('Corrupt async game')
+  return { ok: false, version: parsed.data.version, state: conflict }
 }
 
 /** Lightweight check used by the join dialog — does not throw on missing setup. */

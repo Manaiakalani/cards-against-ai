@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import { GameProvider } from "@/contexts/GameContext";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Analytics } from "@/components/Analytics";
+import { SITE_URL } from "@/lib/tokens";
 import "./globals.css";
 
 const archivoBlack = Archivo_Black({
@@ -18,6 +19,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "Cards Against AI",
   description:
     "The unhinged party card game for the chronically online. Play with AI bots in this Cards Against Humanity-inspired game.",
@@ -70,10 +72,17 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('cai-theme');if(!t){t=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'}document.documentElement.setAttribute('data-theme',t)}catch(e){}})()` }} />
       </head>
       <body>
+        <a href="#main-content" className="skip-link">
+          Skip to game
+        </a>
         <Analytics />
         <ThemeProvider>
           <ErrorBoundary>
-            <GameProvider>{children}</GameProvider>
+            <GameProvider>
+              <main id="main-content" tabIndex={-1} className="h-full">
+                {children}
+              </main>
+            </GameProvider>
           </ErrorBoundary>
         </ThemeProvider>
       </body>

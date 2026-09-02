@@ -11,6 +11,8 @@ export const COLOR = {
 } as const
 
 export const GITHUB_REPO = 'https://github.com/Manaiakalani/cards-against-ai'
+export const SITE_URL = 'https://manaiakalani.github.io/cards-against-ai/'
+export const SITE_VERSION = 'v1.1'
 
 export const SITE_LINKS = [
   {

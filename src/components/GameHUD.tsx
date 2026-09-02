@@ -22,19 +22,23 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode, timer }
 
   return (
     <div
-      className="fixed left-0 right-0 top-0 z-50 flex flex-col"
+      className="relative z-50 flex shrink-0 flex-col"
       style={{
         backgroundColor: 'var(--theme-backdrop)',
         backdropFilter: 'blur(8px)',
         borderBottom: '3px solid var(--theme-border)',
       }}
     >
-      {/* Row 1: Room code + Round indicator */}
       <div
-        className="flex items-center gap-3"
-        style={{ height: 40, paddingLeft: 'clamp(44px, 6vw, 52px)', paddingRight: 'clamp(148px, 24vw, 168px)' }}
+        className="flex flex-wrap items-center gap-x-3 gap-y-1"
+        style={{
+          minHeight: 40,
+          paddingLeft: 'clamp(44px, 6vw, 52px)',
+          paddingRight: 'clamp(148px, 24vw, 168px)',
+          paddingTop: 4,
+          paddingBottom: 4,
+        }}
       >
-        {/* Room code — hidden on mobile */}
         <div
           className="flex items-center rounded px-2 py-0.5"
           style={{
@@ -54,7 +58,6 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode, timer }
           </span>
         </div>
 
-        {/* Round indicator + timer */}
         <div className="flex flex-shrink-0 items-center gap-2">
           <span
             className="uppercase whitespace-nowrap"
@@ -86,8 +89,7 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode, timer }
           )}
         </div>
 
-        {/* Score pills — flow after round indicator */}
-        <div className="flex min-w-0 items-center gap-1 overflow-x-auto" tabIndex={0} role="region" aria-label="Player scores">
+        <div className="flex w-full min-w-0 flex-wrap items-center gap-1 sm:w-auto" tabIndex={0} role="region" aria-label="Player scores">
           {players.map((player) => {
             const isCzar = player.id === czarId
             const isLeader = player.score === leadScore && leadScore > 0

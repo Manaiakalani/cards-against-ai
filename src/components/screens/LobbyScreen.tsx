@@ -14,7 +14,9 @@ const MAX_PLAYERS = 6
 
 export default function LobbyScreen() {
   const { gameState, startGame, updateSettings, newGame, isMultiplayer, isHost, isClient, isAsync, presencePlayers, mpState, renamePlayer, myPlayerId, copyInvite } = useGame()
-  const [playerName, setPlayerName] = useState('')
+  const [playerName, setPlayerName] = useState(
+    () => gameState.players.find((p) => p.id === myPlayerId)?.name ?? '',
+  )
   const [botCount, setBotCount] = useState(3)
   const [selectedDecks, setSelectedDecks] = useState<string[]>(
     gameState.settings.selectedDecks
@@ -135,7 +137,7 @@ export default function LobbyScreen() {
           </NavButton>
           {isClient ? (
             <NavButton variant="primary" disabled>
-              ⏳ WAITING FOR HOST...
+              ⏳ WAITING FOR HOST…
             </NavButton>
           ) : (
             <NavButton
@@ -321,7 +323,7 @@ export default function LobbyScreen() {
                   display: 'inline-block',
                 }}
               />
-              {mpState.connected ? `Room: ${gameState.roomCode}` : 'Connecting...'}
+              {mpState.connected ? `Room: ${gameState.roomCode}` : 'Connecting…'}
             </div>
           )}
         </m.div>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import {
   createAsyncGame,
@@ -15,6 +15,8 @@ import {
   saveMembership,
 } from '@/lib/asyncStorage'
 import * as engine from '@/lib/gameEngine'
+import { notifyIfHidden, requestTurnNotifications } from '@/lib/notify'
+import { isPlayersTurn } from '@/lib/gameEngine'
 import type { useGameState } from '@/hooks/useGameState'
 import type { Card, GameState, PlayerInfo } from '@/types/game'
 import type { RealtimeChannel } from '@supabase/supabase-js'
@@ -46,18 +48,24 @@ export function useAsyncGame(gameEngine: GameEngine) {
     }
   }, [])
 
+  const setFullState = gameEngine.setFullState
+  const getState = gameEngine.getState
+  const beginHostedLobby = gameEngine.beginHostedLobby
+  const resetGame = gameEngine.newGame
+  const startEngineGame = gameEngine.startGame
+
   const hydrate = useCallback(
     (state: GameState, version: number, pid: string) => {
       applyingRemoteRef.current = true
       versionRef.current = version
       latestRef.current = state
-      gameEngine.setFullState(state)
+      setFullState(state)
       rememberAsyncGame(state, pid)
       queueMicrotask(() => {
         applyingRemoteRef.current = false
       })
     },
-    [gameEngine],
+    [setFullState],
   )
 
   const refetch = useCallback(async () => {
@@ -66,7 +74,11 @@ export function useAsyncGame(gameEngine: GameEngine) {
     const snap = await fetchAsyncGame(code)
     if (!snap) return
     if (snap.version <= versionRef.current) return
+    const wasTurn = isPlayersTurn(latestRef.current, playerRef.current)
     hydrate(snap.state, snap.version, playerRef.current)
+    if (!wasTurn && isPlayersTurn(snap.state, playerRef.current)) {
+      notifyIfHidden('Your turn', 'Cards Against AI — play a card or judge.')
+    }
   }, [hydrate])
 
   const ping = useCallback(() => {
@@ -122,15 +134,16 @@ export function useAsyncGame(gameEngine: GameEngine) {
       setError('This table got busy. Refresh and try again.')
       return null
     },
-    [gameEngine, hydrate, ping],
+    [hydrate, ping],
   )
 
   const hostAsyncGame = useCallback(
     async (playerInfo: PlayerInfo) => {
       setError(null)
+      requestTurnNotifications()
       const roomCode = engine.generateRoomCode()
       const hostId = 'player-1'
-      const next = gameEngine.beginHostedLobby({
+      const next = beginHostedLobby({
         roomCode,
         playMode: 'async',
         host: { id: hostId, ...playerInfo },
@@ -151,48 +164,55 @@ export function useAsyncGame(gameEngine: GameEngine) {
         playerRef.current = ''
         setPlayerId('')
         setError(err instanceof Error ? err.message : 'Could not create async room')
-        gameEngine.newGame()
+        resetGame()
       }
     },
-    [gameEngine, setupChannel],
+    [beginHostedLobby, resetGame, setupChannel],
   )
 
   const joinAsyncGame = useCallback(
-    async (roomCode: string, playerInfo: PlayerInfo): Promise<boolean> => {
+    async (
+      roomCode: string,
+      playerInfo: PlayerInfo,
+      knownPlayerId?: string,
+    ): Promise<boolean> => {
       setError(null)
+      requestTurnNotifications()
       const code = roomCode.toUpperCase()
       const snap = await fetchAsyncGame(code)
       if (!snap) return false
 
       const existing = getMembership(code)
-      const returning = existing
-        ? snap.state.players.find((p) => p.id === existing.playerId)
-        : undefined
-
-      roomRef.current = code
-      setActive(true)
-      setupChannel(code)
+      const returning = snap.state.players.find(
+        (p) =>
+          p.id === knownPlayerId ||
+          (existing ? p.id === existing.playerId : false),
+      )
 
       if (returning) {
+        roomRef.current = code
         playerRef.current = returning.id
         setPlayerId(returning.id)
+        setActive(true)
+        setupChannel(code)
         hydrate(snap.state, snap.version, returning.id)
         return true
       }
 
       if (snap.state.phase !== 'lobby') {
         setError('That game already started. Ask the host for a new code.')
-        setActive(false)
-        teardownChannel()
-        return true
+        return false
       }
 
       const newId = generatePlayerId()
+      roomRef.current = code
+      playerRef.current = newId
       versionRef.current = snap.version
       latestRef.current = snap.state
-      gameEngine.setFullState(snap.state)
-      playerRef.current = newId
+      setFullState(snap.state)
       setPlayerId(newId)
+      setActive(true)
+      setupChannel(code)
       saveMembership(code, { playerId: newId, ...playerInfo })
 
       const joined = await persistAction((s) =>
@@ -200,11 +220,15 @@ export function useAsyncGame(gameEngine: GameEngine) {
       )
       if (!joined) {
         setActive(false)
+        setPlayerId('')
+        roomRef.current = ''
+        playerRef.current = ''
         teardownChannel()
+        return false
       }
       return true
     },
-    [gameEngine, hydrate, persistAction, setupChannel, teardownChannel],
+    [hydrate, persistAction, setFullState, setupChannel, teardownChannel],
   )
 
   const resumeAsyncGame = useCallback(
@@ -233,6 +257,29 @@ export function useAsyncGame(gameEngine: GameEngine) {
     [hydrate, setupChannel],
   )
 
+  const seedBackup = useCallback(async (state: GameState) => {
+    try {
+      const snap = await createAsyncGame(state.roomCode, state)
+      versionRef.current = snap.version
+      roomRef.current = state.roomCode
+    } catch {
+      // Live games still work if async backup isn't available
+    }
+  }, [])
+
+  const persistBackup = useCallback(async (state: GameState) => {
+    if (!roomRef.current && state.roomCode) roomRef.current = state.roomCode
+    const code = roomRef.current || state.roomCode
+    if (!code || versionRef.current < 1) return
+    try {
+      const result = await saveAsyncGame(code, versionRef.current, state)
+      if (result.ok) versionRef.current = result.version
+      else versionRef.current = result.version
+    } catch {
+      // Ignore backup failures
+    }
+  }, [])
+
   const disconnect = useCallback(() => {
     teardownChannel()
     setActive(false)
@@ -260,21 +307,73 @@ export function useAsyncGame(gameEngine: GameEngine) {
     }
   }, [active, refetch])
 
-  const wrap =
-    <A extends unknown[]>(action: (state: GameState, ...args: A) => GameState) =>
-    (...args: A) => {
+  const run = useCallback(
+    (action: (state: GameState) => GameState) => {
       if (!active) {
-        gameEngine.setFullState(action(gameEngine.gameState, ...args))
+        setFullState(action(getState()))
         return
       }
-      void persistAction((s) => action(s, ...args))
-    }
+      void persistAction(action)
+    },
+    [active, persistAction, setFullState, getState],
+  )
+
+  const submitCards = useCallback(
+    (playerId: string, cards: Card[]) => {
+      run((s) => engine.submitCards(s, playerId, cards))
+    },
+    [run],
+  )
+  const pickWinner = useCallback(
+    (winnerId: string) => {
+      run((s) => engine.pickWinner(s, winnerId))
+    },
+    [run],
+  )
+  const rebootHand = useCallback(
+    (pid: string) => {
+      run((s) => engine.rebootHand(s, pid))
+    },
+    [run],
+  )
+  const redrawHand = useCallback(
+    (pid: string) => {
+      run((s) => engine.redrawHand(s, pid))
+    },
+    [run],
+  )
+  const nextRound = useCallback(() => {
+    run(engine.nextRound)
+  }, [run])
+  const continueFromScoreboard = useCallback(() => {
+    run(engine.continueFromScoreboard)
+  }, [run])
+  const finishReveal = useCallback(() => {
+    run(engine.finishReveal)
+  }, [run])
+  const updateSettings = useCallback(
+    (updates: Partial<GameState['settings']>) => {
+      run((s) => engine.updateSettings(s, updates))
+    },
+    [run],
+  )
+  const renamePlayer = useCallback(
+    (pid: string, name: string) => {
+      run((s) => engine.renamePlayer(s, pid, name))
+    },
+    [run],
+  )
+  const botSubmit = useCallback(() => {
+    run(engine.botSubmit)
+  }, [run])
+  const botPickWinner = useCallback(() => {
+    run(engine.botPickWinner)
+  }, [run])
 
   const startGame = useCallback(
     async (playerName: string, botCount?: number) => {
-      const next = await gameEngine.startGame(playerName, botCount)
+      const next = await startEngineGame(playerName, botCount)
       if (active && next) {
-        // startGame already applied locally; persist that snapshot
         try {
           const result = await saveAsyncGame(roomRef.current, versionRef.current, next)
           if (result.ok) {
@@ -289,11 +388,11 @@ export function useAsyncGame(gameEngine: GameEngine) {
         }
       }
     },
-    [active, gameEngine, hydrate, ping],
+    [active, startEngineGame, hydrate, ping],
   )
 
   const copyInvite = useCallback(async () => {
-    const code = roomRef.current || gameEngine.gameState.roomCode
+    const code = roomRef.current || getState().roomCode
     if (!code) return false
     try {
       await navigator.clipboard.writeText(inviteUrl(code))
@@ -301,35 +400,61 @@ export function useAsyncGame(gameEngine: GameEngine) {
     } catch {
       return false
     }
-  }, [gameEngine.gameState.roomCode])
+  }, [getState])
 
-  return {
-    active,
-    error,
-    playerId,
-    hostAsyncGame,
-    joinAsyncGame,
-    resumeAsyncGame,
-    disconnect,
-    persistAction,
-    startGame,
-    copyInvite,
-    refetch,
-    submitCards: wrap((s, playerId: string, cards: Card[]) =>
-      engine.submitCards(s, playerId, cards),
-    ),
-    pickWinner: wrap((s, winnerId: string) => engine.pickWinner(s, winnerId)),
-    rebootHand: wrap((s, pid: string) => engine.rebootHand(s, pid)),
-    redrawHand: wrap((s, pid: string) => engine.redrawHand(s, pid)),
-    nextRound: wrap(engine.nextRound),
-    continueFromScoreboard: wrap(engine.continueFromScoreboard),
-    finishReveal: wrap(engine.finishReveal),
-    updateSettings: wrap((s, updates: Partial<GameState['settings']>) =>
-      engine.updateSettings(s, updates),
-    ),
-    renamePlayer: wrap((s, pid: string, name: string) => engine.renamePlayer(s, pid, name)),
-    botSubmit: wrap(engine.botSubmit),
-    botPickWinner: wrap(engine.botPickWinner),
-    setError,
-  }
+  return useMemo(
+    () => ({
+      active,
+      error,
+      playerId,
+      hostAsyncGame,
+      joinAsyncGame,
+      resumeAsyncGame,
+      disconnect,
+      persistAction,
+      startGame,
+      copyInvite,
+      refetch,
+      seedBackup,
+      persistBackup,
+      submitCards,
+      pickWinner,
+      rebootHand,
+      redrawHand,
+      nextRound,
+      continueFromScoreboard,
+      finishReveal,
+      updateSettings,
+      renamePlayer,
+      botSubmit,
+      botPickWinner,
+      setError,
+    }),
+    [
+      active,
+      error,
+      playerId,
+      hostAsyncGame,
+      joinAsyncGame,
+      resumeAsyncGame,
+      disconnect,
+      persistAction,
+      startGame,
+      copyInvite,
+      refetch,
+      seedBackup,
+      persistBackup,
+      submitCards,
+      pickWinner,
+      rebootHand,
+      redrawHand,
+      nextRound,
+      continueFromScoreboard,
+      finishReveal,
+      updateSettings,
+      renamePlayer,
+      botSubmit,
+      botPickWinner,
+    ],
+  )
 }

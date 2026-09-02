@@ -4,9 +4,12 @@ import { useCallback, useEffect, useMemo, useSyncExternalStore } from 'react'
 import { useMultiplayer, hydrateClientState } from '@/hooks/useMultiplayer'
 import { useAsyncGame } from '@/hooks/useAsyncGame'
 import { getEmptyAsyncGames, listAsyncGames, subscribeAsyncGames } from '@/lib/asyncStorage'
-import { peekAsyncGame } from '@/lib/asyncGame'
+import { fetchAsyncGame } from '@/lib/asyncGame'
+import { getMembership, saveMembership } from '@/lib/asyncStorage'
+import { setPlayMode } from '@/lib/gameEngine'
+import { requestTurnNotifications } from '@/lib/notify'
 import type { useGameState } from '@/hooks/useGameState'
-import type { AsyncGameSummary, Card, GameAction, GameState, PlayerInfo } from '@/types/game'
+import type { Card, GameAction, GameState, PlayerInfo } from '@/types/game'
 
 type GameEngine = ReturnType<typeof useGameState>
 
@@ -103,11 +106,21 @@ export function useNetworkedGame(engine: GameEngine) {
         engine.removeRemotePlayer(player.id)
       }
       if (mp.mpState.role === 'client' && player.isHost) {
-        engine.setFullState({
-          ...engine.gameState,
-          phase: 'menu',
-        })
-        mp.disconnect()
+        const st = engine.getState()
+        const info = getMembership(st.roomCode)
+        void (async () => {
+          const snap = await fetchAsyncGame(st.roomCode)
+          if (snap && info) {
+            const ok = await asyncGame.joinAsyncGame(st.roomCode, info, mp.mpState.playerId)
+            if (ok) {
+              await asyncGame.persistAction((s) => setPlayMode(s, 'async'))
+              mp.disconnect()
+              return
+            }
+          }
+          engine.setFullState({ ...engine.getState(), phase: 'menu' })
+          mp.disconnect()
+        })()
       }
     },
   })
@@ -117,6 +130,14 @@ export function useNetworkedGame(engine: GameEngine) {
       mp.broadcastState(engine.gameState)
     }
   }, [engine.gameState, mp.isHost, mp.mpState.connected, mp.broadcastState])
+
+  useEffect(() => {
+    if (!mp.isHost || engine.gameState.playMode !== 'live') return
+    const t = window.setTimeout(() => {
+      void asyncGame.persistBackup(engine.gameState)
+    }, 400)
+    return () => window.clearTimeout(t)
+  }, [engine.gameState, mp.isHost, asyncGame.persistBackup])
 
   const submitCards = useCallback(
     (playerId: string, cards: Card[]) => {
@@ -256,26 +277,59 @@ export function useNetworkedGame(engine: GameEngine) {
 
   const hostGame = useCallback(
     (playerInfo: PlayerInfo) => {
+      requestTurnNotifications()
       const { roomCode } = mp.createRoom(playerInfo)
-      engine.beginHostedLobby({
+      const next = engine.beginHostedLobby({
         roomCode,
         playMode: 'live',
         host: { id: 'player-1', ...playerInfo },
       })
+      saveMembership(roomCode, { playerId: 'player-1', ...playerInfo })
+      void asyncGame.seedBackup(next)
     },
-    [mp, engine],
+    [mp, engine, asyncGame.seedBackup],
   )
 
   const joinGame = useCallback(
     async (roomCode: string, playerInfo: PlayerInfo) => {
-      const isAsyncRoom = await peekAsyncGame(roomCode)
-      if (isAsyncRoom) {
-        await asyncGame.joinAsyncGame(roomCode, playerInfo)
+      requestTurnNotifications()
+      const code = roomCode.toUpperCase()
+      const snap = await fetchAsyncGame(code)
+      if (snap?.state.playMode === 'async') {
+        await asyncGame.joinAsyncGame(code, playerInfo)
         return
       }
-      mp.joinRoom(roomCode, playerInfo)
+
+      const { playerId } = mp.joinRoom(code, playerInfo)
+      saveMembership(code, { playerId, ...playerInfo })
+
+      for (let i = 0; i < 30; i++) {
+        await new Promise((r) => setTimeout(r, 200))
+        const st = engine.getState()
+        if (st.roomCode === code && st.phase !== 'menu') return
+      }
+
+      if (snap) {
+        const ok = await asyncGame.joinAsyncGame(code, playerInfo, playerId)
+        if (ok) {
+          await asyncGame.persistAction((s) => setPlayMode(s, 'async'))
+          mp.disconnect()
+          return
+        }
+        mp.disconnect()
+        return
+      }
+
+      asyncGame.setError('No table with that code. Ask the host to open it again.')
+      mp.disconnect()
     },
-    [asyncGame, mp],
+    [
+      asyncGame.joinAsyncGame,
+      asyncGame.persistAction,
+      asyncGame.setError,
+      engine.getState,
+      mp,
+    ],
   )
 
   const startGame = useCallback(
@@ -369,6 +423,7 @@ export function useNetworkedGame(engine: GameEngine) {
       asyncGame.disconnect,
       asyncGame.error,
       asyncGame.botPickWinner,
+      asyncGame.persistAction,
       joinGame,
       asyncGames,
     ],

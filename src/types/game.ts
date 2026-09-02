@@ -74,6 +74,10 @@ export interface GameState {
   playMode: PlayMode
   blackCardPool: Card[]
   whiteCardPool: Card[]
+  /** Player ids who already used the free redraw this round */
+  roundRedraws: string[]
+  /** Player ids who already paid for Reboot this round */
+  roundReboots: string[]
 }
 
 export interface AsyncGameSummary {

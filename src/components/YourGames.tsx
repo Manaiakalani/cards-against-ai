@@ -46,11 +46,28 @@ export function YourGames() {
               onClick={() => resumeAsyncGame(game.roomCode)}
               className="min-w-0 flex-1 cursor-pointer text-left"
             >
-              <span
-                className="block tracking-[0.2em]"
-                style={{ fontFamily: 'var(--font-archivo)', fontSize: 16, color: 'var(--theme-text)' }}
-              >
-                {game.roomCode}
+              <span className="flex items-center gap-2">
+                <span
+                  className="tracking-[0.2em]"
+                  style={{ fontFamily: 'var(--font-archivo)', fontSize: 16, color: 'var(--theme-text)' }}
+                >
+                  {game.roomCode}
+                </span>
+                {game.myTurn && (
+                  <span
+                    className="rounded-full px-2 py-0.5 uppercase"
+                    style={{
+                      fontFamily: 'var(--font-archivo)',
+                      fontSize: 10,
+                      letterSpacing: '0.06em',
+                      backgroundColor: '#66FF00',
+                      color: '#111111',
+                      border: '2px solid var(--theme-border)',
+                    }}
+                  >
+                    YOUR TURN
+                  </span>
+                )}
               </span>
               <span
                 style={{
@@ -59,7 +76,6 @@ export function YourGames() {
                   color: game.myTurn ? '#166534' : 'var(--theme-text-muted)',
                 }}
               >
-                {game.myTurn ? 'Your turn · ' : ''}
                 {PHASE_LABEL[game.phase] ?? game.phase}
                 {` · ${game.playerCount}p`}
               </span>

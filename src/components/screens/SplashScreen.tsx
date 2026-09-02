@@ -8,7 +8,8 @@ import { GameCard } from '@/components/GameCard'
 import { CardIcon } from '@/components/CardIcon'
 import { Code2, Sparkles, GitPullRequestArrow } from 'lucide-react'
 import { isSupabaseConfigured } from '@/lib/supabase'
-import { SITE_LINKS } from '@/lib/tokens'
+import { SITE_LINKS, SITE_VERSION } from '@/lib/tokens'
+import { getMembership } from '@/lib/asyncStorage'
 import { useFocusTrap } from '@/hooks/useFocusTrap'
 import { YourGames } from '@/components/YourGames'
 import { ScreenShell } from '@/components/ScreenShell'
@@ -43,13 +44,30 @@ function readRoomParam(): string {
   return room && room.length === 6 ? room : ''
 }
 
+function clearRoomParam() {
+  if (typeof window === 'undefined') return
+  const url = new URL(window.location.href)
+  if (!url.searchParams.has('room')) return
+  url.searchParams.delete('room')
+  const next = `${url.pathname}${url.search}${url.hash}`
+  window.history.replaceState({}, '', next)
+}
+
+function shouldOpenJoin(): boolean {
+  const room = readRoomParam()
+  if (room.length !== 6) return false
+  return !getMembership(room)
+}
+
+const DEFAULT_HOST = { name: 'Host', avatar: '🦄', avatarBg: '#FFD700' }
+
 export default function SplashScreen() {
-  const { goToLobby, hostGame, hostAsyncGame, joinGame, mpState, asyncError } = useGame()
+  const { goToLobby, hostGame, hostAsyncGame, joinGame, resumeAsyncGame, mpState, asyncError } = useGame()
   const [showStats, setShowStats] = useState(false)
   const [showAchievements, setShowAchievements] = useState(false)
   const [showFavorites, setShowFavorites] = useState(false)
   const [joinCode, setJoinCode] = useState(readRoomParam)
-  const [showJoin, setShowJoin] = useState(() => readRoomParam().length === 6)
+  const [showJoin, setShowJoin] = useState(shouldOpenJoin)
   const [joinName, setJoinName] = useState('')
   const [joining, setJoining] = useState(false)
   const [asyncBusy, setAsyncBusy] = useState(false)
@@ -70,10 +88,18 @@ export default function SplashScreen() {
     }
   }, [showJoin, handleEsc])
 
+  useEffect(() => {
+    const room = readRoomParam()
+    if (room.length !== 6) return
+    clearRoomParam()
+    if (getMembership(room)) void resumeAsyncGame(room)
+  }, [resumeAsyncGame])
+
   // When an error occurs while joining, the user must be able to dismiss the
   // dialog or retry. We derive an "effectively joining" flag that becomes false
   // when an error is present, without needing setState in an effect.
-  const effectivelyJoining = joining && !mpState.error
+  const joinError = mpState.error || asyncError
+  const effectivelyJoining = joining && !joinError
 
   const joinTrapRef = useFocusTrap<HTMLDivElement>(showJoin)
 
@@ -265,7 +291,7 @@ export default function SplashScreen() {
           <m.button
             onClick={() => {
               if (isSupabaseConfigured) {
-                hostGame({ name: '', avatar: '🦄', avatarBg: '#FFD700' })
+                hostGame(DEFAULT_HOST)
               } else {
                 goToLobby()
               }
@@ -327,7 +353,7 @@ export default function SplashScreen() {
             <m.button
               onClick={async () => {
                 setAsyncBusy(true)
-                await hostAsyncGame({ name: '', avatar: '🦄', avatarBg: '#FFD700' })
+                await hostAsyncGame(DEFAULT_HOST)
                 setAsyncBusy(false)
               }}
               disabled={asyncBusy}
@@ -484,7 +510,7 @@ export default function SplashScreen() {
               }}
             >
               <CardIcon color="currentColor" size={14} />
-              v1.0 MVP
+              {SITE_VERSION}
             </span>
             {SITE_LINKS.map(({ href, label, color, darkColor, bg, darkBg }) => {
               const Icon = footerIcons[label]
@@ -683,7 +709,7 @@ export default function SplashScreen() {
                   letterSpacing: '0.04em',
                 }}
               >
-                {effectivelyJoining ? '⏳ Connecting...' : '🔗 JOIN'}
+                {effectivelyJoining ? '⏳ Connecting…' : '🔗 JOIN'}
               </button>
             </m.div>
           </m.div>

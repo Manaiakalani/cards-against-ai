@@ -176,9 +176,7 @@ export default function PlayingScreen() {
   const { checkAndUnlock, stats: achStats } = useAchievements()
   const { recordCardPlayed, recordRedraw } = useStats()
   const [selectedCards, setSelectedCards] = useState<Card[]>([])
-  const [submitted, setSubmitted] = useState(false)
-  const [hasRebooted, setHasRebooted] = useState(false)
-  const [hasRedrawn, setHasRedrawn] = useState(false)
+  const [optimisticSubmitted, setOptimisticSubmitted] = useState(false)
   const botTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const roundStartRef = useRef(0)
   const [isDealt, setIsDealt] = useState(false)
@@ -194,6 +192,11 @@ export default function PlayingScreen() {
   const isPlayerCzar = humanPlayer?.isCardCzar ?? false
   const blanks = gameState.currentBlackCard?.blanks ?? 1
   const { timerEnabled, timerSeconds } = gameState.settings
+  const hasRedrawn = (gameState.roundRedraws ?? []).includes(myPlayerId)
+  const hasRebooted = (gameState.roundReboots ?? []).includes(myPlayerId)
+  const submitted =
+    optimisticSubmitted ||
+    gameState.submissions.some((s) => s.playerId === myPlayerId)
 
   // Timer: auto-submit random card(s) when time expires
   const handleTimerExpire = useCallback(() => {
@@ -204,18 +207,18 @@ export default function PlayingScreen() {
     play('tick')
     if (blanks === 1) {
       const randomCard = hand[Math.floor(Math.random() * hand.length)]
-      setSubmitted(true)
+      setOptimisticSubmitted(true)
       submitCard(myPlayerId, randomCard)
     } else {
       const shuffled = [...hand].sort(() => Math.random() - 0.5)
       const picks = shuffled.slice(0, Math.min(blanks, hand.length))
-      setSubmitted(true)
+      setOptimisticSubmitted(true)
       submitCards(myPlayerId, picks)
     }
 
     const delay = 500 + Math.random() * 1000
     botTimerRef.current = setTimeout(() => { botSubmit() }, delay)
-  }, [submitted, isPlayerCzar, humanPlayer, blanks, submitCard, submitCards, botSubmit, play])
+  }, [submitted, isPlayerCzar, humanPlayer, blanks, submitCard, submitCards, botSubmit, play, myPlayerId])
 
   const timer = useTimer({
     seconds: timerSeconds,
@@ -280,7 +283,7 @@ export default function PlayingScreen() {
 
   const handleConfirm = useCallback(() => {
     if (selectedCards.length !== blanks || !humanPlayer) return
-    setSubmitted(true)
+    setOptimisticSubmitted(true)
     timer.stop()
     play('submit')
 
@@ -308,7 +311,6 @@ export default function PlayingScreen() {
     if (hasRedrawn || submitted) return
     redrawHand(myPlayerId)
     setSelectedCards([])
-    setHasRedrawn(true)
     recordRedraw()
     checkAndUnlock({ redrawsUsed: achStats.redrawsUsed + 1 })
   }, [hasRedrawn, submitted, redrawHand, recordRedraw, checkAndUnlock, achStats.redrawsUsed, myPlayerId])
@@ -318,7 +320,6 @@ export default function PlayingScreen() {
     if (!humanPlayer || humanPlayer.score < 1) return
     rebootHand(myPlayerId)
     setSelectedCards([])
-    setHasRebooted(true)
     play('submit')
   }, [hasRebooted, submitted, humanPlayer, rebootHand, play, myPlayerId])
 
@@ -328,7 +329,7 @@ export default function PlayingScreen() {
       <div className="screen" style={bgStyle}>
         <PosterBackground words={['no cap', 'fr fr', 'lowkey']} opacity={0.15} />
         <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} />
-        <div className="relative z-10 flex h-full flex-col items-center justify-center overflow-y-auto px-4 pt-14">
+        <div className="relative z-10 flex min-h-0 flex-1 flex-col items-center justify-center overflow-y-auto px-4">
           <m.div
             animate={{ scale: [1, 1.05, 1] }}
             transition={{ repeat: Infinity, duration: 2 }}
@@ -360,7 +361,7 @@ export default function PlayingScreen() {
       <PosterBackground words={['no cap', 'fr fr', 'lowkey']} opacity={0.15} />
       <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} timer={timerEnabled ? { timeLeft: timer.timeLeft, progress: timer.progress, isUrgent: timer.isUrgent } : undefined} />
 
-      <div className="relative z-10 flex min-h-0 flex-1 flex-col px-4 pt-12 sm:px-6 sm:pt-14">
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col px-4 sm:px-6">
         {/* Top Section: Title + Mini Black Card */}
         <div className="mb-3 flex flex-shrink-0 flex-col gap-2 sm:mb-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
           <div>

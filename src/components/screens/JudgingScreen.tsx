@@ -46,7 +46,7 @@ export default function JudgingScreen() {
       <div className="screen" style={{ backgroundColor: 'var(--theme-bg)' }}>
         <PosterBackground words={['slay', 'ate', 'period']} />
         <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} />
-        <div className="screen-body flex flex-col items-center justify-center px-4 pt-12">
+        <div className="screen-body flex flex-col items-center justify-center px-4 pt-4">
           <m.div
             animate={{ rotate: [0, 5, -5, 0] }}
             transition={{ repeat: Infinity, duration: 1.5 }}
@@ -89,7 +89,8 @@ export default function JudgingScreen() {
   return (
     <ScreenShell
       words={['slay', 'ate', 'period']}
-      bodyClassName="flex flex-col items-center px-4 pt-12 pb-4"
+      header={<GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} />}
+      bodyClassName="flex flex-col items-center px-4 pt-4 pb-4"
       footer={
         <BottomNav>
           <NavButton
@@ -102,7 +103,6 @@ export default function JudgingScreen() {
         </BottomNav>
       }
     >
-      <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} />
       <div className="flex w-full flex-col items-center">
         {/* Status Badge */}
         <m.div

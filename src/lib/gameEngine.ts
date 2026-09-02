@@ -108,6 +108,8 @@ export function createInitialState(): GameState {
     playMode: 'local',
     blackCardPool: [],
     whiteCardPool: [],
+    roundRedraws: [],
+    roundReboots: [],
   }
 }
 
@@ -148,7 +150,7 @@ export function beginHostedLobby(
     host: { id: string; name: string; avatar: string; avatarBg: string }
   },
 ): GameState {
-  const host = createHumanPlayer(opts.host.name, {
+  const host = createHumanPlayer(opts.host.name.trim() || 'Host', {
     id: opts.host.id,
     avatar: opts.host.avatar,
     avatarBg: opts.host.avatarBg,
@@ -168,6 +170,8 @@ export function beginHostedLobby(
     czarId: '',
     blackCardPool: [],
     whiteCardPool: [],
+    roundRedraws: [],
+    roundReboots: [],
   }
 }
 
@@ -217,6 +221,8 @@ export function startGame(
     czarId: allPlayers[czarIdx].id,
     blackCardPool: shuffledBlack.slice(1),
     whiteCardPool: shuffledWhite,
+    roundRedraws: [],
+    roundReboots: [],
   }
 
   if (state.playMode === 'async') {
@@ -229,6 +235,7 @@ export function startGame(
 export function redrawHand(state: GameState, playerId: string): GameState {
   if (state.phase !== 'playing') return state
   if (state.submissions.some((s) => s.playerId === playerId)) return state
+  if ((state.roundRedraws ?? []).includes(playerId)) return state
 
   const player = state.players.find((p) => p.id === playerId)
   if (!player) return state
@@ -239,6 +246,7 @@ export function redrawHand(state: GameState, playerId: string): GameState {
   return {
     ...state,
     whiteCardPool: remaining,
+    roundRedraws: [...(state.roundRedraws ?? []), playerId],
     players: state.players.map((p) =>
       p.id === playerId ? { ...p, hand: drawn, selectedCard: null } : p,
     ),
@@ -249,6 +257,7 @@ export function rebootHand(state: GameState, playerId: string): GameState {
   if (state.phase !== 'playing') return state
   if (!state.settings.rebootEnabled) return state
   if (state.submissions.some((s) => s.playerId === playerId)) return state
+  if ((state.roundReboots ?? []).includes(playerId)) return state
 
   const player = state.players.find((p) => p.id === playerId)
   if (!player || player.score < 1) return state
@@ -259,6 +268,7 @@ export function rebootHand(state: GameState, playerId: string): GameState {
   return {
     ...state,
     whiteCardPool: remaining,
+    roundReboots: [...(state.roundReboots ?? []), playerId],
     players: state.players.map((p) =>
       p.id === playerId ? { ...p, hand: drawn, selectedCard: null, score: p.score - 1 } : p,
     ),
@@ -431,6 +441,8 @@ export function continueFromScoreboard(state: GameState): GameState {
     czarId: newPlayers[nextCzarIndex]?.id ?? state.czarId,
     blackCardPool: state.blackCardPool.slice(1),
     whiteCardPool: pool,
+    roundRedraws: [],
+    roundReboots: [],
   }
 
   if (state.playMode === 'async') {

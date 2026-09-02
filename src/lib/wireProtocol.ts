@@ -3,6 +3,7 @@ import type {
   PresencePlayer,
   BroadcastGameState,
   GameAction,
+  GameState,
 } from '@/types/game'
 
 // ── Runtime schemas for the multiplayer wire protocol ──
@@ -72,6 +73,28 @@ const RoundResultSchema = z.object({
   round: z.number(),
 })
 
+const PersistedPlayerSchema = BroadcastPlayerSchema.extend({
+  hand: z.array(CardSchema),
+})
+
+export const GameStateSchema = z.object({
+  phase: GamePhaseSchema,
+  currentRound: z.number(),
+  currentBlackCard: CardSchema.nullable(),
+  players: z.array(PersistedPlayerSchema),
+  submissions: z.array(SubmissionSchema),
+  roundWinner: z.string().nullable(),
+  roundHistory: z.array(RoundResultSchema),
+  settings: GameSettingsSchema,
+  roomCode: z.string(),
+  czarId: z.string(),
+  playMode: PlayModeSchema,
+  blackCardPool: z.array(CardSchema),
+  whiteCardPool: z.array(CardSchema),
+  roundRedraws: z.array(z.string()).default([]),
+  roundReboots: z.array(z.string()).default([]),
+})
+
 export const PresencePlayerSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -94,6 +117,8 @@ export const BroadcastGameStateSchema = z.object({
   roomCode: z.string(),
   czarId: z.string(),
   playMode: PlayModeSchema,
+  roundRedraws: z.array(z.string()).default([]),
+  roundReboots: z.array(z.string()).default([]),
   yourHand: z.array(CardSchema),
   yourId: z.string(),
 })
@@ -187,6 +212,16 @@ export function parseBroadcastGameState(value: unknown): BroadcastGameState | nu
   const result = BroadcastGameStateSchema.safeParse(value)
   if (!result.success) {
     warnInvalid('game state broadcast', result.error)
+    return null
+  }
+  return result.data
+}
+
+/** Parse a persisted async snapshot; logs and returns null if invalid. */
+export function parseGameState(value: unknown): GameState | null {
+  const result = GameStateSchema.safeParse(value)
+  if (!result.success) {
+    warnInvalid('persisted game state', result.error)
     return null
   }
   return result.data
