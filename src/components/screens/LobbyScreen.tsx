@@ -5,7 +5,7 @@ import { m } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { deckMeta } from '@/data/deckMeta'
 import { pickRandomBots } from '@/hooks/useGameState'
-import { PosterBackground } from '@/components/PosterBackground'
+import { ScreenShell } from '@/components/ScreenShell'
 import { BottomNav } from '@/components/BottomNav'
 import { NavButton } from '@/components/NavButton'
 import { Sticker } from '@/components/Sticker'
@@ -125,19 +125,39 @@ export default function LobbyScreen() {
     .reduce((sum, d) => sum + d.blackCount + d.whiteCount, 0)
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>
-      <PosterBackground words={['touch', 'grass', 'never']} />
-
-      <div className="relative z-10 flex flex-col items-center px-4 py-12">
-        {/* Title */}
+    <ScreenShell
+      words={['touch', 'grass', 'never']}
+      bodyClassName="flex flex-col items-center px-3 pb-3 pt-12 sm:px-4 sm:pb-4"
+      footer={
+        <BottomNav>
+          <NavButton variant="secondary" onClick={newGame}>
+            ← BACK
+          </NavButton>
+          {isClient ? (
+            <NavButton variant="primary" disabled>
+              ⏳ WAITING FOR HOST...
+            </NavButton>
+          ) : (
+            <NavButton
+              variant="primary"
+              onClick={handleStart}
+              disabled={!playerName.trim() || totalPlayers < 2}
+            >
+              LET&apos;S GO 🔥
+            </NavButton>
+          )}
+        </BottomNav>
+      }
+    >
+        {/* Title + room */}
         <m.h1
           initial={{ y: -40, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5, ease: 'easeOut' }}
-          className="mb-4 text-center"
+          className="mb-2 text-center"
           style={{
             fontFamily: 'var(--font-archivo)',
-            fontSize: 'clamp(36px, 8vw, 64px)',
+            fontSize: 'clamp(28px, min(8vw, 7vh), 64px)',
             lineHeight: 1,
             color: 'white',
             WebkitTextStroke: '2px var(--theme-shadow)',
@@ -166,11 +186,11 @@ export default function LobbyScreen() {
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.15, type: 'spring', stiffness: 300 }}
-          className="mb-4 inline-block cursor-pointer text-center"
+          className="mb-2 inline-block cursor-pointer text-center"
           style={{
             background: 'var(--theme-surface)',
             border: '4px solid var(--theme-border)',
-            padding: '12px 32px',
+            padding: '8px 20px',
             boxShadow: '8px 8px 0px var(--theme-shadow-soft)',
             transform: 'rotate(-2deg)',
           }}
@@ -189,7 +209,7 @@ export default function LobbyScreen() {
           <div
             style={{
               fontFamily: 'var(--font-archivo)',
-              fontSize: 'clamp(24px, 6vw, 36px)',
+              fontSize: 'clamp(20px, min(6vw, 4vh), 36px)',
               letterSpacing: '4px',
               color: 'var(--theme-text)',
             }}
@@ -212,7 +232,7 @@ export default function LobbyScreen() {
           <m.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="mt-3"
+            className="mt-2"
           >
             <Sticker color="green" rotation={3}>
               Async · play on your own time
@@ -220,106 +240,12 @@ export default function LobbyScreen() {
           </m.div>
         )}
 
-        {/* Player Grid */}
-        <div className="mt-8 grid w-full max-w-5xl grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5">
-          {slots.map((_, i) => {
-            const player = filledSlots[i]
-            const rotation = i % 2 === 0 ? -1.5 : 1.5
-
-            return (
-              <m.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 * i }}
-                className="relative flex flex-col items-center justify-center gap-3"
-                style={{
-                  minHeight: '180px',
-                  borderRadius: '18px',
-                  borderStyle: player ? 'solid' : 'dashed',
-                  borderColor: player ? 'var(--theme-border)' : 'var(--theme-border-light)',
-                  borderWidth: player?.isHost ? '4px' : '3px',
-                  backgroundColor: player ? 'var(--theme-surface)' : 'transparent',
-                  boxShadow: player
-                    ? player.isHost
-                      ? '8px 8px 0px #FFB6C1'
-                      : '5px 5px 0px var(--theme-shadow)'
-                    : 'none',
-                  transform: `rotate(${rotation}deg)`,
-                }}
-              >
-                {player ? (
-                  <>
-                    {/* Host badge */}
-                    {player.isHost && (
-                      <div className="absolute -right-3 -top-3">
-                        <Sticker color="green" rotation={12}>
-                          HOST
-                        </Sticker>
-                      </div>
-                    )}
-                    <div
-                      className="relative flex items-center justify-center rounded-full"
-                      style={{
-                        width: '72px',
-                        height: '72px',
-                        backgroundColor: player.bg,
-                        border: '3px solid var(--theme-border)',
-                        fontSize: '32px',
-                      }}
-                    >
-                      {player.emoji}
-                      {player.isOnline && (
-                        <span
-                          style={{
-                            position: 'absolute',
-                            bottom: 2,
-                            right: 2,
-                            width: 14,
-                            height: 14,
-                            borderRadius: '50%',
-                            backgroundColor: '#66FF00',
-                            border: '2px solid var(--theme-border)',
-                          }}
-                        />
-                      )}
-                    </div>
-                    <span
-                      className="max-w-full truncate px-2"
-                      style={{
-                        fontFamily: 'var(--font-archivo)',
-                        fontSize: '20px',
-                        color: 'var(--theme-text)',
-                      }}
-                    >
-                      {player.name}
-                    </span>
-                    <span
-                      className="text-xs uppercase tracking-wider"
-                      style={{ fontFamily: 'var(--font-inter)', color: 'var(--theme-text-muted)' }}
-                    >
-                      {player.role}
-                    </span>
-                  </>
-                ) : (
-                  <span
-                    className="text-sm"
-                    style={{ fontFamily: 'var(--font-inter)', color: 'var(--theme-text-muted)' }}
-                  >
-                    Waiting for Talent…
-                  </span>
-                )}
-              </m.div>
-            )
-          })}
-        </div>
-
-        {/* Name Input + Bot Selector */}
+        {/* Name Input + Bot Selector — first so you can start without hunting */}
         <m.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="mt-8 flex w-full max-w-md flex-col gap-4"
+          transition={{ delay: 0.2 }}
+          className="mt-3 flex w-full max-w-md flex-col gap-3"
         >
           <label className="sr-only" htmlFor="player-name-input">Your name</label>
           <input
@@ -400,18 +326,74 @@ export default function LobbyScreen() {
           )}
         </m.div>
 
+        {/* Player chips */}
+        <div className="mt-3 flex w-full max-w-2xl flex-wrap items-center justify-center gap-2">
+          {slots.map((_, i) => {
+            const player = filledSlots[i]
+            return (
+              <m.div
+                key={i}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.04 * i }}
+                className="flex items-center gap-2 rounded-full px-2 py-1.5"
+                style={{
+                  minWidth: 0,
+                  borderStyle: player ? 'solid' : 'dashed',
+                  borderColor: player ? 'var(--theme-border)' : 'var(--theme-border-light)',
+                  borderWidth: 2,
+                  backgroundColor: player ? 'var(--theme-surface)' : 'transparent',
+                  boxShadow: player?.isHost ? '3px 3px 0px #FFB6C1' : undefined,
+                }}
+              >
+                {player ? (
+                  <>
+                    <div
+                      className="relative flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full"
+                      style={{
+                        backgroundColor: player.bg,
+                        border: '2px solid var(--theme-border)',
+                        fontSize: 18,
+                      }}
+                    >
+                      {player.emoji}
+                    </div>
+                    <span
+                      className="max-w-[7rem] truncate pr-1"
+                      style={{
+                        fontFamily: 'var(--font-archivo)',
+                        fontSize: 13,
+                        color: 'var(--theme-text)',
+                      }}
+                    >
+                      {player.name}
+                    </span>
+                  </>
+                ) : (
+                  <span
+                    className="px-2 text-xs"
+                    style={{ fontFamily: 'var(--font-inter)', color: 'var(--theme-text-muted)' }}
+                  >
+                    Waiting for Talent…
+                  </span>
+                )}
+              </m.div>
+            )
+          })}
+        </div>
+
         {/* Deck Selector */}
         <m.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
-          className="mt-8 w-full max-w-2xl"
+          transition={{ delay: 0.3 }}
+          className="mt-4 w-full max-w-2xl"
         >
-          <div className="mb-3 flex items-center justify-between">
+          <div className="mb-2 flex items-center justify-between">
             <h2
               style={{
                 fontFamily: 'var(--font-archivo)',
-                fontSize: '20px',
+                fontSize: '16px',
                 color: 'var(--theme-text)',
                 letterSpacing: '2px',
                 textTransform: 'uppercase',
@@ -435,7 +417,7 @@ export default function LobbyScreen() {
             </span>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
             {deckMeta.map((deck) => {
               const isSelected = selectedDecks.includes(deck.id)
               const cardCount = deck.blackCount + deck.whiteCount
@@ -444,51 +426,40 @@ export default function LobbyScreen() {
                   key={deck.id}
                   onClick={() => toggleDeck(deck.id)}
                   aria-pressed={isSelected}
-                  className="relative flex flex-col items-center gap-1 px-3 py-4 transition-transform hover:scale-[1.03] cursor-pointer"
+                  className="relative flex items-center gap-2 px-2.5 py-2 transition-transform hover:scale-[1.03] cursor-pointer"
                   style={{
                     border: isSelected
                       ? '3px solid #66FF00'
                       : '3px dashed var(--theme-border-light)',
-                    borderRadius: '14px',
+                    borderRadius: '12px',
                     backgroundColor: 'var(--theme-surface)',
                     opacity: isSelected ? 1 : 0.55,
-                    boxShadow: isSelected ? '4px 4px 0px var(--theme-shadow)' : 'none',
+                    boxShadow: isSelected ? '3px 3px 0px var(--theme-shadow)' : 'none',
+                    textAlign: 'left',
                   }}
                 >
-                  {isSelected && (
+                  <span style={{ fontSize: '20px' }}>{deck.icon}</span>
+                  <span className="min-w-0 flex-1">
                     <span
-                      className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full text-xs"
+                      className="block truncate"
                       style={{
-                        backgroundColor: '#66FF00',
-                        border: '2px solid var(--theme-border)',
-                        fontWeight: 700,
+                        fontFamily: 'var(--font-archivo)',
+                        fontSize: '12px',
                         color: 'var(--theme-text)',
-                        lineHeight: 1,
+                        lineHeight: 1.2,
                       }}
                     >
-                      ✓
+                      {deck.name}
                     </span>
-                  )}
-                  <span style={{ fontSize: '28px' }}>{deck.icon}</span>
-                  <span
-                    style={{
-                      fontFamily: 'var(--font-archivo)',
-                      fontSize: '13px',
-                      color: 'var(--theme-text)',
-                      textAlign: 'center',
-                      lineHeight: 1.2,
-                    }}
-                  >
-                    {deck.name}
-                  </span>
-                  <span
-                    style={{
-                      fontFamily: 'var(--font-inter)',
-                      fontSize: '12px',
-                      color: 'var(--theme-text-muted)',
-                    }}
-                  >
-                    {cardCount} cards
+                    <span
+                      style={{
+                        fontFamily: 'var(--font-inter)',
+                        fontSize: '11px',
+                        color: 'var(--theme-text-muted)',
+                      }}
+                    >
+                      {cardCount} cards
+                    </span>
                   </span>
                 </button>
               )
@@ -502,10 +473,10 @@ export default function LobbyScreen() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8 }}
-          className="mt-6 w-full max-w-md"
+          className="mt-3 w-full max-w-md"
         >
           <div
-            className="flex items-center justify-between rounded-xl px-5 py-4"
+            className="flex items-center justify-between rounded-xl px-4 py-2.5"
             style={{
               backgroundColor: 'var(--theme-surface)',
               border: '3px solid var(--theme-border)',
@@ -572,13 +543,13 @@ export default function LobbyScreen() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.9 }}
-          className="mt-6 w-full max-w-md"
+          className="mt-3 w-full max-w-md pb-2"
         >
           <h2
-            className="mb-3"
+            className="mb-2"
             style={{
               fontFamily: 'var(--font-archivo)',
-              fontSize: '18px',
+              fontSize: '16px',
               color: 'var(--theme-text)',
               letterSpacing: '2px',
               textTransform: 'uppercase',
@@ -586,10 +557,10 @@ export default function LobbyScreen() {
           >
             🏠 HOUSE RULES
           </h2>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-2">
             {/* Winner's Pick */}
             <div
-              className="flex items-center justify-between rounded-xl px-5 py-4"
+              className="flex items-center justify-between rounded-xl px-4 py-2.5"
               style={{
                 backgroundColor: 'var(--theme-surface)',
                 border: '3px solid var(--theme-border)',
@@ -607,10 +578,10 @@ export default function LobbyScreen() {
                   👑 Winner&apos;s Pick
                 </span>
                 <p
-                  className="mt-1"
+                  className="hide-short mt-1"
                   style={{
                     fontFamily: 'var(--font-inter)',
-                    fontSize: '13px',
+                    fontSize: '12px',
                     color: 'var(--theme-text-secondary)',
                     lineHeight: 1.3,
                   }}
@@ -640,7 +611,7 @@ export default function LobbyScreen() {
 
             {/* Reboot the Universe */}
             <div
-              className="flex items-center justify-between rounded-xl px-5 py-4"
+              className="flex items-center justify-between rounded-xl px-4 py-2.5"
               style={{
                 backgroundColor: 'var(--theme-surface)',
                 border: '3px solid var(--theme-border)',
@@ -658,10 +629,10 @@ export default function LobbyScreen() {
                   💥 Reboot the Universe
                 </span>
                 <p
-                  className="mt-1"
+                  className="hide-short mt-1"
                   style={{
                     fontFamily: 'var(--font-inter)',
-                    fontSize: '13px',
+                    fontSize: '12px',
                     color: 'var(--theme-text-secondary)',
                     lineHeight: 1.3,
                   }}
@@ -690,35 +661,6 @@ export default function LobbyScreen() {
             </div>
           </div>
         </m.div>
-
-        {/* Spacer for bottom nav */}
-        <div className="h-36" />
-      </div>
-
-      <BottomNav>
-        <NavButton
-          variant="secondary"
-          onClick={newGame}
-        >
-          ← BACK
-        </NavButton>
-        {isClient ? (
-          <NavButton
-            variant="primary"
-            disabled
-          >
-            ⏳ WAITING FOR HOST...
-          </NavButton>
-        ) : (
-          <NavButton
-            variant="primary"
-            onClick={handleStart}
-            disabled={!playerName.trim() || (totalPlayers < 2)}
-          >
-            LET&apos;S GO 🔥
-          </NavButton>
-        )}
-      </BottomNav>
-    </div>
+    </ScreenShell>
   )
 }

@@ -325,7 +325,7 @@ export default function PlayingScreen() {
   // Czar waiting view
   if (isPlayerCzar) {
     return (
-      <div className="relative h-dvh overflow-hidden" style={bgStyle}>
+      <div className="screen" style={bgStyle}>
         <PosterBackground words={['no cap', 'fr fr', 'lowkey']} opacity={0.15} />
         <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} />
         <div className="relative z-10 flex h-full flex-col items-center justify-center overflow-y-auto px-4 pt-14">
@@ -356,11 +356,11 @@ export default function PlayingScreen() {
   }
 
   return (
-    <div className="relative h-dvh overflow-hidden" style={bgStyle}>
+    <div className="screen" style={bgStyle}>
       <PosterBackground words={['no cap', 'fr fr', 'lowkey']} opacity={0.15} />
       <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} timer={timerEnabled ? { timeLeft: timer.timeLeft, progress: timer.progress, isUrgent: timer.isUrgent } : undefined} />
 
-      <div className="relative z-10 flex h-full flex-col px-4 pt-12 sm:px-6 sm:pt-14">
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col px-4 pt-12 sm:px-6 sm:pt-14">
         {/* Top Section: Title + Mini Black Card */}
         <div className="mb-3 flex flex-shrink-0 flex-col gap-2 sm:mb-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
           <div>

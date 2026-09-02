@@ -235,7 +235,7 @@ export default function EndScreen() {
   }, [humanWon, winner, totalRounds, sortedPlayers])
 
   return (
-    <div className="relative h-dvh overflow-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>
+    <div className="screen" style={{ backgroundColor: 'var(--theme-bg)' }}>
       <PosterBackground words={['slay', 'iconic', 'legend']} opacity={0.9} />
 
       {/* Enhanced Confetti */}
@@ -243,7 +243,7 @@ export default function EndScreen() {
         <ConfettiPiece key={i} config={cfg} />
       ))}
 
-      <div className="relative z-10 flex h-full flex-col items-center overflow-y-auto px-4 py-8">
+      <div className="screen-body flex flex-col items-center px-4 py-6">
         {/* Trophy */}
         <m.div
           initial={{ scale: 0, rotate: -10 }}
@@ -603,8 +603,6 @@ export default function EndScreen() {
             </m.button>
           </div>
         </m.div>
-
-        <div className="mb-12" />
 
         <SiteFooter />
       </div>

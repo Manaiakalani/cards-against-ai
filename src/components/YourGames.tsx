@@ -19,7 +19,7 @@ export function YourGames() {
   if (open.length === 0) return null
 
   return (
-    <div className="mt-5 w-full max-w-md px-4">
+    <div className="w-full max-w-md px-2">
       <p
         className="mb-2 text-center uppercase tracking-wider"
         style={{

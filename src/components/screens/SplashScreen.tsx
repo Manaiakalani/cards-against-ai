@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback, useMemo } from 'react'
 import { m, AnimatePresence } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { deckMeta } from '@/data/deckMeta'
-import { PosterBackground } from '@/components/PosterBackground'
 import { GameCard } from '@/components/GameCard'
 import { CardIcon } from '@/components/CardIcon'
 import { Code2, Sparkles, GitPullRequestArrow } from 'lucide-react'
@@ -12,6 +11,7 @@ import { isSupabaseConfigured } from '@/lib/supabase'
 import { SITE_LINKS } from '@/lib/tokens'
 import { useFocusTrap } from '@/hooks/useFocusTrap'
 import { YourGames } from '@/components/YourGames'
+import { ScreenShell } from '@/components/ScreenShell'
 import dynamic from 'next/dynamic'
 
 const StatsScreen = dynamic(
@@ -94,15 +94,11 @@ export default function SplashScreen() {
   }
 
   return (
-    <div
-      className="relative flex min-h-dvh items-center justify-center overflow-x-hidden overflow-y-auto"
-      style={{
-        backgroundColor: 'var(--theme-bg)',
-        paddingTop: 'max(1.5rem, env(safe-area-inset-top))',
-        paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))',
-      }}
+    <ScreenShell
+      words={['slay', 'brainrot', 'unhinged']}
+      posterOpacity={0.9}
+      bodyClassName="flex items-center justify-center px-3 pb-3 pt-12 sm:px-4 sm:pb-4"
     >
-      <PosterBackground words={['slay', 'brainrot', 'unhinged']} opacity={0.9} />
 
       {/* Decorative floating cards — hidden on mobile */}
       <div
@@ -140,7 +136,7 @@ export default function SplashScreen() {
 
       {/* Main content */}
       <m.div
-        className="relative z-10 flex flex-col items-center text-center"
+        className="stack-tight relative z-10 w-full max-w-lg text-center"
         variants={stagger}
         initial="hidden"
         animate="show"
@@ -150,7 +146,7 @@ export default function SplashScreen() {
           <h1
             style={{
               fontFamily: 'var(--font-archivo)',
-              fontSize: 'clamp(60px, 15vw, 120px)',
+              fontSize: 'clamp(40px, min(14vw, 11vh), 120px)',
               fontWeight: 400,
               lineHeight: 0.9,
               color: 'white',
@@ -162,12 +158,12 @@ export default function SplashScreen() {
           </h1>
         </m.div>
 
-        <m.div variants={fadeUp} className="mt-2">
+        <m.div variants={fadeUp}>
           <span
-            className="inline-block px-5 py-1"
+            className="inline-block px-4 py-0.5 sm:px-5 sm:py-1"
             style={{
               fontFamily: 'var(--font-archivo)',
-              fontSize: 'clamp(28px, 6vw, 48px)',
+              fontSize: 'clamp(20px, min(6vw, 5vh), 48px)',
               fontWeight: 400,
               lineHeight: 1.1,
               color: 'var(--theme-bg)',
@@ -179,11 +175,11 @@ export default function SplashScreen() {
           </span>
         </m.div>
 
-        <m.div variants={fadeUp} className="mt-2">
+        <m.div variants={fadeUp}>
           <h2
             style={{
               fontFamily: 'var(--font-archivo)',
-              fontSize: 'clamp(48px, 12vw, 96px)',
+              fontSize: 'clamp(32px, min(12vw, 9vh), 96px)',
               fontWeight: 400,
               lineHeight: 1,
               color: '#66FF00',
@@ -198,14 +194,14 @@ export default function SplashScreen() {
         {/* Tagline */}
         <m.p
           variants={fadeUp}
-          className="mt-6 uppercase tracking-wider"
+          className="uppercase tracking-wider"
           style={{
             fontFamily: 'var(--font-archivo)',
-            fontSize: 'clamp(14px, 3vw, 18px)',
+            fontSize: 'clamp(12px, min(3vw, 2.2vh), 18px)',
             color: 'var(--theme-text)',
             fontWeight: 900,
             backgroundColor: 'var(--theme-surface)',
-            padding: '10px 20px',
+            padding: '6px 14px',
             borderRadius: 12,
             border: '3px solid var(--theme-border)',
             boxShadow: '4px 4px 0px var(--theme-shadow-soft)',
@@ -219,7 +215,7 @@ export default function SplashScreen() {
         {/* Deck info */}
         <m.div
           variants={fadeUp}
-          className="mt-3 flex flex-wrap items-center justify-center gap-2"
+          className="flex flex-wrap items-center justify-center gap-1.5"
         >
           <span
             className="inline-flex items-center gap-1 rounded-full px-3 py-1"
@@ -265,7 +261,7 @@ export default function SplashScreen() {
         </m.div>
 
         {/* Host / Join buttons */}
-        <m.div variants={fadeUp} className="mt-10 flex flex-col items-center gap-3 sm:flex-row">
+        <m.div variants={fadeUp} className="flex flex-col items-center gap-2 sm:flex-row">
           <m.button
             onClick={() => {
               if (isSupabaseConfigured) {
@@ -280,12 +276,12 @@ export default function SplashScreen() {
             className="cursor-pointer uppercase"
             style={{
               fontFamily: 'var(--font-archivo)',
-              fontSize: 'clamp(18px, 3vw, 24px)',
+              fontSize: 'clamp(16px, min(3vw, 2.4vh), 24px)',
               fontWeight: 900,
               backgroundColor: '#66FF00',
               color: '#111111',
               border: '4px solid var(--theme-border)',
-              padding: 'clamp(14px, 2.5vw, 20px) clamp(36px, 7vw, 64px)',
+              padding: 'clamp(10px, 1.6vh, 20px) clamp(28px, 7vw, 64px)',
               borderRadius: 100,
               boxShadow: '0px 8px 0px var(--theme-shadow)',
               letterSpacing: '0.04em',
@@ -302,12 +298,12 @@ export default function SplashScreen() {
               className="cursor-pointer uppercase"
               style={{
                 fontFamily: 'var(--font-archivo)',
-                fontSize: 'clamp(18px, 3vw, 24px)',
+                fontSize: 'clamp(16px, min(3vw, 2.4vh), 24px)',
                 fontWeight: 400,
                 backgroundColor: 'var(--theme-surface)',
                 color: 'var(--theme-text)',
                 border: '4px solid var(--theme-border)',
-                padding: 'clamp(14px, 2.5vw, 20px) clamp(36px, 7vw, 64px)',
+                padding: 'clamp(10px, 1.6vh, 20px) clamp(28px, 7vw, 64px)',
                 borderRadius: 100,
                 boxShadow: '0px 8px 0px var(--theme-shadow)',
               }}
@@ -318,7 +314,16 @@ export default function SplashScreen() {
         </m.div>
 
         {isSupabaseConfigured && (
-          <m.div variants={fadeUp} className="mt-3 flex flex-col items-center gap-2">
+          <m.div
+            variants={fadeUp}
+            className="flex w-full max-w-md flex-col items-center gap-2.5 px-4 py-3"
+            style={{
+              backgroundColor: 'var(--theme-surface)',
+              border: '3px solid var(--theme-border)',
+              borderRadius: 16,
+              boxShadow: '4px 4px 0px var(--theme-shadow-soft)',
+            }}
+          >
             <m.button
               onClick={async () => {
                 setAsyncBusy(true)
@@ -332,12 +337,12 @@ export default function SplashScreen() {
               className="cursor-pointer uppercase"
               style={{
                 fontFamily: 'var(--font-archivo)',
-                fontSize: 'clamp(16px, 2.6vw, 20px)',
+                fontSize: 'clamp(14px, min(2.6vw, 2.1vh), 20px)',
                 fontWeight: 400,
                 backgroundColor: '#FFB6C1',
                 color: '#111111',
                 border: '4px solid var(--theme-border)',
-                padding: 'clamp(12px, 2vw, 16px) clamp(28px, 6vw, 48px)',
+                padding: 'clamp(8px, 1.3vh, 16px) clamp(22px, 6vw, 48px)',
                 borderRadius: 100,
                 boxShadow: '0px 8px 0px var(--theme-shadow)',
                 letterSpacing: '0.04em',
@@ -347,31 +352,35 @@ export default function SplashScreen() {
               {asyncBusy ? '⏳ OPENING TABLE…' : '⏳ PLAY ASYNC'}
             </m.button>
             <p
-              className="max-w-xs px-4 text-center"
+              className="max-w-sm text-center uppercase tracking-wide"
               style={{
-                fontFamily: 'var(--font-inter)',
-                fontSize: 13,
-                color: 'var(--theme-text-muted)',
-                lineHeight: 1.4,
+                fontFamily: 'var(--font-archivo)',
+                fontSize: 'clamp(11px, 1.8vh, 13px)',
+                color: 'var(--theme-text)',
+                lineHeight: 1.35,
               }}
             >
               Take turns on your own time. Share a code, play a card, come back later.
             </p>
-            <button
+            <m.button
               type="button"
               onClick={goToLobby}
-              className="cursor-pointer underline-offset-4 hover:underline"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="cursor-pointer uppercase"
               style={{
                 fontFamily: 'var(--font-archivo)',
                 fontSize: 13,
-                color: 'var(--theme-text-secondary)',
-                background: 'none',
-                border: 'none',
-                padding: '8px 12px',
+                backgroundColor: 'var(--theme-surface-alt)',
+                color: 'var(--theme-text)',
+                border: '3px solid var(--theme-border)',
+                padding: '8px 14px',
+                borderRadius: 12,
+                boxShadow: '3px 3px 0px var(--theme-shadow-soft)',
               }}
             >
               or play solo with bots
-            </button>
+            </m.button>
           </m.div>
         )}
 
@@ -393,7 +402,7 @@ export default function SplashScreen() {
         <YourGames />
 
         {/* Menu buttons row */}
-        <m.div variants={fadeUp} className="mt-4 flex flex-wrap justify-center gap-3">
+        <m.div variants={fadeUp} className="flex flex-wrap justify-center gap-2">
           <m.button
             onClick={() => setShowStats(true)}
             whileHover={{ scale: 1.05 }}
@@ -405,7 +414,7 @@ export default function SplashScreen() {
               backgroundColor: 'var(--theme-surface)',
               color: 'var(--theme-text)',
               border: '3px solid var(--theme-border)',
-              padding: '10px 20px',
+              padding: '8px 14px',
               borderRadius: 12,
               boxShadow: '4px 4px 0px var(--theme-shadow-soft)',
             }}
@@ -423,7 +432,7 @@ export default function SplashScreen() {
               backgroundColor: 'var(--theme-surface)',
               color: 'var(--theme-text)',
               border: '3px solid var(--theme-border)',
-              padding: '10px 20px',
+              padding: '8px 14px',
               borderRadius: 12,
               boxShadow: '4px 4px 0px var(--theme-shadow-soft)',
             }}
@@ -441,7 +450,7 @@ export default function SplashScreen() {
               backgroundColor: 'var(--theme-surface)',
               color: 'var(--theme-text)',
               border: '3px solid var(--theme-border)',
-              padding: '10px 20px',
+              padding: '8px 14px',
               borderRadius: 12,
               boxShadow: '4px 4px 0px var(--theme-shadow-soft)',
             }}
@@ -453,13 +462,12 @@ export default function SplashScreen() {
         {/* Footer card */}
         <m.div
           variants={fadeUp}
-          className="mt-6 flex flex-col items-center gap-4 w-full px-4 py-5"
+          className="flex w-full max-w-md flex-col items-center gap-2 px-3 py-3"
           style={{
             backgroundColor: 'var(--theme-surface)',
             border: '3px solid var(--theme-border)',
             borderRadius: 16,
             boxShadow: '0px 6px 0px var(--theme-shadow)',
-            maxWidth: 480,
           }}
         >
           {/* Version + links row */}
@@ -503,10 +511,10 @@ export default function SplashScreen() {
             })}
           </div>
           <p
-            className="text-center"
+            className="hidden text-center sm:block"
             style={{
               fontFamily: 'var(--font-inter)',
-              fontSize: 13,
+              fontSize: 12,
               fontWeight: 600,
               color: 'var(--theme-text-muted)',
               letterSpacing: '0.01em',
@@ -681,6 +689,6 @@ export default function SplashScreen() {
           </m.div>
         )}
       </AnimatePresence>
-    </div>
+    </ScreenShell>
   )
 }

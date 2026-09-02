@@ -29,12 +29,12 @@ export default function ScoreboardScreen() {
 
   return (
     <div
-      className="relative h-dvh overflow-hidden"
+      className="screen"
       style={{ backgroundColor: 'var(--theme-bg)' }}
     >
       <PosterBackground words={['main', 'character', 'energy']} opacity={0.4} />
 
-      <div className="relative z-10 flex h-full flex-col">
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col">
         {/* Scrollable content */}
         <div className="flex min-h-0 flex-1 flex-col items-center overflow-y-auto overscroll-contain px-6 pt-8 pb-4 sm:px-8" tabIndex={0} role="region" aria-label="Scoreboard">
         {/* Header */}

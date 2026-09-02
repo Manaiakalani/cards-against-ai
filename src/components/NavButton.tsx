@@ -31,12 +31,12 @@ export function NavButton({
       whileTap={disabled ? undefined : { y: 4, boxShadow: `0px 2px 0px ${shadow}` }}
       whileHover={disabled ? undefined : { y: 1, boxShadow: `0px 5px 0px ${shadow}` }}
       className={`
-        rounded-full uppercase cursor-pointer px-5 py-3 sm:px-8 sm:py-4
+        rounded-full uppercase cursor-pointer px-4 py-2.5 sm:px-8 sm:py-4
         ${disabled ? 'opacity-50 grayscale cursor-not-allowed' : ''}
       `}
       style={{
         fontFamily: 'var(--font-archivo)',
-        fontSize: 'clamp(14px, 2vw, 18px)',
+        fontSize: 'clamp(13px, 1.8vw + 0.4vh, 18px)',
         fontWeight: 400,
         letterSpacing: '0.02em',
         border: '3px solid var(--theme-border)',

@@ -36,7 +36,7 @@ export default function RevealScreen() {
   }, [revealedCount, totalCards, finishReveal, play])
 
   return (
-    <div className="relative h-dvh overflow-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>
+    <div className="screen" style={{ backgroundColor: 'var(--theme-bg)' }}>
       <PosterBackground words={['the', 'big', 'reveal']} opacity={0.15} />
       <GameHUD
         round={gameState.currentRound}
@@ -45,7 +45,7 @@ export default function RevealScreen() {
         roomCode={gameState.roomCode}
       />
 
-      <div className="relative z-10 flex h-full flex-col items-center overflow-y-auto px-4 pt-12 pb-8">
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col items-center overflow-y-auto px-4 pt-12 pb-8">
         {/* Title */}
         <m.div
           initial={{ y: -20, opacity: 0 }}

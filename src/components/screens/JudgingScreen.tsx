@@ -5,6 +5,7 @@ import { m } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { useSound } from '@/hooks/useSound'
 import { PosterBackground } from '@/components/PosterBackground'
+import { ScreenShell } from '@/components/ScreenShell'
 import { GameCard } from '@/components/GameCard'
 import { GameHUD } from '@/components/GameHUD'
 import { BottomNav } from '@/components/BottomNav'
@@ -42,10 +43,10 @@ export default function JudgingScreen() {
   // Bot czar deliberating view
   if (!isHumanCzar) {
     return (
-      <div className="relative h-dvh overflow-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>
+      <div className="screen" style={{ backgroundColor: 'var(--theme-bg)' }}>
         <PosterBackground words={['slay', 'ate', 'period']} />
         <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} />
-        <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 pt-12">
+        <div className="screen-body flex flex-col items-center justify-center px-4 pt-12">
           <m.div
             animate={{ rotate: [0, 5, -5, 0] }}
             transition={{ repeat: Infinity, duration: 1.5 }}
@@ -86,11 +87,23 @@ export default function JudgingScreen() {
 
   // Human czar judging view
   return (
-    <div className="relative h-dvh overflow-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>
-      <PosterBackground words={['slay', 'ate', 'period']} />
+    <ScreenShell
+      words={['slay', 'ate', 'period']}
+      bodyClassName="flex flex-col items-center px-4 pt-12 pb-4"
+      footer={
+        <BottomNav>
+          <NavButton
+            variant="primary"
+            onClick={handlePickWinner}
+            disabled={selectedSubmissionIdx === null}
+          >
+            CROWN THEM 👑
+          </NavButton>
+        </BottomNav>
+      }
+    >
       <GameHUD round={gameState.currentRound} players={gameState.players} czarId={gameState.czarId} roomCode={gameState.roomCode} />
-
-      <div className="relative z-10 flex h-full flex-col items-center overflow-y-auto px-4 pt-12 pb-8">
+      <div className="flex w-full flex-col items-center">
         {/* Status Badge */}
         <m.div
           initial={{ y: -20, opacity: 0 }}
@@ -183,19 +196,7 @@ export default function JudgingScreen() {
           </div>
         </div>
 
-        {/* Spacer for bottom nav */}
-        <div className="h-36" />
       </div>
-
-      <BottomNav>
-        <NavButton
-          variant="primary"
-          onClick={handlePickWinner}
-          disabled={selectedSubmissionIdx === null}
-        >
-          CROWN THEM 👑
-        </NavButton>
-      </BottomNav>
-    </div>
+    </ScreenShell>
   )
 }

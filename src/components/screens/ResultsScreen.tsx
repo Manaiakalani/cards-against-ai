@@ -99,7 +99,7 @@ export default function ResultsScreen() {
   if (!latestResult) return null
 
   return (
-    <div className="relative h-dvh overflow-hidden" style={{ backgroundColor: 'var(--theme-bg)' }}>
+    <div className="screen" style={{ backgroundColor: 'var(--theme-bg)' }}>
       <PosterBackground words={['ate', 'left no', 'crumbs']} opacity={0.9} />
 
       {/* Confetti */}
@@ -107,7 +107,7 @@ export default function ResultsScreen() {
         <ConfettiPiece key={i} index={i} />
       ))}
 
-      <div className="relative z-10 flex h-full flex-col">
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col">
         {/* Scrollable content */}
         <div className="flex min-h-0 flex-1 flex-col items-center overflow-y-auto px-4 pt-8 pb-4" tabIndex={0} role="region" aria-label="Round results">
           {/* Title */}

@@ -47,6 +47,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
+  interactiveWidget: "resizes-content",
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#F4F4EE" },
     { media: "(prefers-color-scheme: dark)", color: "#1A1A1A" },
@@ -62,13 +63,13 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${archivoBlack.variable} ${inter.variable} h-full antialiased`}
+      className={`${archivoBlack.variable} ${inter.variable} antialiased`}
     >
       <head>
         {/* Prevent dark-mode FOUC: apply saved theme before first paint */}
         <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('cai-theme');if(!t){t=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'}document.documentElement.setAttribute('data-theme',t)}catch(e){}})()` }} />
       </head>
-      <body className="min-h-full flex flex-col">
+      <body>
         <Analytics />
         <ThemeProvider>
           <ErrorBoundary>
