@@ -109,7 +109,7 @@ export default function ResultsScreen() {
 
       <div className="relative z-10 flex min-h-0 flex-1 flex-col">
         {/* Scrollable content */}
-        <div className="flex min-h-0 flex-1 flex-col items-center overflow-y-auto px-4 pt-16 pb-4" tabIndex={0} role="region" aria-label="Round results">
+        <div className="overlay-pad flex min-h-0 flex-1 flex-col items-center overflow-y-auto px-4 pb-4" tabIndex={0} role="region" aria-label="Round results">
           {/* Title */}
           <m.h1
             initial={{ scale: 0.5, opacity: 0 }}

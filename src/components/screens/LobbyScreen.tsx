@@ -129,7 +129,7 @@ export default function LobbyScreen() {
   return (
     <ScreenShell
       words={['touch', 'grass', 'never']}
-      bodyClassName="flex flex-col items-center px-3 pb-3 pt-20 sm:px-4 sm:pb-4"
+      bodyClassName="overlay-pad flex flex-col items-center px-3 pb-3 sm:px-4 sm:pb-4"
       footer={
         <BottomNav>
           <NavButton variant="secondary" onClick={newGame}>
@@ -248,7 +248,7 @@ export default function LobbyScreen() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="mt-3 flex w-full max-w-md flex-col gap-3"
+          className="mt-2 flex w-full max-w-md flex-col gap-2"
         >
           <label className="sr-only" htmlFor="player-name-input">Your name</label>
           <input
@@ -261,7 +261,7 @@ export default function LobbyScreen() {
             onKeyDown={(e) => {
               if (e.key === 'Enter') handleStart()
             }}
-            className="w-full px-5 py-3 text-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#66FF00] placeholder:text-[var(--theme-placeholder)]"
+            className="w-full px-5 py-2.5 text-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#66FF00] placeholder:text-[var(--theme-placeholder)]"
             spellCheck={false}
             autoComplete="off"
             style={{
@@ -286,7 +286,7 @@ export default function LobbyScreen() {
                 key={count}
                 onClick={() => setBotCount(count)}
                 aria-pressed={botCount === count}
-                className="flex h-10 w-10 items-center justify-center transition-transform hover:scale-110 cursor-pointer"
+                className="flex h-11 w-11 items-center justify-center transition-transform hover:scale-110 cursor-pointer"
                 style={{
                   fontFamily: 'var(--font-archivo)',
                   fontSize: '18px',
@@ -330,7 +330,7 @@ export default function LobbyScreen() {
         </m.div>
 
         {/* Player chips */}
-        <div className="mt-3 flex w-full max-w-2xl flex-wrap items-center justify-center gap-2">
+        <div className="mt-2 flex w-full max-w-2xl flex-wrap items-center justify-center gap-2">
           {slots.map((_, i) => {
             const player = filledSlots[i]
             return (
@@ -390,7 +390,7 @@ export default function LobbyScreen() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="mt-4 w-full max-w-2xl"
+          className="mt-2 w-full max-w-2xl"
         >
           <div className="mb-2 flex items-center justify-between">
             <h2
@@ -420,7 +420,7 @@ export default function LobbyScreen() {
             </span>
           </div>
 
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+          <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">
             {deckMeta.map((deck) => {
               const isSelected = selectedDecks.includes(deck.id)
               const cardCount = deck.blackCount + deck.whiteCount
@@ -429,7 +429,7 @@ export default function LobbyScreen() {
                   key={deck.id}
                   onClick={() => toggleDeck(deck.id)}
                   aria-pressed={isSelected}
-                  className="relative flex items-center gap-2 px-2.5 py-2 transition-transform hover:scale-[1.03] cursor-pointer"
+                  className="relative flex min-h-11 items-center gap-2 px-2 py-1.5 transition-transform hover:scale-[1.03] cursor-pointer"
                   style={{
                     border: isSelected
                       ? '3px solid #66FF00'
@@ -546,7 +546,7 @@ export default function LobbyScreen() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.9 }}
-          className="mt-3 w-full max-w-md pb-2"
+          className="hide-shorter mt-2 w-full max-w-md pb-2"
         >
           <h2
             className="mb-2"

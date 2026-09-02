@@ -124,7 +124,7 @@ export default function SplashScreen() {
       words={['slay', 'brainrot', 'unhinged']}
       posterOpacity={0.9}
       overlay={<SplashDeckFloaters />}
-      bodyClassName="flex flex-col items-center px-3 pb-3 pt-20 sm:px-4 sm:pb-4"
+      bodyClassName="overlay-pad flex flex-col items-center px-3 pb-3 sm:px-4 sm:pb-4"
     >
       {/* Main content — my-auto centers when it fits, and lets you scroll
           from the top when the stack is taller than the viewport (flex
@@ -189,7 +189,7 @@ export default function SplashScreen() {
         {/* Tagline */}
         <m.p
           variants={fadeUp}
-          className="uppercase tracking-wider"
+          className="hide-short uppercase tracking-wider"
           style={{
             fontFamily: 'var(--font-archivo)',
             fontSize: 'clamp(12px, min(3vw, 2.2vh), 18px)',
@@ -241,7 +241,7 @@ export default function SplashScreen() {
             📦 {deckMeta.length} Decks
           </span>
           <span
-            className="inline-flex items-center gap-1 rounded-full px-3 py-1"
+            className="hide-short inline-flex items-center gap-1 rounded-full px-3 py-1"
             style={{
               fontFamily: 'var(--font-archivo)',
               fontSize: 14,
@@ -277,6 +277,7 @@ export default function SplashScreen() {
               color: '#111111',
               border: '4px solid var(--theme-border)',
               padding: 'clamp(10px, 1.6vh, 20px) clamp(28px, 7vw, 64px)',
+              minHeight: 44,
               borderRadius: 100,
               boxShadow: '0px 8px 0px var(--theme-shadow)',
               letterSpacing: '0.04em',
@@ -347,7 +348,7 @@ export default function SplashScreen() {
               {asyncBusy ? '⏳ OPENING TABLE…' : '⏳ PLAY ASYNC'}
             </m.button>
             <p
-              className="max-w-sm text-center uppercase tracking-wide"
+              className="hide-short max-w-sm text-center uppercase tracking-wide"
               style={{
                 fontFamily: 'var(--font-archivo)',
                 fontSize: 'clamp(11px, 1.8vh, 13px)',
@@ -382,6 +383,7 @@ export default function SplashScreen() {
         {asyncError && (
           <m.p
             variants={fadeUp}
+            role="alert"
             className="mt-3 max-w-sm px-4 text-center"
             style={{
               fontFamily: 'var(--font-inter)',
@@ -397,7 +399,7 @@ export default function SplashScreen() {
         <YourGames />
 
         {/* Menu buttons row */}
-        <m.div variants={fadeUp} className="flex flex-wrap justify-center gap-2">
+        <m.div variants={fadeUp} className="hide-shorter flex flex-wrap justify-center gap-2">
           <m.button
             onClick={() => setShowStats(true)}
             whileHover={{ scale: 1.05 }}
@@ -410,6 +412,7 @@ export default function SplashScreen() {
               color: 'var(--theme-text)',
               border: '3px solid var(--theme-border)',
               padding: '8px 14px',
+              minHeight: 44,
               borderRadius: 12,
               boxShadow: '4px 4px 0px var(--theme-shadow-soft)',
             }}
@@ -457,7 +460,7 @@ export default function SplashScreen() {
         {/* Footer card */}
         <m.div
           variants={fadeUp}
-          className="flex w-full max-w-md flex-col items-center gap-2 px-3 py-3"
+          className="hide-shorter flex w-full max-w-md flex-col items-center gap-2 px-3 py-3"
           style={{
             backgroundColor: 'var(--theme-surface)',
             border: '3px solid var(--theme-border)',

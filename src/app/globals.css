@@ -136,6 +136,13 @@ body {
   max-height: 100dvh;
   overflow: hidden;
   padding-top: env(safe-area-inset-top, 0px);
+  container-type: size;
+  container-name: screen;
+}
+
+/* Clear the fixed mute/theme/help cluster without a huge empty band. */
+.overlay-pad {
+  padding-top: max(3.25rem, calc(env(safe-area-inset-top, 0px) + 3.25rem));
 }
 
 .screen-body {
@@ -164,12 +171,40 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(0.35rem, 1.2vh, 1rem);
+  gap: clamp(0.25rem, 1vh, 1rem);
 }
 
-@media (max-height: 700px) {
+@media (max-height: 740px) {
   .hide-short {
     display: none !important;
+  }
+  .overlay-pad {
+    padding-top: max(2.75rem, calc(env(safe-area-inset-top, 0px) + 2.75rem));
+  }
+}
+
+@media (max-height: 600px) {
+  .hide-shorter {
+    display: none !important;
+  }
+}
+
+@container screen (max-height: 740px) {
+  .hide-short {
+    display: none !important;
+  }
+}
+
+@container screen (max-height: 600px) {
+  .hide-shorter {
+    display: none !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .screen-body {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
   }
 }
 

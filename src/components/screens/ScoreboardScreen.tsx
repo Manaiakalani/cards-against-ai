@@ -36,7 +36,7 @@ export default function ScoreboardScreen() {
 
       <div className="relative z-10 flex min-h-0 flex-1 flex-col">
         {/* Scrollable content */}
-        <div className="flex min-h-0 flex-1 flex-col items-center overflow-y-auto overscroll-contain px-6 pt-16 pb-4 sm:px-8" tabIndex={0} role="region" aria-label="Scoreboard">
+        <div className="overlay-pad flex min-h-0 flex-1 flex-col items-center overflow-y-auto overscroll-contain px-6 pb-4 sm:px-8" tabIndex={0} role="region" aria-label="Scoreboard">
         {/* Header */}
         <div className="flex w-full max-w-[800px] flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>

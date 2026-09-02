@@ -246,7 +246,7 @@ export default function EndScreen() {
         <ConfettiPiece key={i} config={cfg} />
       ))}
 
-      <div className="screen-body flex flex-col items-center px-4 pb-6 pt-16">
+      <div className="screen-body overlay-pad flex flex-col items-center px-4 pb-6">
         {/* Trophy */}
         <m.div
           initial={{ scale: 0, rotate: -10 }}
