@@ -246,7 +246,7 @@ export default function SplashScreen() {
         {/* Tagline */}
         <m.p
           variants={fadeUp}
-          className="hide-short uppercase tracking-wider"
+          className="uppercase tracking-wider"
           style={{
             fontFamily: 'var(--font-archivo)',
             fontSize: 'clamp(12px, min(3vw, 2.2vh), 18px)',
