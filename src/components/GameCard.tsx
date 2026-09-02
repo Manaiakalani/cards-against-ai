@@ -85,6 +85,7 @@ export const GameCard = React.memo(function GameCard({
       style={{
         width: '100%',
         maxWidth: dims.w,
+        minWidth: 0,
         aspectRatio: `${dims.w} / ${dims.h}`,
         padding: `${dims.pt}px ${dims.px}px ${dims.px}px`,
         borderRadius: 18,
@@ -110,6 +111,7 @@ export const GameCard = React.memo(function GameCard({
           fontSize: dims.fontSize,
           fontWeight: 700,
           lineHeight: 1.3,
+          overflowWrap: 'break-word',
         }}
       >
         {renderCardText(card.text, isBlack)}

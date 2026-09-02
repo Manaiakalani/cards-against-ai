@@ -14,6 +14,7 @@ import { GameCard } from '@/components/GameCard'
 import { GameHUD } from '@/components/GameHUD'
 import { NavButton } from '@/components/NavButton'
 import { Sticker } from '@/components/Sticker'
+import { WaitingRoster } from '@/components/WaitingRoster'
 
 // Stagger container for card dealing animation
 const containerVariants = {
@@ -139,7 +140,7 @@ const HandCard = memo(function HandCard({
       } : undefined}
       whileHover={{ scale: submitted ? 1 : 1.05 }}
       transition={isDealt ? { type: 'spring', stiffness: 400, damping: 30 } : undefined}
-      className="relative"
+      className="relative min-w-0"
       style={{
         filter: isSelected ? 'none' : undefined,
         boxShadow: isSelected
@@ -348,33 +349,7 @@ export default function PlayingScreen() {
           >
             Waiting for everyone to lock in…
           </p>
-          <m.div
-            className="mt-6 flex gap-2"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-          >
-            {gameState.players
-              .filter((p) => !p.isCardCzar)
-              .map((p) => {
-                const hasSubmitted = gameState.submissions.some(
-                  (s) => s.playerId === p.id
-                )
-                return (
-                  <m.div
-                    key={p.id}
-                    animate={{ opacity: hasSubmitted ? 1 : 0.4 }}
-                    className="flex h-10 w-10 items-center justify-center rounded-full text-lg"
-                    style={{
-                      backgroundColor: p.avatarBg,
-                      border: '2px solid var(--theme-border)',
-                    }}
-                  >
-                    {p.avatar}
-                  </m.div>
-                )
-              })}
-          </m.div>
+          <WaitingRoster gameState={gameState} />
         </div>
       </div>
     )
@@ -431,7 +406,7 @@ export default function PlayingScreen() {
         {/* Card Grid — scrollable area */}
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain" style={{ WebkitOverflowScrolling: 'touch' }}>
           <m.div
-            className="grid grid-cols-2 gap-2 px-3 pt-4 pb-6 sm:grid-cols-3 sm:gap-3 sm:px-2 lg:grid-cols-4 lg:gap-4"
+            className="grid grid-cols-2 gap-2 px-3 pt-4 pb-6 sm:grid-cols-3 sm:gap-3 sm:px-2 lg:grid-cols-4 lg:gap-4 [&>*]:min-w-0"
             variants={containerVariants}
           initial="hidden"
           animate="show"
@@ -471,6 +446,7 @@ export default function PlayingScreen() {
             >
               Card{blanks > 1 ? 's' : ''} Submitted! Waiting for others…
             </p>
+            <WaitingRoster gameState={gameState} />
           </m.div>
         )}
 

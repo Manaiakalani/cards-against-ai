@@ -57,6 +57,8 @@ const GamePhaseSchema = z.enum([
   'ended',
 ])
 
+const PlayModeSchema = z.enum(['local', 'live', 'async']).default('live')
+
 const SubmissionSchema = z.object({
   playerId: z.string(),
   cards: z.array(CardSchema),
@@ -91,6 +93,7 @@ export const BroadcastGameStateSchema = z.object({
   settings: GameSettingsSchema,
   roomCode: z.string(),
   czarId: z.string(),
+  playMode: PlayModeSchema,
   yourHand: z.array(CardSchema),
   yourId: z.string(),
 })
@@ -129,6 +132,15 @@ export const GameActionSchema = z.discriminatedUnion('type', [
   z.object({
     type: z.literal('player:reboot'),
     playerId: z.string(),
+  }),
+  z.object({
+    type: z.literal('player:redraw'),
+    playerId: z.string(),
+  }),
+  z.object({
+    type: z.literal('player:rename'),
+    playerId: z.string(),
+    payload: z.object({ name: z.string() }),
   }),
   z.object({
     type: z.literal('player:update_settings'),

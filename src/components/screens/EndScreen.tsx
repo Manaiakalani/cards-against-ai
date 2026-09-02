@@ -486,6 +486,7 @@ export default function EndScreen() {
                 className="flex items-center justify-between px-5 py-3"
                 style={{
                   background: i === 0 ? '#66FF00' : 'var(--theme-surface)',
+                  color: i === 0 ? '#111111' : 'var(--theme-text)',
                   border: '3px solid var(--theme-border)',
                   boxShadow: i === 0 ? '6px 6px 0px var(--theme-shadow)' : '4px 4px 0px var(--theme-shadow-soft)',
                   transform: `rotate(${i % 2 === 0 ? -0.5 : 0.8}deg)${i === 0 ? ' scale(1.03)' : ''}`,
@@ -496,7 +497,7 @@ export default function EndScreen() {
                     style={{
                       fontFamily: 'var(--font-archivo)',
                       fontSize: 'clamp(18px, 3.5vw, 24px)',
-                      color: i === 0 ? 'var(--theme-text)' : 'var(--theme-text-muted)',
+                      color: i === 0 ? '#111111' : 'var(--theme-text-muted)',
                       width: '28px',
                     }}
                   >
@@ -515,7 +516,7 @@ export default function EndScreen() {
                     style={{
                       fontFamily: 'var(--font-archivo)',
                       fontSize: 'clamp(14px, 3vw, 18px)',
-                      color: 'var(--theme-text)',
+                      color: i === 0 ? '#111111' : 'var(--theme-text)',
                     }}
                   >
                     {player.name}
@@ -525,7 +526,7 @@ export default function EndScreen() {
                   style={{
                     fontFamily: 'var(--font-archivo)',
                     fontSize: 'clamp(20px, 4vw, 28px)',
-                    color: 'var(--theme-text)',
+                    color: i === 0 ? '#111111' : 'var(--theme-text)',
                     fontVariantNumeric: 'tabular-nums',
                   }}
                 >
@@ -553,7 +554,7 @@ export default function EndScreen() {
               fontSize: '24px',
               textTransform: 'uppercase',
               backgroundColor: '#66FF00',
-              color: 'var(--theme-text)',
+              color: '#111111',
               padding: 'clamp(16px, 3vw, 24px) clamp(36px, 8vw, 60px)',
               borderRadius: '100px',
               border: '4px solid var(--theme-border)',

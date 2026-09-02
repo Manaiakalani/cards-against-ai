@@ -32,11 +32,11 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode, timer }
       {/* Row 1: Room code + Round indicator */}
       <div
         className="flex items-center gap-3"
-        style={{ height: 40, paddingLeft: 'clamp(44px, 6vw, 52px)', paddingRight: 'clamp(100px, 18vw, 136px)' }}
+        style={{ height: 40, paddingLeft: 'clamp(44px, 6vw, 52px)', paddingRight: 'clamp(148px, 24vw, 168px)' }}
       >
         {/* Room code — hidden on mobile */}
         <div
-          className="hidden items-center rounded px-2 py-0.5 sm:flex"
+          className="flex items-center rounded px-2 py-0.5"
           style={{
             border: '2px solid var(--theme-border)',
             backgroundColor: 'var(--theme-surface)',
@@ -99,6 +99,7 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode, timer }
                 style={{
                   backgroundColor: isLeader ? '#66FF00' : 'var(--theme-surface)',
                   border: '2px solid var(--theme-border)',
+                  color: isLeader ? '#111111' : 'var(--theme-text)',
                 }}
               >
                 <div
@@ -126,7 +127,7 @@ export function GameHUD({ round, totalRounds, players, czarId, roomCode, timer }
                     fontFamily: 'var(--font-archivo)',
                     fontSize: 12,
                     fontWeight: 400,
-                    color: 'var(--theme-text)',
+                    color: isLeader ? '#111111' : 'var(--theme-text)',
                     fontVariantNumeric: 'tabular-nums',
                   }}
                 >

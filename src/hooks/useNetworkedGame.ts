@@ -1,42 +1,42 @@
 'use client'
 
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useSyncExternalStore } from 'react'
 import { useMultiplayer, hydrateClientState } from '@/hooks/useMultiplayer'
+import { useAsyncGame } from '@/hooks/useAsyncGame'
+import { getEmptyAsyncGames, listAsyncGames, subscribeAsyncGames } from '@/lib/asyncStorage'
+import { peekAsyncGame } from '@/lib/asyncGame'
 import type { useGameState } from '@/hooks/useGameState'
-import type { Card, GameAction, GameState } from '@/types/game'
+import type { AsyncGameSummary, Card, GameAction, GameState, PlayerInfo } from '@/types/game'
 
 type GameEngine = ReturnType<typeof useGameState>
+
+function subscribeGames(cb: () => void) {
+  return subscribeAsyncGames(cb)
+}
 
 /**
  * Wraps the local `useGameState` engine with multiplayer awareness.
  *
- * In client mode, player-facing actions are sent to the host over the
- * Supabase Realtime channel instead of mutating local state directly; in
- * host/local mode they call straight through to the engine. This hook also
- * owns the host's remote-action reducer (`handleRemoteAction`) and the
- * effect that broadcasts state to clients whenever it changes.
- *
- * Split out of GameContext.tsx so the context/provider itself stays thin —
- * everything network-related lives here, and GameContext just wires this
- * hook's output into the public GameContextType.
+ * Live mode: player-facing actions go over the Supabase Realtime channel
+ * (host-authoritative). Async mode: actions are applied locally then
+ * persisted with optimistic locking so people can play on their own time.
  */
 export function useNetworkedGame(engine: GameEngine) {
-  // Handle remote actions (host receives from clients)
+  const asyncGame = useAsyncGame(engine)
+  const isAsync = asyncGame.active || engine.gameState.playMode === 'async'
+
   const handleRemoteAction = useCallback(
     (action: GameAction) => {
-      // Security: verify the sender is a known player in the current game
       const { players, czarId, phase } = engine.gameState
-      const sender = players.find(p => p.id === action.playerId)
-      if (!sender) return // unknown player — reject silently
+      const sender = players.find((p) => p.id === action.playerId)
+      if (!sender) return
 
       switch (action.type) {
         case 'player:submit':
-          // Only non-czar players may submit, and only during the playing phase
           if (phase !== 'playing' || action.playerId === czarId) return
           engine.submitCards(action.playerId, action.payload.cards)
           break
         case 'player:pick_winner':
-          // Only the czar may pick a winner, and only during the judging phase
           if (phase !== 'judging' || action.playerId !== czarId) return
           engine.pickWinner(action.payload.winnerId)
           break
@@ -44,8 +44,14 @@ export function useNetworkedGame(engine: GameEngine) {
           if (phase !== 'playing') return
           engine.rebootHand(action.playerId)
           break
+        case 'player:redraw':
+          if (phase !== 'playing') return
+          engine.redrawHand(action.playerId)
+          break
+        case 'player:rename':
+          engine.renamePlayer(action.playerId, action.payload.name)
+          break
         case 'player:update_settings':
-          // Only allow settings changes during the lobby phase
           if (phase !== 'lobby') return
           engine.updateSettings(action.payload.settings)
           break
@@ -61,30 +67,23 @@ export function useNetworkedGame(engine: GameEngine) {
         case 'player:leave':
         case 'player:start_game':
         case 'player:new_game':
-          // Not sent over the wire in this app: joins/leaves are driven by
-          // Supabase Presence, and start/new-game are host-initiated only.
-          // Listed so the switch stays exhaustive if that ever changes.
           break
         default: {
-          // Compile-time guarantee: if a new GameActionType is added without
-          // a case above, this line fails to type-check.
           const unhandled: never = action
           void unhandled
         }
       }
     },
-    [engine]
+    [engine],
   )
 
   const mp = useMultiplayer({
     onStateUpdate: (broadcast) => {
-      // Client receives state from host
       if (mp.mpState.role === 'client') {
         engine.setFullState(hydrateClientState(broadcast))
       }
     },
     onAction: (action) => {
-      // Host receives actions from clients
       if (mp.mpState.role === 'host') {
         handleRemoteAction(action)
       }
@@ -103,7 +102,6 @@ export function useNetworkedGame(engine: GameEngine) {
       if (mp.mpState.role === 'host') {
         engine.removeRemotePlayer(player.id)
       }
-      // Client: detect host leaving
       if (mp.mpState.role === 'client' && player.isHost) {
         engine.setFullState({
           ...engine.gameState,
@@ -114,33 +112,35 @@ export function useNetworkedGame(engine: GameEngine) {
     },
   })
 
-  // Broadcast state to clients whenever game state changes (host only)
   useEffect(() => {
     if (mp.isHost && mp.mpState.connected) {
       mp.broadcastState(engine.gameState)
     }
   }, [engine.gameState, mp.isHost, mp.mpState.connected, mp.broadcastState])
 
-  // Proxied actions: in client mode, send network action instead of local engine
   const submitCards = useCallback(
     (playerId: string, cards: Card[]) => {
-      if (mp.isClient) {
+      if (isAsync) {
+        asyncGame.submitCards(playerId, cards)
+      } else if (mp.isClient) {
         mp.sendAction({ type: 'player:submit', playerId, payload: { cards } })
       } else {
         engine.submitCards(playerId, cards)
       }
     },
-    [mp.isClient, mp.sendAction, engine.submitCards]
+    [isAsync, asyncGame, mp.isClient, mp.sendAction, engine],
   )
 
   const submitCard = useCallback(
     (playerId: string, card: Card) => submitCards(playerId, [card]),
-    [submitCards]
+    [submitCards],
   )
 
   const pickWinner = useCallback(
     (winnerId: string) => {
-      if (mp.isClient) {
+      if (isAsync) {
+        asyncGame.pickWinner(winnerId)
+      } else if (mp.isClient) {
         mp.sendAction({
           type: 'player:pick_winner',
           playerId: mp.mpState.playerId,
@@ -150,22 +150,39 @@ export function useNetworkedGame(engine: GameEngine) {
         engine.pickWinner(winnerId)
       }
     },
-    [mp.isClient, mp.sendAction, mp.mpState.playerId, engine.pickWinner]
+    [isAsync, asyncGame, mp.isClient, mp.sendAction, mp.mpState.playerId, engine],
   )
 
   const rebootHand = useCallback(
     (playerId: string) => {
-      if (mp.isClient) {
+      if (isAsync) {
+        asyncGame.rebootHand(playerId)
+      } else if (mp.isClient) {
         mp.sendAction({ type: 'player:reboot', playerId })
       } else {
         engine.rebootHand(playerId)
       }
     },
-    [mp.isClient, mp.sendAction, engine.rebootHand]
+    [isAsync, asyncGame, mp.isClient, mp.sendAction, engine],
+  )
+
+  const redrawHand = useCallback(
+    (playerId: string) => {
+      if (isAsync) {
+        asyncGame.redrawHand(playerId)
+      } else if (mp.isClient) {
+        mp.sendAction({ type: 'player:redraw', playerId })
+      } else {
+        engine.redrawHand(playerId)
+      }
+    },
+    [isAsync, asyncGame, mp.isClient, mp.sendAction, engine],
   )
 
   const nextRound = useCallback(() => {
-    if (mp.isClient) {
+    if (isAsync) {
+      asyncGame.nextRound()
+    } else if (mp.isClient) {
       mp.sendAction({
         type: 'player:next_round',
         playerId: mp.mpState.playerId,
@@ -173,10 +190,12 @@ export function useNetworkedGame(engine: GameEngine) {
     } else {
       engine.nextRound()
     }
-  }, [mp.isClient, mp.sendAction, mp.mpState.playerId, engine.nextRound])
+  }, [isAsync, asyncGame, mp.isClient, mp.sendAction, mp.mpState.playerId, engine])
 
   const continueFromScoreboard = useCallback(() => {
-    if (mp.isClient) {
+    if (isAsync) {
+      asyncGame.continueFromScoreboard()
+    } else if (mp.isClient) {
       mp.sendAction({
         type: 'player:continue',
         playerId: mp.mpState.playerId,
@@ -184,17 +203,22 @@ export function useNetworkedGame(engine: GameEngine) {
     } else {
       engine.continueFromScoreboard()
     }
-  }, [mp.isClient, mp.sendAction, mp.mpState.playerId, engine.continueFromScoreboard])
+  }, [isAsync, asyncGame, mp.isClient, mp.sendAction, mp.mpState.playerId, engine])
 
   const finishReveal = useCallback(() => {
-    // Only host can advance phases
+    if (isAsync) {
+      asyncGame.finishReveal()
+      return
+    }
     if (mp.isClient) return
     engine.finishReveal()
-  }, [mp.isClient, engine.finishReveal])
+  }, [isAsync, asyncGame, mp.isClient, engine])
 
   const updateSettings = useCallback(
     (updates: Partial<GameState['settings']>) => {
-      if (mp.isClient) {
+      if (isAsync) {
+        asyncGame.updateSettings(updates)
+      } else if (mp.isClient) {
         mp.sendAction({
           type: 'player:update_settings',
           playerId: mp.mpState.playerId,
@@ -204,45 +228,90 @@ export function useNetworkedGame(engine: GameEngine) {
         engine.updateSettings(updates)
       }
     },
-    [mp.isClient, mp.sendAction, mp.mpState.playerId, engine.updateSettings]
+    [isAsync, asyncGame, mp.isClient, mp.sendAction, mp.mpState.playerId, engine],
+  )
+
+  const renamePlayer = useCallback(
+    (playerId: string, name: string) => {
+      if (isAsync) {
+        asyncGame.renamePlayer(playerId, name)
+      } else if (mp.isClient) {
+        mp.sendAction({
+          type: 'player:rename',
+          playerId,
+          payload: { name },
+        })
+      } else {
+        engine.renamePlayer(playerId, name)
+      }
+    },
+    [isAsync, asyncGame, mp.isClient, mp.sendAction, engine],
   )
 
   const newGame = useCallback(() => {
+    asyncGame.disconnect()
     mp.disconnect()
     engine.newGame()
-  }, [mp.disconnect, engine.newGame])
+  }, [asyncGame, mp, engine])
 
-  // Multiplayer-specific actions
   const hostGame = useCallback(
-    (playerInfo: { name: string; avatar: string; avatarBg: string }) => {
+    (playerInfo: PlayerInfo) => {
       const { roomCode } = mp.createRoom(playerInfo)
-      engine.setRoomCode(roomCode)
-      engine.goToLobby()
-      // Add host to player list immediately
-      engine.addRemotePlayer({
-        id: 'player-1',
-        ...playerInfo,
+      engine.beginHostedLobby({
+        roomCode,
+        playMode: 'live',
+        host: { id: 'player-1', ...playerInfo },
       })
     },
-    [mp.createRoom, engine.setRoomCode, engine.goToLobby, engine.addRemotePlayer]
+    [mp, engine],
   )
 
   const joinGame = useCallback(
-    (
-      roomCode: string,
-      playerInfo: { name: string; avatar: string; avatarBg: string }
-    ) => {
+    async (roomCode: string, playerInfo: PlayerInfo) => {
+      const isAsyncRoom = await peekAsyncGame(roomCode)
+      if (isAsyncRoom) {
+        await asyncGame.joinAsyncGame(roomCode, playerInfo)
+        return
+      }
       mp.joinRoom(roomCode, playerInfo)
     },
-    [mp.joinRoom]
+    [asyncGame, mp],
   )
 
-  const myPlayerId = mp.isMultiplayer ? mp.mpState.playerId : 'player-1'
+  const startGame = useCallback(
+    async (playerName: string, botCount?: number) => {
+      if (isAsync) {
+        await asyncGame.startGame(playerName, botCount)
+        return
+      }
+      await engine.startGame(playerName, botCount)
+    },
+    [isAsync, asyncGame, engine],
+  )
+
+  const myPlayerId = isAsync
+    ? asyncGame.playerId || 'player-1'
+    : mp.isMultiplayer
+      ? mp.mpState.playerId
+      : 'player-1'
+
+  const asyncGames = useSyncExternalStore(subscribeGames, listAsyncGames, getEmptyAsyncGames)
+
+  const mpState = isAsync
+    ? {
+        role: 'async' as const,
+        connected: true,
+        roomCode: engine.gameState.roomCode,
+        playerId: asyncGame.playerId,
+        error: asyncGame.error ?? mp.mpState.error,
+      }
+    : mp.mpState
 
   return useMemo(
     () => ({
       updateSettings,
       rebootHand,
+      redrawHand,
       submitCard,
       submitCards,
       finishReveal,
@@ -250,20 +319,32 @@ export function useNetworkedGame(engine: GameEngine) {
       nextRound,
       continueFromScoreboard,
       newGame,
-      // Multiplayer
-      mpState: mp.mpState,
+      startGame,
+      renamePlayer,
+      mpState,
       presencePlayers: mp.presencePlayers,
-      isMultiplayer: mp.isMultiplayer,
-      isHost: mp.isHost,
-      isClient: mp.isClient,
+      isMultiplayer: mp.isMultiplayer || isAsync,
+      isHost: isAsync ? myPlayerId === 'player-1' : mp.isHost,
+      isClient: isAsync ? myPlayerId !== 'player-1' : mp.isClient,
+      isAsync,
       myPlayerId,
       hostGame,
+      hostAsyncGame: asyncGame.hostAsyncGame,
       joinGame,
-      disconnect: mp.disconnect,
+      resumeAsyncGame: asyncGame.resumeAsyncGame,
+      disconnect: () => {
+        asyncGame.disconnect()
+        mp.disconnect()
+      },
+      copyInvite: asyncGame.copyInvite,
+      asyncGames,
+      asyncError: asyncGame.error,
+      botPickWinner: asyncGame.botPickWinner,
     }),
     [
       updateSettings,
       rebootHand,
+      redrawHand,
       submitCard,
       submitCards,
       finishReveal,
@@ -271,15 +352,25 @@ export function useNetworkedGame(engine: GameEngine) {
       nextRound,
       continueFromScoreboard,
       newGame,
-      mp.mpState,
+      startGame,
+      renamePlayer,
+      mpState,
       mp.presencePlayers,
       mp.isMultiplayer,
       mp.isHost,
       mp.isClient,
+      mp.disconnect,
+      isAsync,
       myPlayerId,
       hostGame,
+      asyncGame.hostAsyncGame,
+      asyncGame.resumeAsyncGame,
+      asyncGame.copyInvite,
+      asyncGame.disconnect,
+      asyncGame.error,
+      asyncGame.botPickWinner,
       joinGame,
-      mp.disconnect,
-    ]
+      asyncGames,
+    ],
   )
 }

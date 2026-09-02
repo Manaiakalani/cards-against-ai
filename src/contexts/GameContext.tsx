@@ -8,6 +8,8 @@ import {
   Card,
   MultiplayerState,
   PresencePlayer,
+  PlayerInfo,
+  AsyncGameSummary,
 } from '@/types/game'
 import { GlobalOverlay } from '@/components/GlobalOverlay'
 import { MotionProvider } from '@/components/MotionProvider'
@@ -28,45 +30,51 @@ type GameContextType = {
   nextRound: () => void
   continueFromScoreboard: () => void
   newGame: () => void
+  renamePlayer: (playerId: string, name: string) => void
   // Multiplayer
   mpState: MultiplayerState
   presencePlayers: PresencePlayer[]
   isMultiplayer: boolean
   isHost: boolean
   isClient: boolean
+  isAsync: boolean
   myPlayerId: string
-  hostGame: (playerInfo: { name: string; avatar: string; avatarBg: string }) => void
-  joinGame: (roomCode: string, playerInfo: { name: string; avatar: string; avatarBg: string }) => void
+  hostGame: (playerInfo: PlayerInfo) => void
+  hostAsyncGame: (playerInfo: PlayerInfo) => void
+  joinGame: (roomCode: string, playerInfo: PlayerInfo) => void | Promise<void>
+  resumeAsyncGame: (roomCode: string) => void
   disconnect: () => void
+  copyInvite: () => Promise<boolean>
+  asyncGames: AsyncGameSummary[]
+  asyncError: string | null
 }
 
 const GameContext = createContext<GameContextType | null>(null)
 
 export function GameProvider({ children }: { children: ReactNode }) {
   const engine = useGameState()
-  // All multiplayer wiring (remote-action reducer, state broadcast, and the
-  // client/host-aware proxied actions) lives in this hook — see
-  // useNetworkedGame.ts for details.
   const net = useNetworkedGame(engine)
 
-  // Bot orchestration must only run on the host — on clients, the host drives
-  // bot actions and broadcasts the resulting state. Running them on a client
-  // would mutate local state that then fights the next host broadcast.
   const botSubmit = useCallback(() => {
+    if (net.isAsync) return
     if (!net.isClient) engine.botSubmit()
-  }, [net.isClient, engine.botSubmit])
+  }, [net.isAsync, net.isClient, engine])
 
   const botPickWinner = useCallback(() => {
+    if (net.isAsync) {
+      net.botPickWinner()
+      return
+    }
     if (!net.isClient) engine.botPickWinner()
-  }, [net.isClient, engine.botPickWinner])
+  }, [net, engine])
 
   const value = useMemo<GameContextType>(
     () => ({
       gameState: engine.gameState,
       goToLobby: engine.goToLobby,
       updateSettings: net.updateSettings,
-      startGame: engine.startGame,
-      redrawHand: engine.redrawHand,
+      startGame: net.startGame,
+      redrawHand: net.redrawHand,
       rebootHand: net.rebootHand,
       submitCard: net.submitCard,
       submitCards: net.submitCards,
@@ -77,26 +85,30 @@ export function GameProvider({ children }: { children: ReactNode }) {
       nextRound: net.nextRound,
       continueFromScoreboard: net.continueFromScoreboard,
       newGame: net.newGame,
-      // Multiplayer
+      renamePlayer: net.renamePlayer,
       mpState: net.mpState,
       presencePlayers: net.presencePlayers,
       isMultiplayer: net.isMultiplayer,
       isHost: net.isHost,
       isClient: net.isClient,
+      isAsync: net.isAsync,
       myPlayerId: net.myPlayerId,
       hostGame: net.hostGame,
+      hostAsyncGame: net.hostAsyncGame,
       joinGame: net.joinGame,
+      resumeAsyncGame: net.resumeAsyncGame,
       disconnect: net.disconnect,
+      copyInvite: net.copyInvite,
+      asyncGames: net.asyncGames,
+      asyncError: net.asyncError,
     }),
     [
       engine.gameState,
       engine.goToLobby,
-      engine.startGame,
-      engine.redrawHand,
       botSubmit,
       botPickWinner,
       net,
-    ]
+    ],
   )
 
   return (

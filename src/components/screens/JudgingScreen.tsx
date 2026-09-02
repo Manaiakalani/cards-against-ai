@@ -19,15 +19,16 @@ export default function JudgingScreen() {
   const humanPlayer = gameState.players.find((p) => p.id === myPlayerId)
   const isHumanCzar = humanPlayer?.isCardCzar ?? false
   const czar = gameState.players.find((p) => p.id === gameState.czarId)
+  const czarIsBot = czar?.isBot ?? false
 
-  // Auto-pick for bot czar
+  // Auto-pick only when the czar is a bot — never steal a human czar's pick
   useEffect(() => {
-    if (isHumanCzar) return
+    if (isHumanCzar || !czarIsBot) return
     const timer = setTimeout(() => {
       botPickWinner()
     }, 2000)
     return () => clearTimeout(timer)
-  }, [isHumanCzar, botPickWinner])
+  }, [isHumanCzar, czarIsBot, botPickWinner])
 
   function handlePickWinner() {
     if (selectedSubmissionIdx === null) return
@@ -74,7 +75,9 @@ export default function JudgingScreen() {
               color: 'var(--theme-text-muted)',
             }}
           >
-            {czar?.name ?? 'Bot'} is choosing a winner
+            {czarIsBot
+              ? `${czar?.name ?? 'Bot'} is choosing a winner`
+              : `${czar?.name ?? 'The czar'} will pick when they are back`}
           </p>
         </div>
       </div>

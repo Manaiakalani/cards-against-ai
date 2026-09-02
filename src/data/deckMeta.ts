@@ -89,8 +89,8 @@ export const deckMeta: DeckMeta[] = [
     name: 'InTuneD',
     description: 'Teams chaos, ADO nightmares, and Intune compliance disasters',
     icon: '🎯',
-    blackCount: 25,
-    whiteCount: 40,
+    blackCount: 29,
+    whiteCount: 46,
   },
   {
     id: 'oncall',

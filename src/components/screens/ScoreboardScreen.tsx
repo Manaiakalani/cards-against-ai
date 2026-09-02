@@ -6,6 +6,7 @@ import { useGame } from '@/contexts/GameContext'
 import { PosterBackground } from '@/components/PosterBackground'
 import { NavButton } from '@/components/NavButton'
 import { Sticker } from '@/components/Sticker'
+import { peekNextCzarId } from '@/lib/gameEngine'
 import dynamic from 'next/dynamic'
 
 const RoundHistory = dynamic(
@@ -15,15 +16,14 @@ const RoundHistory = dynamic(
 
 export default function ScoreboardScreen() {
   const { gameState, continueFromScoreboard } = useGame()
-  const { players, currentRound, roundHistory, czarId } = gameState
+  const { players, currentRound, roundHistory } = gameState
   const [showHistory, setShowHistory] = useState(false)
 
   const sortedPlayers = [...players].sort((a, b) => b.score - a.score)
   const leadScore = sortedPlayers[0]?.score ?? 0
   const lastResult = roundHistory[roundHistory.length - 1]
 
-  // Find the next czar (the czarId in gameState is already set for the next round)
-  const nextCzar = players.find((p) => p.id === czarId)
+  const nextCzar = players.find((p) => p.id === peekNextCzarId(gameState))
 
   const rotations = [-0.5, 0.8, -0.3, 0.5, -0.8, 0.3]
 
@@ -139,6 +139,7 @@ export default function ScoreboardScreen() {
                 style={{
                   padding: 'clamp(10px, 1.5vw, 16px) clamp(12px, 2.5vw, 28px)',
                   backgroundColor: isLeader ? '#66FF00' : 'var(--theme-surface)',
+                  color: isLeader ? '#111111' : 'var(--theme-text)',
                   border: '3px solid var(--theme-border)',
                   borderRadius: 12,
                   boxShadow: '4px 4px 0px var(--theme-shadow-soft)',
@@ -153,7 +154,7 @@ export default function ScoreboardScreen() {
                     style={{
                       fontFamily: 'var(--font-archivo)',
                       fontSize: 'clamp(18px, 2.5vw, 28px)',
-                      color: 'var(--theme-text)',
+                      color: isLeader ? '#111111' : 'var(--theme-text)',
                       minWidth: 24,
                     }}
                   >
@@ -176,7 +177,7 @@ export default function ScoreboardScreen() {
                     style={{
                       fontFamily: 'var(--font-archivo)',
                       fontSize: 'clamp(16px, 2.5vw, 20px)',
-                      color: 'var(--theme-text)',
+                      color: isLeader ? '#111111' : 'var(--theme-text)',
                     }}
                   >
                     {player.name}
@@ -202,7 +203,7 @@ export default function ScoreboardScreen() {
                     style={{
                       fontFamily: 'var(--font-archivo)',
                       fontSize: 'clamp(20px, 3.5vw, 38px)',
-                      color: 'var(--theme-text)',
+                      color: isLeader ? '#111111' : 'var(--theme-text)',
                       fontVariantNumeric: 'tabular-nums',
                     }}
                   >

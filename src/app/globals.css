@@ -29,6 +29,11 @@
   --green: #66FF00;
   --pink: #FFB6C1;
   --black: var(--theme-shadow);
+  --theme-lime: #66FF00;
+  --theme-pink: #FFB6C1;
+  --theme-gold: #FFD700;
+  --theme-danger: #C62828;
+  --theme-on-accent: #111111;
 }
 
 [data-theme="dark"] {
@@ -75,6 +80,12 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+input::placeholder,
+textarea::placeholder {
+  color: var(--theme-placeholder);
+  opacity: 1;
+}
+
 /* Footer link dark mode overrides */
 [data-theme="dark"] .footer-link {
   --_footer-bg: var(--_footer-bg-dark);
@@ -89,6 +100,38 @@ button, a, [role="button"] {
 /* Heading utility */
 .font-archivo {
   font-family: var(--font-archivo), 'Impact', sans-serif;
+}
+
+/* Ink on lime/pink/gold — never theme-text, which goes light in dark mode */
+.on-accent {
+  color: var(--theme-on-accent);
+}
+
+.btn-pill {
+  font-family: var(--font-archivo), 'Impact', sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-radius: 9999px;
+  border: 4px solid var(--theme-border);
+  cursor: pointer;
+  color: var(--theme-on-accent);
+}
+
+.btn-pill-primary {
+  background-color: var(--theme-lime);
+  box-shadow: 0 8px 0 var(--theme-shadow);
+}
+
+.btn-pill-secondary {
+  background-color: var(--theme-pink);
+  box-shadow: 0 8px 0 var(--theme-shadow);
+}
+
+.btn-pill-ghost {
+  background-color: var(--theme-surface);
+  color: var(--theme-text);
+  box-shadow: 0 8px 0 var(--theme-shadow);
 }
 
 /* Hard shadow utility */

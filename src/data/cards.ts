@@ -304,7 +304,7 @@ const startupWhite: Card[] = [
   { id: 'su-w15', text: "Putting \"AI-powered\" on everything including the bathroom", type: 'white', category: 'startup' },
 ]
 
-// ─── InTuneD (corporate chaos × customer escalations) ─────────────────
+// ─── InTuneD (Microsoft Intune × corporate endpoint chaos) ────────────
 const intunedBlack: Card[] = [
   { id: 'it-b1', text: "A customer has escalated concerns about a change. Do you _____?", type: 'black', blanks: 1, category: 'corporate' },
   { id: 'it-b2', text: "The Azure pipeline broke prod on a Friday at 4:59 PM. Your move: _____.", type: 'black', blanks: 1, category: 'corporate' },
@@ -331,6 +331,10 @@ const intunedBlack: Card[] = [
   { id: 'it-b23', text: "Copilot hallucinated _____ during a live customer demo.", type: 'black', blanks: 1, category: 'corporate' },
   { id: 'it-b24', text: "Service Health says ✅ Healthy. Meanwhile, _____ is happening.", type: 'black', blanks: 1, category: 'corporate' },
   { id: 'it-b25', text: "\"This will be a quick 5-minute sync\" — 2 hours later, we're debating _____.", type: 'black', blanks: 1, category: 'corporate' },
+  { id: 'it-b26', text: "Autopilot just enrolled 400 devices into _____.", type: 'black', blanks: 1, category: 'corporate' },
+  { id: 'it-b27', text: "The Company Portal error nobody can find docs for is caused by _____.", type: 'black', blanks: 1, category: 'corporate' },
+  { id: 'it-b28', text: "BitLocker recovery keys are stored in _____.", type: 'black', blanks: 1, category: 'corporate' },
+  { id: 'it-b29', text: "We blocked personal devices in Intune. Users responded with _____.", type: 'black', blanks: 1, category: 'corporate' },
 ]
 
 const intunedWhite: Card[] = [
@@ -374,6 +378,12 @@ const intunedWhite: Card[] = [
   { id: 'it-w38', text: "An Azure resource group named \"test-delete-me\" running 14 VMs", type: 'white', category: 'corporate' },
   { id: 'it-w39', text: "The DRI who changed their phone number and didn't tell anyone", type: 'white', category: 'corporate' },
   { id: 'it-w40', text: "A postmortem that just says \"don't do that again\"", type: 'white', category: 'corporate' },
+  { id: 'it-w41', text: "A Windows Update ring that ships Insider builds to the CFO", type: 'white', category: 'corporate' },
+  { id: 'it-w42', text: "Wiping the CEO's phone because the compliance policy said so", type: 'white', category: 'corporate' },
+  { id: 'it-w43', text: "An Autopilot profile named \"DO NOT USE\" assigned to All Devices", type: 'white', category: 'corporate' },
+  { id: 'it-w44', text: "Required enrollment that takes 47 minutes and a blood sacrifice", type: 'white', category: 'corporate' },
+  { id: 'it-w45', text: "A configuration profile that disables Wi-Fi on every Surface", type: 'white', category: 'corporate' },
+  { id: 'it-w46', text: "The Intune admin who left and took the only working ESP with them", type: 'white', category: 'corporate' },
 ]
 
 // ─── On-Call Nightmares (ICM bridges × pager duty × incident chaos) ───

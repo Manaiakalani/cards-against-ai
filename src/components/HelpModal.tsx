@@ -3,6 +3,7 @@
 import { useEffect, useCallback } from 'react'
 import { m, AnimatePresence } from 'framer-motion'
 import { useFocusTrap } from '@/hooks/useFocusTrap'
+import { deckMeta } from '@/data/deckMeta'
 
 interface HelpModalProps {
   open: boolean
@@ -31,11 +32,18 @@ const RULES = [
     body: 'Hate your cards? You can redraw your entire hand once per round. Use it wisely.',
   },
   {
+    emoji: '⏳',
+    title: 'Async tables',
+    body: 'Host an async game and share the code. Everyone plays a card when they can — nobody has to stay in the tab. Come back when it is your turn to play or judge.',
+  },
+  {
     emoji: '💀',
     title: 'The Vibe',
     body: 'Be unhinged. Be chaotic. The funniest, most cursed answer wins. There are no wrong answers (except boring ones).',
   },
 ]
+
+const totalCards = deckMeta.reduce((sum, d) => sum + d.blackCount + d.whiteCount, 0)
 
 export function HelpModal({ open, onClose }: HelpModalProps) {
   const handleEsc = useCallback((e: KeyboardEvent) => {
@@ -157,7 +165,7 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
                   color: 'var(--theme-text-muted)',
                 }}
               >
-                189 cards • 6 decks • infinite chaos
+                {totalCards} cards • {deckMeta.length} decks • infinite chaos
               </p>
             </div>
           </m.div>

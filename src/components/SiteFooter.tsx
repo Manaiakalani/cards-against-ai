@@ -1,36 +1,13 @@
 'use client'
 
 import { Code2, Sparkles, GitPullRequestArrow } from 'lucide-react'
+import { SITE_LINKS } from '@/lib/tokens'
 
-const links = [
-  {
-    href: 'https://github.com/Manaiakalani/Cards',
-    label: 'GitHub',
-    Icon: Code2,
-    color: '#555',
-    darkColor: '#E0E0E0',
-    bg: 'rgba(85,85,85,0.08)',
-    darkBg: 'rgba(224,224,224,0.1)',
-  },
-  {
-    href: 'https://github.com/Manaiakalani/Cards/issues/new?labels=new-deck&template=deck_submission.md&title=%5BDeck%5D+',
-    label: 'Submit a Deck',
-    Icon: Sparkles,
-    color: '#9B2C2C',
-    darkColor: '#FF6B6B',
-    bg: 'rgba(155,44,44,0.06)',
-    darkBg: 'rgba(255,107,107,0.12)',
-  },
-  {
-    href: 'https://github.com/Manaiakalani/Cards/pulls',
-    label: 'Contribute',
-    Icon: GitPullRequestArrow,
-    color: '#166534',
-    darkColor: '#66FF00',
-    bg: 'rgba(22,101,52,0.06)',
-    darkBg: 'rgba(102,255,0,0.12)',
-  },
-] as const
+const icons = {
+  GitHub: Code2,
+  'Submit a Deck': Sparkles,
+  Contribute: GitPullRequestArrow,
+} as const
 
 export function SiteFooter() {
   return (
@@ -42,7 +19,9 @@ export function SiteFooter() {
       }}
     >
       <div className="flex flex-wrap items-center justify-center gap-2.5">
-        {links.map(({ href, label, Icon, color, darkColor, bg, darkBg }) => (
+        {SITE_LINKS.map(({ href, label, color, darkColor, bg, darkBg }) => {
+          const Icon = icons[label]
+          return (
           <a
             key={label}
             href={href}
@@ -54,17 +33,17 @@ export function SiteFooter() {
               backgroundColor: `var(--_footer-bg, ${bg})`,
               color: `var(--_footer-fg, ${color})`,
               border: `1.5px solid color-mix(in srgb, var(--_footer-fg, ${color}) 20%, transparent)`,
-              // CSS custom props for dark mode override
               ['--_footer-bg-light' as string]: bg,
               ['--_footer-bg-dark' as string]: darkBg,
               ['--_footer-fg-light' as string]: color,
               ['--_footer-fg-dark' as string]: darkColor,
             }}
           >
-            <Icon className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
+            <Icon className="h-3.5 w-3.5" strokeWidth={2.5} aria-hidden="true" />
             {label}
           </a>
-        ))}
+          )
+        })}
       </div>
       <p
         style={{

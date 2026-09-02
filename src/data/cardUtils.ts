@@ -4,7 +4,7 @@ import { Card } from '@/types/game'
 // round has already started (the card pool is already in memory by then).
 // Kept separate from `cards.ts` — which holds the actual ~350 cards of
 // deck text — so callers that only need shuffling/drawing logic (e.g.
-// `useGameState.ts`, statically imported from the very first render) don't
+// `gameEngine.ts`, statically imported from the very first render) don't
 // have to pull in that much larger module just for these two functions.
 
 export function shuffle<T>(arr: T[]): T[] {

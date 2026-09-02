@@ -139,8 +139,8 @@ export function GlobalOverlay() {
             left: 10,
             width: 44,
             height: 44,
-            backgroundColor: '#C62828',
-            color: 'white',
+            backgroundColor: 'var(--theme-danger)',
+            color: '#fff',
             border: '2px solid var(--theme-border)',
             fontFamily: 'var(--font-inter)',
             fontSize: 16,
@@ -206,7 +206,9 @@ export function GlobalOverlay() {
                   lineHeight: 1.5,
                 }}
               >
-                Your progress will be lost. No take-backs, bestie.
+                {gameState.playMode === 'async'
+                  ? 'You can rejoin later with the room code. This table stays put.'
+                  : 'Your progress will be lost. No take-backs, bestie.'}
               </p>
               <div className="flex gap-3">
                 <button
@@ -233,8 +235,8 @@ export function GlobalOverlay() {
                     fontFamily: 'var(--font-archivo)',
                     fontSize: 16,
                     textTransform: 'uppercase',
-                    backgroundColor: '#C62828',
-                    color: 'white',
+                    backgroundColor: 'var(--theme-danger)',
+                    color: '#fff',
                     border: '3px solid var(--theme-border)',
                   }}
                 >

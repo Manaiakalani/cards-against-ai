@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect } from 'react'
 import { m } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { deckMeta } from '@/data/deckMeta'
-import { BOT_POOL, pickRandomBots } from '@/hooks/useGameState'
+import { pickRandomBots } from '@/hooks/useGameState'
 import { PosterBackground } from '@/components/PosterBackground'
 import { BottomNav } from '@/components/BottomNav'
 import { NavButton } from '@/components/NavButton'
@@ -13,7 +13,7 @@ import { Sticker } from '@/components/Sticker'
 const MAX_PLAYERS = 6
 
 export default function LobbyScreen() {
-  const { gameState, startGame, updateSettings, newGame, isMultiplayer, isHost, isClient, presencePlayers, mpState } = useGame()
+  const { gameState, startGame, updateSettings, newGame, isMultiplayer, isHost, isClient, isAsync, presencePlayers, mpState, renamePlayer, myPlayerId, copyInvite } = useGame()
   const [playerName, setPlayerName] = useState('')
   const [botCount, setBotCount] = useState(3)
   const [selectedDecks, setSelectedDecks] = useState<string[]>(
@@ -31,8 +31,8 @@ export default function LobbyScreen() {
   const [rebootEnabled, setRebootEnabled] = useState(
     gameState.settings.rebootEnabled ?? false
   )
+  const [copied, setCopied] = useState(false)
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const botRoster = useMemo(() => pickRandomBots(MAX_PLAYERS - 1), [])
 
   // Warm the deck-content chunk in the background as soon as the lobby
@@ -43,10 +43,26 @@ export default function LobbyScreen() {
     import('@/data/cards')
   }, [])
 
-  // Remote human players from Presence (excluding self)
-  const remoteHumans = isMultiplayer
-    ? presencePlayers.filter((p) => p.id !== mpState.playerId)
-    : []
+  useEffect(() => {
+    if (!playerName.trim()) return
+    const t = window.setTimeout(() => renamePlayer(myPlayerId, playerName), 400)
+    return () => window.clearTimeout(t)
+  }, [playerName, myPlayerId, renamePlayer])
+
+  // Remote human players: live uses Presence; async uses persisted game state
+  const remoteHumans = isAsync
+    ? gameState.players
+        .filter((p) => !p.isBot && p.id !== myPlayerId)
+        .map((p) => ({
+          id: p.id,
+          name: p.name,
+          avatar: p.avatar,
+          avatarBg: p.avatarBg,
+          isHost: p.isHost,
+        }))
+    : isMultiplayer
+      ? presencePlayers.filter((p) => p.id !== mpState.playerId)
+      : []
 
   const totalPlayers = (playerName.trim() ? 1 : 0) + remoteHumans.length + botCount
   const slots = Array.from({ length: MAX_PLAYERS })
@@ -133,11 +149,24 @@ export default function LobbyScreen() {
         </m.h1>
 
         {/* Room Code Card */}
-        <m.div
+        <m.button
+          type="button"
+          onClick={async () => {
+            const shared = await copyInvite()
+            if (!shared) {
+              try {
+                await navigator.clipboard.writeText(gameState.roomCode)
+              } catch {
+                return
+              }
+            }
+            setCopied(true)
+            window.setTimeout(() => setCopied(false), 1600)
+          }}
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.15, type: 'spring', stiffness: 300 }}
-          className="mb-4 inline-block text-center"
+          className="mb-4 inline-block cursor-pointer text-center"
           style={{
             background: 'var(--theme-surface)',
             border: '4px solid var(--theme-border)',
@@ -155,7 +184,7 @@ export default function LobbyScreen() {
               marginBottom: '2px',
             }}
           >
-            Room Code
+            {copied ? 'Copied invite' : 'Room Code · tap to copy'}
           </div>
           <div
             style={{
@@ -167,7 +196,7 @@ export default function LobbyScreen() {
           >
             {gameState.roomCode}
           </div>
-        </m.div>
+        </m.button>
 
         {/* Player Count Sticker */}
         <m.div
@@ -179,6 +208,17 @@ export default function LobbyScreen() {
             {totalPlayers} / {MAX_PLAYERS} Players Joined
           </Sticker>
         </m.div>
+        {isAsync && (
+          <m.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="mt-3"
+          >
+            <Sticker color="green" rotation={3}>
+              Async · play on your own time
+            </Sticker>
+          </m.div>
+        )}
 
         {/* Player Grid */}
         <div className="mt-8 grid w-full max-w-5xl grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5">
@@ -324,7 +364,7 @@ export default function LobbyScreen() {
                   border: '3px solid var(--theme-border)',
                   borderRadius: '10px',
                   backgroundColor: botCount === count ? '#66FF00' : 'var(--theme-surface)',
-                  color: botCount === count ? '#111' : 'var(--theme-text)',
+                  color: botCount === count ? '#111111' : 'var(--theme-text)',
                   boxShadow: botCount === count ? '3px 3px 0px var(--theme-shadow)' : 'none',
                 }}
               >
@@ -386,7 +426,7 @@ export default function LobbyScreen() {
                 fontSize: '14px',
                 fontWeight: 900,
                 backgroundColor: '#66FF00',
-                color: '#111',
+                color: '#111111',
                 border: '2px solid var(--theme-border)',
                 fontVariantNumeric: 'tabular-nums',
               }}
@@ -456,7 +496,8 @@ export default function LobbyScreen() {
           </div>
         </m.div>
 
-        {/* Timer Toggle */}
+        {/* Timer Toggle — hidden for async; a round clock makes no sense when people play hours apart */}
+        {!isAsync && (
         <m.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -491,7 +532,7 @@ export default function LobbyScreen() {
                 border: '3px solid var(--theme-border)',
                 borderRadius: '100px',
                 backgroundColor: timerEnabled ? '#66FF00' : 'var(--theme-surface-alt)',
-                color: 'var(--theme-text)',
+                color: timerEnabled ? '#111111' : 'var(--theme-text)',
                 boxShadow: timerEnabled ? '3px 3px 0px var(--theme-shadow)' : 'none',
                 minWidth: '72px',
               }}
@@ -514,7 +555,7 @@ export default function LobbyScreen() {
                     border: '3px solid var(--theme-border)',
                     borderRadius: '10px',
                     backgroundColor: timerSeconds === s ? '#66FF00' : 'var(--theme-surface)',
-                    color: 'var(--theme-text)',
+                    color: timerSeconds === s ? '#111111' : 'var(--theme-text)',
                     boxShadow: timerSeconds === s ? '3px 3px 0px var(--theme-shadow)' : 'none',
                   }}
                 >
@@ -524,6 +565,7 @@ export default function LobbyScreen() {
             </div>
           )}
         </m.div>
+        )}
 
         {/* House Rules */}
         <m.div
@@ -587,7 +629,7 @@ export default function LobbyScreen() {
                   border: '3px solid var(--theme-border)',
                   borderRadius: '100px',
                   backgroundColor: winnersPick ? '#66FF00' : 'var(--theme-surface-alt)',
-                  color: 'var(--theme-text)',
+                  color: winnersPick ? '#111111' : 'var(--theme-text)',
                   boxShadow: winnersPick ? '3px 3px 0px var(--theme-shadow)' : 'none',
                   minWidth: '72px',
                 }}
@@ -638,7 +680,7 @@ export default function LobbyScreen() {
                   border: '3px solid var(--theme-border)',
                   borderRadius: '100px',
                   backgroundColor: rebootEnabled ? '#66FF00' : 'var(--theme-surface-alt)',
-                  color: 'var(--theme-text)',
+                  color: rebootEnabled ? '#111111' : 'var(--theme-text)',
                   boxShadow: rebootEnabled ? '3px 3px 0px var(--theme-shadow)' : 'none',
                   minWidth: '72px',
                 }}

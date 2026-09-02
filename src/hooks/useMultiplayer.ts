@@ -58,6 +58,7 @@ export function sanitizeStateForPlayer(
     settings: state.settings,
     roomCode: state.roomCode,
     czarId: state.czarId,
+    playMode: state.playMode,
     yourHand: player?.hand ?? [],
     yourId: playerId,
   }
@@ -80,6 +81,9 @@ export function hydrateClientState(broadcast: BroadcastGameState): GameState {
     settings: broadcast.settings,
     roomCode: broadcast.roomCode,
     czarId: broadcast.czarId,
+    playMode: broadcast.playMode,
+    blackCardPool: [],
+    whiteCardPool: [],
   }
 }
 

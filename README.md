@@ -29,7 +29,7 @@ One player draws a black prompt card. Everyone else plays their funniest (worst?
 | 🎮 Gamer Lore | Skill issue tbh |
 | 🪙 Crypto & Web3 | Number go up (and then very much down) |
 | 🚀 Startup Life | We're not a family, we're a ~~company~~ cult |
-| 🎵 InTuneD | Music hot takes that will get you unfollowed |
+| 🎯 InTuneD | Teams chaos, Autopilot, and Intune policies that brick phones |
 | 🔥 On-Call Nightmares | PagerDuty at 3am on a Friday |
 
 **357 cards** across **10 decks**. All terrible. You're welcome.
@@ -37,6 +37,7 @@ One player draws a black prompt card. Everyone else plays their funniest (worst?
 ## Features
 
 - **Real-time multiplayer** via Supabase Realtime (host a room, share the code, ruin friendships)
+- **Async tables** so people can take turns on their own time — play a card, close the tab, come back later
 - **Solo mode** with AI bots that have questionable taste
 - **House rules** - Winner's Pick, Reboot the Universe, round timers
 - **Neo-brutalist UI** that looks like a poster from a design school dropout
@@ -82,7 +83,11 @@ cp .env.example .env.local
 # Fill in your Supabase URL and anon key
 ```
 
-Without Supabase credentials, the game runs perfectly in single-player mode with bots.
+Without those env vars, the game runs perfectly in single-player mode with bots. URL and keys stay in GitHub Actions secrets / `.env.local` — never in the repo.
+
+### Async tables (optional)
+
+Live rooms need everyone online. Async tables do not. Click **Play Async**, share the room code (or the `?room=` link). Friends play a card when they can; the czar judges whenever the last card lands.
 
 ## Contributing
 

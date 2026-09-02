@@ -9,7 +9,9 @@ import { GameCard } from '@/components/GameCard'
 import { CardIcon } from '@/components/CardIcon'
 import { Code2, Sparkles, GitPullRequestArrow } from 'lucide-react'
 import { isSupabaseConfigured } from '@/lib/supabase'
+import { SITE_LINKS } from '@/lib/tokens'
 import { useFocusTrap } from '@/hooks/useFocusTrap'
+import { YourGames } from '@/components/YourGames'
 import dynamic from 'next/dynamic'
 
 const StatsScreen = dynamic(
@@ -25,45 +27,32 @@ const RoundHistory = dynamic(
   { ssr: false }
 )
 
-const footerLinks = [
-  {
-    href: 'https://github.com/Manaiakalani/Cards',
-    label: 'GitHub',
-    Icon: Code2,
-    color: '#555',
-    darkColor: '#E0E0E0',
-    bg: 'rgba(85,85,85,0.12)',
-    darkBg: 'rgba(224,224,224,0.15)',
-  },
-  {
-    href: 'https://github.com/Manaiakalani/Cards/issues/new?labels=new-deck&template=deck_submission.md&title=%5BDeck%5D+',
-    label: 'Submit a Deck',
-    Icon: Sparkles,
-    color: '#9B2C2C',
-    darkColor: '#FF6B6B',
-    bg: 'rgba(155,44,44,0.08)',
-    darkBg: 'rgba(255,107,107,0.15)',
-  },
-  {
-    href: 'https://github.com/Manaiakalani/Cards/pulls',
-    label: 'Contribute',
-    Icon: GitPullRequestArrow,
-    color: '#166534',
-    darkColor: '#66FF00',
-    bg: 'rgba(22,101,52,0.08)',
-    darkBg: 'rgba(102,255,0,0.15)',
-  },
-] as const
+const footerIcons = {
+  GitHub: Code2,
+  'Submit a Deck': Sparkles,
+  Contribute: GitPullRequestArrow,
+} as const
+
+function readRoomParam(): string {
+  if (typeof window === 'undefined') return ''
+  const room = new URLSearchParams(window.location.search)
+    .get('room')
+    ?.toUpperCase()
+    .replace(/[^A-Z0-9]/g, '')
+    .slice(0, 6)
+  return room && room.length === 6 ? room : ''
+}
 
 export default function SplashScreen() {
-  const { goToLobby, hostGame, joinGame, mpState, isClient, gameState } = useGame()
+  const { goToLobby, hostGame, hostAsyncGame, joinGame, mpState, asyncError } = useGame()
   const [showStats, setShowStats] = useState(false)
   const [showAchievements, setShowAchievements] = useState(false)
   const [showFavorites, setShowFavorites] = useState(false)
-  const [showJoin, setShowJoin] = useState(false)
-  const [joinCode, setJoinCode] = useState('')
+  const [joinCode, setJoinCode] = useState(readRoomParam)
+  const [showJoin, setShowJoin] = useState(() => readRoomParam().length === 6)
   const [joinName, setJoinName] = useState('')
   const [joining, setJoining] = useState(false)
+  const [asyncBusy, setAsyncBusy] = useState(false)
 
   const totalCards = useMemo(
     () => deckMeta.reduce((sum, d) => sum + d.blackCount + d.whiteCount, 0),
@@ -106,8 +95,12 @@ export default function SplashScreen() {
 
   return (
     <div
-      className="relative flex h-dvh items-center justify-center overflow-hidden"
-      style={{ backgroundColor: 'var(--theme-bg)' }}
+      className="relative flex min-h-dvh items-center justify-center overflow-x-hidden overflow-y-auto"
+      style={{
+        backgroundColor: 'var(--theme-bg)',
+        paddingTop: 'max(1.5rem, env(safe-area-inset-top))',
+        paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))',
+      }}
     >
       <PosterBackground words={['slay', 'brainrot', 'unhinged']} opacity={0.9} />
 
@@ -235,7 +228,7 @@ export default function SplashScreen() {
               fontSize: 14,
               fontWeight: 900,
               backgroundColor: '#66FF00',
-              color: '#111',
+              color: '#111111',
               border: '2px solid var(--theme-border)',
               fontVariantNumeric: 'tabular-nums',
             }}
@@ -263,7 +256,7 @@ export default function SplashScreen() {
               fontSize: 14,
               fontWeight: 900,
               backgroundColor: '#FF4242',
-              color: '#111',
+              color: '#111111',
               border: '2px solid var(--theme-border)',
             }}
           >
@@ -290,7 +283,7 @@ export default function SplashScreen() {
               fontSize: 'clamp(18px, 3vw, 24px)',
               fontWeight: 900,
               backgroundColor: '#66FF00',
-              color: '#111',
+              color: '#111111',
               border: '4px solid var(--theme-border)',
               padding: 'clamp(14px, 2.5vw, 20px) clamp(36px, 7vw, 64px)',
               borderRadius: 100,
@@ -323,6 +316,81 @@ export default function SplashScreen() {
             </m.button>
           )}
         </m.div>
+
+        {isSupabaseConfigured && (
+          <m.div variants={fadeUp} className="mt-3 flex flex-col items-center gap-2">
+            <m.button
+              onClick={async () => {
+                setAsyncBusy(true)
+                await hostAsyncGame({ name: '', avatar: '🦄', avatarBg: '#FFD700' })
+                setAsyncBusy(false)
+              }}
+              disabled={asyncBusy}
+              whileHover={{ y: 2, boxShadow: '0px 6px 0px var(--theme-shadow)' }}
+              whileTap={{ y: 6, boxShadow: '0px 2px 0px var(--theme-shadow)' }}
+              transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+              className="cursor-pointer uppercase"
+              style={{
+                fontFamily: 'var(--font-archivo)',
+                fontSize: 'clamp(16px, 2.6vw, 20px)',
+                fontWeight: 400,
+                backgroundColor: '#FFB6C1',
+                color: '#111111',
+                border: '4px solid var(--theme-border)',
+                padding: 'clamp(12px, 2vw, 16px) clamp(28px, 6vw, 48px)',
+                borderRadius: 100,
+                boxShadow: '0px 8px 0px var(--theme-shadow)',
+                letterSpacing: '0.04em',
+                opacity: asyncBusy ? 0.6 : 1,
+              }}
+            >
+              {asyncBusy ? '⏳ OPENING TABLE…' : '⏳ PLAY ASYNC'}
+            </m.button>
+            <p
+              className="max-w-xs px-4 text-center"
+              style={{
+                fontFamily: 'var(--font-inter)',
+                fontSize: 13,
+                color: 'var(--theme-text-muted)',
+                lineHeight: 1.4,
+              }}
+            >
+              Take turns on your own time. Share a code, play a card, come back later.
+            </p>
+            <button
+              type="button"
+              onClick={goToLobby}
+              className="cursor-pointer underline-offset-4 hover:underline"
+              style={{
+                fontFamily: 'var(--font-archivo)',
+                fontSize: 13,
+                color: 'var(--theme-text-secondary)',
+                background: 'none',
+                border: 'none',
+                padding: '8px 12px',
+              }}
+            >
+              or play solo with bots
+            </button>
+          </m.div>
+        )}
+
+        {asyncError && (
+          <m.p
+            variants={fadeUp}
+            className="mt-3 max-w-sm px-4 text-center"
+            style={{
+              fontFamily: 'var(--font-inter)',
+              fontSize: 13,
+              color: '#C62828',
+              fontWeight: 600,
+            }}
+          >
+            {asyncError}
+          </m.p>
+        )}
+
+        <YourGames />
 
         {/* Menu buttons row */}
         <m.div variants={fadeUp} className="mt-4 flex flex-wrap justify-center gap-3">
@@ -410,7 +478,9 @@ export default function SplashScreen() {
               <CardIcon color="currentColor" size={14} />
               v1.0 MVP
             </span>
-            {footerLinks.map(({ href, label, Icon, color, darkColor, bg, darkBg }) => (
+            {SITE_LINKS.map(({ href, label, color, darkColor, bg, darkBg }) => {
+              const Icon = footerIcons[label]
+              return (
               <a
                 key={label}
                 href={href}
@@ -429,7 +499,8 @@ export default function SplashScreen() {
                 <Icon className="h-4 w-4" strokeWidth={2.5} aria-hidden="true" />
                 {label}
               </a>
-            ))}
+              )
+            })}
           </div>
           <p
             className="text-center"
@@ -516,7 +587,7 @@ export default function SplashScreen() {
                   color: 'var(--theme-text-muted)',
                 }}
               >
-                Enter the room code from a host
+                Live party or async table — same code either way
               </p>
 
               <label className="sr-only" htmlFor="join-room-code">Room code</label>
@@ -565,7 +636,7 @@ export default function SplashScreen() {
                 }}
               />
 
-              {mpState.error && (
+              {(mpState.error || asyncError) && (
                 <div
                   className="mb-4 rounded-lg p-3 text-center"
                   style={{
@@ -574,10 +645,10 @@ export default function SplashScreen() {
                     fontFamily: 'var(--font-inter)',
                     fontSize: 13,
                     fontWeight: 600,
-                    color: '#FF4242',
+                    color: '#C62828',
                   }}
                 >
-                  {mpState.error}
+                  {mpState.error || asyncError}
                 </div>
               )}
 
@@ -585,7 +656,7 @@ export default function SplashScreen() {
                 onClick={() => {
                   if (joinCode.length !== 6 || !joinName.trim()) return
                   setJoining(true)
-                  joinGame(joinCode, {
+                  void joinGame(joinCode, {
                     name: joinName.trim(),
                     avatar: '🎮',
                     avatarBg: '#87CEEB',
@@ -598,7 +669,7 @@ export default function SplashScreen() {
                   fontSize: 18,
                   fontWeight: 900,
                   backgroundColor: joinCode.length === 6 && joinName.trim() && !effectivelyJoining ? '#66FF00' : 'var(--theme-surface-alt)',
-                  color: joinCode.length === 6 && joinName.trim() && !effectivelyJoining ? '#111' : 'var(--theme-text-muted)',
+                  color: joinCode.length === 6 && joinName.trim() && !effectivelyJoining ? '#111111' : 'var(--theme-text-muted)',
                   border: '3px solid var(--theme-border)',
                   boxShadow: '0px 6px 0px var(--theme-shadow)',
                   letterSpacing: '0.04em',
