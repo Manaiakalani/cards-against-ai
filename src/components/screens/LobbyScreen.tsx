@@ -17,7 +17,7 @@ export default function LobbyScreen() {
   const [playerName, setPlayerName] = useState(
     () => gameState.players.find((p) => p.id === myPlayerId)?.name ?? '',
   )
-  const [botCount, setBotCount] = useState(3)
+  const [botCount, setBotCount] = useState(() => (isAsync ? 0 : 3))
   const [selectedDecks, setSelectedDecks] = useState<string[]>(
     gameState.settings.selectedDecks
   )
@@ -67,6 +67,14 @@ export default function LobbyScreen() {
       : []
 
   const totalPlayers = (playerName.trim() ? 1 : 0) + remoteHumans.length + botCount
+  const canStart = Boolean(playerName.trim()) && totalPlayers >= 2
+  const startHint = !playerName.trim()
+    ? 'Type your name to start.'
+    : totalPlayers < 2
+      ? isAsync
+        ? 'Need one more player. Wait for a friend, or add a bot.'
+        : 'Add a bot or another player to start.'
+      : null
   const slots = Array.from({ length: MAX_PLAYERS })
 
   const filledSlots: { name: string; emoji: string; bg: string; role: string; isHost: boolean; isOnline?: boolean }[] = []
@@ -143,7 +151,7 @@ export default function LobbyScreen() {
             <NavButton
               variant="primary"
               onClick={handleStart}
-              disabled={!playerName.trim() || totalPlayers < 2}
+              disabled={!canStart}
             >
               LET&apos;S GO 🔥
             </NavButton>
@@ -242,6 +250,31 @@ export default function LobbyScreen() {
             </Sticker>
           </m.div>
         )}
+        {isClient ? (
+          <p
+            className="mt-2 max-w-sm text-center"
+            style={{
+              fontFamily: 'var(--font-inter)',
+              fontSize: 13,
+              color: 'var(--theme-text-secondary)',
+              lineHeight: 1.4,
+            }}
+          >
+            The host starts the round. You can close this tab and come back.
+          </p>
+        ) : startHint ? (
+          <p
+            className="mt-2 max-w-sm text-center"
+            style={{
+              fontFamily: 'var(--font-inter)',
+              fontSize: 13,
+              color: 'var(--theme-text-secondary)',
+              lineHeight: 1.4,
+            }}
+          >
+            {startHint}
+          </p>
+        ) : null}
 
         {/* Name Input + Bot Selector — first so you can start without hunting */}
         <m.div

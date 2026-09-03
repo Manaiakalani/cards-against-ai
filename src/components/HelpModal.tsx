@@ -37,7 +37,7 @@ const RULES = [
   {
     emoji: '⏳',
     title: 'Async tables',
-    body: 'Host an async game and share the code. Everyone plays a card when they can — nobody has to stay in the tab. Come back when it is your turn to play or judge. Look for YOUR TURN on the home list.',
+    body: 'Host an async game and share the code. Friends can join in the lobby or drop in later. Everyone plays a card when they can — nobody has to stay in the tab. Come back when it is YOUR TURN on the home list.',
   },
   {
     emoji: '💀',

@@ -202,8 +202,13 @@ export function useAsyncGame(gameEngine: GameEngine) {
         return true
       }
 
-      if (snap.state.phase !== 'lobby') {
-        setError('That game already started. Ask the host for a new code.')
+      if (snap.state.phase === 'ended' || snap.state.phase === 'menu') {
+        setError('That table is finished. Ask the host for a new code.')
+        return false
+      }
+
+      if (snap.state.players.length >= snap.state.settings.maxPlayers) {
+        setError('That table is full.')
         return false
       }
 

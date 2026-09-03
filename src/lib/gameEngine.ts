@@ -463,9 +463,17 @@ export function addRemotePlayer(
   state: GameState,
   info: { id: string; name: string; avatar: string; avatarBg: string },
 ): GameState {
-  if (state.phase !== 'lobby') return state
+  if (state.phase === 'ended' || state.phase === 'menu') return state
   if (state.players.some((p) => p.id === info.id)) return state
   if (state.players.length >= state.settings.maxPlayers) return state
+
+  let hand: Card[] = []
+  let whiteCardPool = state.whiteCardPool
+  if (state.phase !== 'lobby') {
+    const dealt = drawCards(whiteCardPool, HAND_SIZE)
+    hand = dealt.drawn
+    whiteCardPool = dealt.remaining
+  }
 
   const newPlayer: Player = {
     id: info.id,
@@ -476,12 +484,12 @@ export function addRemotePlayer(
     isConnected: true,
     avatar: info.avatar,
     avatarBg: info.avatarBg,
-    hand: [],
+    hand,
     selectedCard: null,
     isBot: false,
   }
 
-  return { ...state, players: [...state.players, newPlayer] }
+  return { ...state, whiteCardPool, players: [...state.players, newPlayer] }
 }
 
 export function removeRemotePlayer(state: GameState, playerId: string): GameState {
