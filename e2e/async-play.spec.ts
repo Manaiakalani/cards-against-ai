@@ -48,4 +48,13 @@ test.describe('Async play UI', () => {
     await expect(dialog.getByText(/MIT License/i)).toBeVisible()
     await expect(dialog.getByRole('link', { name: /full license on github/i })).toBeVisible()
   })
+
+  test('help can mute turn alerts', async ({ page }) => {
+    await page.goto('/')
+    await page.getByRole('button', { name: 'How to play' }).click()
+    const toggle = page.getByRole('dialog').getByRole('button', { name: /mute turn alerts/i })
+    await expect(toggle).toBeVisible()
+    await toggle.click()
+    await expect(page.getByRole('dialog').getByRole('button', { name: /unmute turn alerts/i })).toBeVisible()
+  })
 })

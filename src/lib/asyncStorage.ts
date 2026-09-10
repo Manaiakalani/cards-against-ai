@@ -100,3 +100,27 @@ export function inviteUrl(roomCode: string): string {
   url.searchParams.set('room', roomCode)
   return url.toString()
 }
+
+export async function shareInvite(roomCode: string): Promise<'shared' | 'copied' | 'failed'> {
+  const url = inviteUrl(roomCode)
+  const text = `Join my Cards Against AI table ${roomCode}`
+  if (typeof navigator.share === 'function') {
+    try {
+      await navigator.share({ title: 'Cards Against AI', text, url })
+      return 'shared'
+    } catch (err) {
+      if ((err as { name?: string }).name === 'AbortError') return 'failed'
+    }
+  }
+  try {
+    await navigator.clipboard.writeText(url)
+    return 'copied'
+  } catch {
+    try {
+      await navigator.clipboard.writeText(roomCode)
+      return 'copied'
+    } catch {
+      return 'failed'
+    }
+  }
+}

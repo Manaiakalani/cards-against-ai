@@ -1,7 +1,9 @@
 import { loadSupabase } from '@/lib/supabase'
 import { registerServiceWorker } from '@/lib/pwa'
+import { alertsMuted } from '@/lib/pushStore'
 
 export function requestTurnNotifications() {
+  if (alertsMuted()) return
   if (typeof Notification === 'undefined') return
   if (Notification.permission === 'default') {
     void Notification.requestPermission()
@@ -11,6 +13,7 @@ export function requestTurnNotifications() {
 
 export function notifyIfHidden(title: string, body: string) {
   if (typeof window === 'undefined') return
+  if (alertsMuted()) return
   if (typeof Notification === 'undefined') return
   if (document.visibilityState === 'visible') return
   if (Notification.permission !== 'granted') return

@@ -5,6 +5,9 @@ import { m, AnimatePresence } from 'framer-motion'
 import { useFocusTrap } from '@/hooks/useFocusTrap'
 import { deckMeta } from '@/data/deckMeta'
 import { LICENSE_URL, SITE_LINKS } from '@/lib/tokens'
+import { useGame } from '@/contexts/GameContext'
+import { alertsMuted, savePushSubscription, setAlertsMuted, subscribeAlertsChange } from '@/lib/pushStore'
+import { subscribeToPush, unsubscribeFromPush } from '@/lib/pwa'
 
 interface HelpModalProps {
   open: boolean
@@ -226,6 +229,7 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
                     </div>
                   </div>
                 ))}
+                <AlertsToggle />
               </div>
             )}
 
@@ -255,8 +259,11 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
                 <div>
                   <p style={legalHead}>Turn alerts</p>
                   <p style={legalBody}>
-                    If you allow notifications, this device can ping when it is your turn. You can turn that off in the browser or system settings.
+                    If you allow notifications, this device can ping when it is your turn. Mute them below without digging through system settings.
                   </p>
+                  <div className="mt-3">
+                    <AlertsToggle />
+                  </div>
                 </div>
               </div>
             )}
@@ -334,6 +341,46 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
         </>
       )}
     </AnimatePresence>
+  )
+}
+
+function AlertsToggle() {
+  const { gameState, isAsync, myPlayerId } = useGame()
+  const [muted, setMuted] = useState(alertsMuted)
+
+  useEffect(() => subscribeAlertsChange(() => setMuted(alertsMuted())), [])
+
+  return (
+    <button
+      type="button"
+      aria-pressed={!muted}
+      onClick={async () => {
+        const next = !muted
+        setMuted(next)
+        setAlertsMuted(next)
+        if (next) {
+          await unsubscribeFromPush()
+          return
+        }
+        if (!isAsync || !gameState.roomCode || !myPlayerId) return
+        const sub = await subscribeToPush()
+        if (sub) await savePushSubscription(gameState.roomCode, myPlayerId, sub)
+      }}
+      className="inline-flex min-h-10 cursor-pointer items-center uppercase"
+      style={{
+        fontFamily: 'var(--font-archivo)',
+        fontSize: 12,
+        backgroundColor: muted ? 'var(--theme-surface)' : '#66FF00',
+        color: '#111111',
+        border: '3px solid var(--theme-border)',
+        padding: '6px 12px',
+        borderRadius: 12,
+        boxShadow: '3px 3px 0px var(--theme-shadow-soft)',
+        letterSpacing: '0.03em',
+      }}
+    >
+      {muted ? 'Unmute turn alerts' : 'Mute turn alerts'}
+    </button>
   )
 }
 

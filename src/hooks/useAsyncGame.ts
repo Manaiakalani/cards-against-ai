@@ -17,6 +17,7 @@ import {
 import * as engine from '@/lib/gameEngine'
 import { notifyIfHidden, requestTurnNotifications, requestTurnPush } from '@/lib/notify'
 import { subscribeToPush } from '@/lib/pwa'
+import { savePushSubscription } from '@/lib/pushStore'
 import { isPlayersTurn } from '@/lib/gameEngine'
 import type { useGameState } from '@/hooks/useGameState'
 import type { Card, GameState, PlayerInfo } from '@/types/game'
@@ -148,7 +149,8 @@ export function useAsyncGame(gameEngine: GameEngine) {
     if (!pid || !code) return
     const sub = await subscribeToPush()
     if (!sub) return
-    await persistAction((s) => engine.upsertPushSub(s, pid, sub))
+    const stored = await savePushSubscription(code, pid, sub)
+    if (!stored) await persistAction((s) => engine.upsertPushSub(s, pid, sub))
   }, [persistAction])
 
   const hostAsyncGame = useCallback(

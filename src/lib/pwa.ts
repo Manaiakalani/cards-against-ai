@@ -1,4 +1,5 @@
 import { VAPID_PUBLIC_KEY } from '@/lib/vapidPublic'
+import { alertsMuted, deletePushSubscription } from '@/lib/pushStore'
 import type { PushSub } from '@/types/game'
 
 let registerPromise: Promise<ServiceWorkerRegistration | null> | null = null
@@ -33,6 +34,7 @@ function urlBase64ToUint8Array(base64: string): BufferSource {
 
 export async function subscribeToPush(): Promise<PushSub | null> {
   if (typeof window === 'undefined') return null
+  if (alertsMuted()) return null
   if (!('Notification' in window) || !('PushManager' in window)) return null
   const registration = await registerServiceWorker()
   if (!registration) return null
@@ -61,6 +63,29 @@ export function isStandaloneDisplay(): boolean {
   if (typeof window === 'undefined') return false
   const nav = window.navigator as Navigator & { standalone?: boolean }
   return nav.standalone === true || window.matchMedia('(display-mode: standalone)').matches
+}
+
+export async function unsubscribeFromPush() {
+  if (typeof window === 'undefined' || !('serviceWorker' in navigator)) return
+  try {
+    const registration = await registerServiceWorker()
+    const sub = await registration?.pushManager.getSubscription()
+    const endpoint = sub?.endpoint
+    await sub?.unsubscribe()
+    if (endpoint) await deletePushSubscription(endpoint)
+  } catch {
+    /* already gone */
+  }
+}
+
+export function listenForNotificationOpen() {
+  if (typeof window === 'undefined' || !('serviceWorker' in navigator)) return () => {}
+  const onMessage = (event: MessageEvent) => {
+    const url = event.data?.type === 'cai-open' ? event.data.url : null
+    if (typeof url === 'string' && url) window.location.assign(url)
+  }
+  navigator.serviceWorker.addEventListener('message', onMessage)
+  return () => navigator.serviceWorker.removeEventListener('message', onMessage)
 }
 
 export function isIosSafari(): boolean {

@@ -37,10 +37,19 @@ self.addEventListener('notificationclick', (event) => {
   event.notification.close()
   const dest = new URL(event.notification.data?.url || './', self.registration.scope).href
   event.waitUntil(
-    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windows) => {
-      const existing = windows.find((client) => 'focus' in client)
-      if (existing) return existing.focus()
-      return self.clients.openWindow(dest)
-    }),
+    (async () => {
+      const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true })
+      for (const client of windows) {
+        try {
+          if ('navigate' in client) await client.navigate(dest)
+          else client.postMessage({ type: 'cai-open', url: dest })
+          if ('focus' in client) await client.focus()
+          return
+        } catch {
+          /* try the next client */
+        }
+      }
+      await self.clients.openWindow(dest)
+    })(),
   )
 })

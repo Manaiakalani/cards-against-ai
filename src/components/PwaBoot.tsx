@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useGame } from '@/contexts/GameContext'
-import { isIosSafari, isStandaloneDisplay, registerServiceWorker } from '@/lib/pwa'
+import { isIosSafari, isStandaloneDisplay, listenForNotificationOpen, registerServiceWorker } from '@/lib/pwa'
 
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>
@@ -17,13 +17,17 @@ export function PwaBoot() {
 
   useEffect(() => {
     void registerServiceWorker()
+    const stop = listenForNotificationOpen()
     const onPrompt = (event: Event) => {
       event.preventDefault()
       setInstallEvent(event as BeforeInstallPromptEvent)
     }
     window.addEventListener('beforeinstallprompt', onPrompt)
     setIosHint(isIosSafari() && !isStandaloneDisplay())
-    return () => window.removeEventListener('beforeinstallprompt', onPrompt)
+    return () => {
+      window.removeEventListener('beforeinstallprompt', onPrompt)
+      stop()
+    }
   }, [])
 
   const onLobby = gameState.phase === 'lobby'

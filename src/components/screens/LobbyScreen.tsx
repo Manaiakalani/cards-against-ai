@@ -5,6 +5,7 @@ import { m } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { deckMeta } from '@/data/deckMeta'
 import { pickRandomBots } from '@/hooks/useGameState'
+import { shareInvite } from '@/lib/asyncStorage'
 import { ScreenShell } from '@/components/ScreenShell'
 import { BottomNav } from '@/components/BottomNav'
 import { NavButton } from '@/components/NavButton'
@@ -183,13 +184,10 @@ export default function LobbyScreen() {
         <m.button
           type="button"
           onClick={async () => {
-            const shared = await copyInvite()
-            if (!shared) {
-              try {
-                await navigator.clipboard.writeText(gameState.roomCode)
-              } catch {
-                return
-              }
+            const result = await shareInvite(gameState.roomCode)
+            if (result === 'failed') {
+              const shared = await copyInvite()
+              if (!shared) return
             }
             setCopied(true)
             window.setTimeout(() => setCopied(false), 1600)
@@ -215,7 +213,7 @@ export default function LobbyScreen() {
               marginBottom: '2px',
             }}
           >
-            {copied ? 'Copied invite' : 'Room Code · tap to copy'}
+            {copied ? 'Invite sent' : 'Room Code · tap to share'}
           </div>
           <div
             style={{

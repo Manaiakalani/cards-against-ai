@@ -1,3 +1,13 @@
+// One-time in the SQL editor (do not grant SELECT to anon):
+// create table if not exists public.push_subscriptions (
+//   endpoint text primary key, room_code text not null, player_id text not null,
+//   p256dh text not null, auth text not null, updated_at timestamptz not null default now());
+// create index if not exists push_subscriptions_room_code_idx on public.push_subscriptions (room_code);
+// alter table public.push_subscriptions enable row level security;
+// create policy push_sub_insert on public.push_subscriptions for insert to anon, authenticated with check (true);
+// create policy push_sub_update on public.push_subscriptions for update to anon, authenticated using (true) with check (true);
+// create policy push_sub_delete on public.push_subscriptions for delete to anon, authenticated using (true);
+
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import webpush from 'npm:web-push@3.6.7'
 
@@ -5,6 +15,9 @@ const cors = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
+
+const COOLDOWN_MS = 8000
+const lastSent = new Map<string, number>()
 
 type GameLike = {
   phase?: string
@@ -14,6 +27,8 @@ type GameLike = {
   pushSubs?: { playerId?: string; endpoint: string; p256dh: string; auth: string }[]
   roomCode?: string
 }
+
+type SubRow = { player_id: string; endpoint: string; p256dh: string; auth: string }
 
 function isPlayersTurn(state: GameLike, playerId: string): boolean {
   const player = state.players?.find((p) => p.id === playerId)
@@ -47,6 +62,12 @@ Deno.serve(async (req) => {
   }
   if (!roomCode) return Response.json({ ok: false }, { status: 400, headers: cors })
 
+  const prev = lastSent.get(roomCode) ?? 0
+  if (Date.now() - prev < COOLDOWN_MS) {
+    return Response.json({ ok: true, skipped: 'cooldown' }, { headers: cors })
+  }
+  lastSent.set(roomCode, Date.now())
+
   const supabase = createClient(
     Deno.env.get('SUPABASE_URL') ?? '',
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
@@ -57,13 +78,32 @@ Deno.serve(async (req) => {
   }
 
   const state = data.state as GameLike
+  const { data: rows } = await supabase
+    .from('push_subscriptions')
+    .select('player_id, endpoint, p256dh, auth')
+    .eq('room_code', roomCode)
+
+  const fromTable: SubRow[] = rows ?? []
+  const fromState: SubRow[] = (state.pushSubs ?? [])
+    .filter((s) => s.playerId && s.endpoint)
+    .map((s) => ({
+      player_id: s.playerId as string,
+      endpoint: s.endpoint,
+      p256dh: s.p256dh,
+      auth: s.auth,
+    }))
+
+  const seen = new Set<string>()
+  const due: SubRow[] = []
+  for (const sub of [...fromTable, ...fromState]) {
+    if (seen.has(sub.endpoint)) continue
+    seen.add(sub.endpoint)
+    if (!sub.player_id || sub.player_id === exceptPlayerId) continue
+    if (!isPlayersTurn(state, sub.player_id)) continue
+    due.push(sub)
+  }
+
   webpush.setVapidDetails(vapidSubject, vapidPublic, vapidPrivate)
-
-  const due = (state.pushSubs ?? []).filter((sub) => {
-    if (!sub.playerId || sub.playerId === exceptPlayerId) return false
-    return isPlayersTurn(state, sub.playerId)
-  })
-
   const url = `https://cards.tinyinternet.company/?room=${encodeURIComponent(roomCode)}`
   const payload = JSON.stringify({
     title: 'Your turn',

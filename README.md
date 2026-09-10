@@ -56,7 +56,7 @@ One player draws a black prompt card. Everyone else plays their funniest (worst?
 | Styling | Tailwind CSS 4 |
 | Animation | Framer Motion |
 | Multiplayer | Supabase Realtime |
-| Hosting | GitHub Pages (static export) |
+| Hosting | Azure Static Web Apps (`cards.tinyinternet.company`); GitHub Pages mirror |
 | Testing | Playwright (140 tests) |
 
 ## Getting started
