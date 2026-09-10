@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useCallback, type ReactNode } from 'react'
+import { useEffect, useCallback, useState, type ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 import { m, AnimatePresence } from 'framer-motion'
 import { useFocusTrap } from '@/hooks/useFocusTrap'
 
@@ -50,8 +51,12 @@ export function ModalFrame({
   }, [open, handleEsc])
 
   const trapRef = useFocusTrap<HTMLDivElement>(open)
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
 
-  return (
+  if (!mounted) return null
+
+  return createPortal(
     <AnimatePresence>
       {open && (
         <>
@@ -66,9 +71,9 @@ export function ModalFrame({
           <m.div
             ref={trapRef}
             tabIndex={-1}
-            initial={{ opacity: 0, scale: 0.95, y: 16 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 16 }}
+            initial={{ opacity: 0, scale: 0.95, x: '-50%', y: 'calc(-50% + 12px)' }}
+            animate={{ opacity: 1, scale: 1, x: '-50%', y: '-50%' }}
+            exit={{ opacity: 0, scale: 0.95, x: '-50%', y: 'calc(-50% + 12px)' }}
             transition={{ type: 'spring', stiffness: 300, damping: 25 }}
             className={wide ? 'cai-dialog cai-dialog-wide' : 'cai-dialog'}
             role="dialog"
@@ -79,6 +84,7 @@ export function ModalFrame({
           </m.div>
         </>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body,
   )
 }

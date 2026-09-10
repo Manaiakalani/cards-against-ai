@@ -140,38 +140,94 @@ test.describe('Top chrome is not clipped', () => {
   })
 })
 
-test.describe('iPhone 15 Pro Max dialogs keep the close control on screen', () => {
+async function assertCenteredDialog(page: Page, dialogName: string | RegExp, closeName: string, shot: string) {
+  const dialog = page.getByRole('dialog', { name: dialogName })
+  await expect(dialog).toBeVisible()
+  const close = page.getByRole('button', { name: closeName })
+  await expect(close).toBeVisible()
+  await expect.poll(async () => (await close.boundingBox())?.height ?? 0).toBeGreaterThanOrEqual(40)
+
+  const metrics = await page.evaluate((name) => {
+    const el = document.querySelector(`[role="dialog"][aria-labelledby]`)
+    const btn = document.querySelector(`button[aria-label="${name}"]`)
+    if (!el || !btn) return null
+    const d = el.getBoundingClientRect()
+    const c = btn.getBoundingClientRect()
+    const vw = window.innerWidth
+    const vh = window.innerHeight
+    return {
+      vw,
+      vh,
+      x: d.x,
+      y: d.y,
+      w: d.width,
+      h: d.height,
+      rightGap: vw - d.right,
+      bottomGap: vh - d.bottom,
+      hCenterOff: Math.abs(d.left - (vw - d.right)),
+      vCenterOff: Math.abs(d.top - (vh - d.bottom)),
+      closeTop: c.top,
+      closeRight: c.right,
+      closeH: c.height,
+    }
+  }, closeName)
+
+  expect(metrics).toBeTruthy()
+  expect(metrics!.x).toBeGreaterThanOrEqual(8)
+  expect(metrics!.y).toBeGreaterThanOrEqual(8)
+  expect(metrics!.rightGap).toBeGreaterThanOrEqual(8)
+  expect(metrics!.bottomGap).toBeGreaterThanOrEqual(8)
+  expect(metrics!.hCenterOff).toBeLessThan(12)
+  expect(metrics!.vCenterOff).toBeLessThan(24)
+  expect(metrics!.closeTop).toBeGreaterThanOrEqual(8)
+  expect(metrics!.closeRight).toBeLessThanOrEqual(metrics!.vw - 8)
+  const closeIsOnTop = await page.evaluate((closeName) => {
+    const btn = document.querySelector(`button[aria-label="${closeName}"]`)
+    if (!btn) return false
+    const r = btn.getBoundingClientRect()
+    const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2)
+    return Boolean(hit && (btn === hit || btn.contains(hit)))
+  }, closeName)
+  expect(closeIsOnTop).toBe(true)
+  expect(metrics!.w).toBeLessThan(metrics!.vw - 16)
+  expect(metrics!.h).toBeLessThan(metrics!.vh - 16)
+
+  await page.screenshot({
+    path: `test-results/screenshots/${shot}.png`,
+    animations: 'disabled',
+  })
+}
+
+test.describe('iPhone 15 Pro Max dialogs stay centered cards', () => {
   test.use({ viewport: { width: 430, height: 932 }, isMobile: true, hasTouch: true })
 
-  async function closeIsTappable(page: Page, name: string) {
-    const close = page.getByRole('button', { name })
-    await expect(close).toBeVisible()
-    await expect
-      .poll(async () => (await close.boundingBox())?.height ?? 0)
-      .toBeGreaterThanOrEqual(40)
-    const box = await close.boundingBox()
-    expect(box).toBeTruthy()
-    expect(box!.y).toBeGreaterThanOrEqual(0)
-    expect(box!.x).toBeGreaterThanOrEqual(0)
-    expect(box!.y + box!.height).toBeLessThanOrEqual(932)
-    expect(box!.x + box!.width).toBeLessThanOrEqual(430)
-  }
-
-  test('stats close X is fully on screen', async ({ page }) => {
+  test('stats is centered with a tappable X', async ({ page }) => {
     await page.goto('/')
     await page.getByRole('button', { name: /stats/i }).click()
-    await expect(page.getByRole('dialog', { name: /your stats/i })).toBeVisible()
-    await closeIsTappable(page, 'Close stats')
+    await assertCenteredDialog(page, /your stats/i, 'Close stats', 'iphone-stats')
     await page.getByRole('button', { name: 'Close stats' }).click()
     await expect(page.getByRole('dialog', { name: /your stats/i })).toHaveCount(0)
   })
 
-  test('achievements close X is fully on screen', async ({ page }) => {
+  test('achievements is centered with a tappable X', async ({ page }) => {
     await page.goto('/')
     await page.getByRole('button', { name: /achievements/i }).click()
-    await expect(page.getByRole('dialog', { name: /achievements/i })).toBeVisible()
-    await closeIsTappable(page, 'Close achievements')
+    await assertCenteredDialog(page, /achievements/i, 'Close achievements', 'iphone-achievements')
     await page.getByRole('button', { name: 'Close achievements' }).click()
     await expect(page.getByRole('dialog', { name: /achievements/i })).toHaveCount(0)
+  })
+})
+
+test.describe('Desktop dialogs stay centered cards', () => {
+  test('stats is centered on 1440', async ({ page }) => {
+    await page.goto('/')
+    await page.getByRole('button', { name: /stats/i }).click()
+    await assertCenteredDialog(page, /your stats/i, 'Close stats', 'desktop-stats')
+  })
+
+  test('achievements is centered on 1440', async ({ page }) => {
+    await page.goto('/')
+    await page.getByRole('button', { name: /achievements/i }).click()
+    await assertCenteredDialog(page, /achievements/i, 'Close achievements', 'desktop-achievements')
   })
 })
