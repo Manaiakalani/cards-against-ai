@@ -287,7 +287,7 @@ button, a, [role="button"] {
   display: flex;
   flex-direction: column;
   width: min(32rem, calc(100vw - 2rem - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)));
-  max-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 2rem);
+  max-height: calc(min(100dvh, 100vh) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 2rem);
   height: auto;
   overflow: hidden;
   overscroll-behavior: contain;
@@ -298,6 +298,7 @@ button, a, [role="button"] {
 }
 .cai-dialog-wide {
   width: min(42rem, calc(100vw - 2rem - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)));
+  max-height: calc(min(100dvh, 100vh) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 2rem);
 }
 .cai-dialog-header {
   display: flex;
@@ -316,6 +317,17 @@ button, a, [role="button"] {
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
 }
+@media (max-height: 540px) {
+  .cai-dialog,
+  .cai-dialog-wide {
+    width: min(42rem, calc(100vw - 1rem - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)));
+    max-height: calc(min(100dvh, 100vh) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 0.75rem);
+  }
+  .cai-dialog-header {
+    padding: 8px 10px 8px 14px;
+  }
+}
+
 .cai-dialog-close {
   box-sizing: border-box;
   display: flex;
