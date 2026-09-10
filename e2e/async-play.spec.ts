@@ -49,6 +49,13 @@ test.describe('Async play UI', () => {
     await expect(dialog.getByRole('link', { name: /full license on github/i })).toBeVisible()
   })
 
+  test('invite link opens the join dialog with the room code', async ({ page }) => {
+    await page.goto('/?room=ABCDEF')
+    const dialog = page.getByRole('dialog', { name: /join game/i })
+    await expect(dialog).toBeVisible()
+    await expect(dialog.getByLabel('Room code')).toHaveValue('ABCDEF')
+  })
+
   test('help can mute turn alerts', async ({ page }) => {
     await page.goto('/')
     await page.getByRole('button', { name: 'How to play' }).click()

@@ -14,7 +14,7 @@ import { Sticker } from '@/components/Sticker'
 const MAX_PLAYERS = 6
 
 export default function LobbyScreen() {
-  const { gameState, startGame, updateSettings, newGame, isMultiplayer, isHost, isClient, isAsync, presencePlayers, mpState, renamePlayer, myPlayerId, copyInvite } = useGame()
+  const { gameState, startGame, updateSettings, newGame, isMultiplayer, isHost, isClient, isAsync, presencePlayers, mpState, renamePlayer, myPlayerId } = useGame()
   const [playerName, setPlayerName] = useState(
     () => gameState.players.find((p) => p.id === myPlayerId)?.name ?? '',
   )
@@ -34,7 +34,7 @@ export default function LobbyScreen() {
   const [rebootEnabled, setRebootEnabled] = useState(
     gameState.settings.rebootEnabled ?? false
   )
-  const [copied, setCopied] = useState(false)
+  const [copied, setCopied] = useState<'shared' | 'copied' | null>(null)
 
   const botRoster = useMemo(() => pickRandomBots(MAX_PLAYERS - 1), [])
 
@@ -185,12 +185,9 @@ export default function LobbyScreen() {
           type="button"
           onClick={async () => {
             const result = await shareInvite(gameState.roomCode)
-            if (result === 'failed') {
-              const shared = await copyInvite()
-              if (!shared) return
-            }
-            setCopied(true)
-            window.setTimeout(() => setCopied(false), 1600)
+            if (result === 'cancelled' || result === 'failed') return
+            setCopied(result)
+            window.setTimeout(() => setCopied(null), 1600)
           }}
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -213,7 +210,7 @@ export default function LobbyScreen() {
               marginBottom: '2px',
             }}
           >
-            {copied ? 'Invite sent' : 'Room Code · tap to share'}
+            {copied === 'shared' ? 'Invite sent' : copied === 'copied' ? 'Copied invite' : 'Room Code · tap to share'}
           </div>
           <div
             style={{

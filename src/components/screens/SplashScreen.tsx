@@ -7,6 +7,7 @@ import { deckMeta } from '@/data/deckMeta'
 import { CardIcon } from '@/components/CardIcon'
 import { isSupabaseConfigured } from '@/lib/supabase'
 import { preloadPlayChunks, scheduleIdle } from '@/lib/preload'
+import { requestTurnNotifications } from '@/lib/notify'
 import { SITE_VERSION } from '@/lib/tokens'
 import { getMembership } from '@/lib/asyncStorage'
 import { useFocusTrap } from '@/hooks/useFocusTrap'
@@ -45,12 +46,6 @@ function clearRoomParam() {
   url.searchParams.delete('room')
   const next = `${url.pathname}${url.search}${url.hash}`
   window.history.replaceState({}, '', next)
-}
-
-function shouldOpenJoin(): boolean {
-  const room = readRoomParam()
-  if (room.length !== 6) return false
-  return !getMembership(room)
 }
 
 const DEFAULT_HOST = { name: 'Host', avatar: '🦄', avatarBg: '#FFD700' }
@@ -106,8 +101,8 @@ export default function SplashScreen() {
   const [showStats, setShowStats] = useState(false)
   const [showAchievements, setShowAchievements] = useState(false)
   const [showFavorites, setShowFavorites] = useState(false)
-  const [joinCode, setJoinCode] = useState(readRoomParam)
-  const [showJoin, setShowJoin] = useState(shouldOpenJoin)
+  const [joinCode, setJoinCode] = useState('')
+  const [showJoin, setShowJoin] = useState(false)
   const [joinName, setJoinName] = useState('')
   const [joining, setJoining] = useState(false)
   const [asyncBusy, setAsyncBusy] = useState(false)
@@ -131,9 +126,19 @@ export default function SplashScreen() {
   useEffect(() => {
     const room = readRoomParam()
     if (room.length !== 6) return
+    requestTurnNotifications()
+    setJoinCode(room)
     clearRoomParam()
-    if (getMembership(room)) void resumeAsyncGame(room)
+    if (getMembership(room)) {
+      void resumeAsyncGame(room)
+      return
+    }
+    setShowJoin(true)
   }, [resumeAsyncGame])
+
+  useEffect(() => {
+    if (showJoin) requestTurnNotifications()
+  }, [showJoin])
 
   // When an error occurs while joining, the user must be able to dismiss the
   // dialog or retry. We derive an "effectively joining" flag that becomes false

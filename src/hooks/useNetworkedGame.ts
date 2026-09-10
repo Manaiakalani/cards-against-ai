@@ -320,7 +320,7 @@ export function useNetworkedGame(engine: GameEngine) {
         return
       }
 
-      asyncGame.setError('No table with that code. Ask the host to open it again.')
+      asyncGame.setError('That table is gone. It may have expired — ask the host for a new code.')
       mp.disconnect()
     },
     [

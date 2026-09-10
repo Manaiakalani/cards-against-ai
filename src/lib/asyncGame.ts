@@ -50,6 +50,26 @@ export function isAsyncBackendReady(): boolean {
   return isSupabaseConfigured
 }
 
+export function friendlyTableError(err: unknown, kind: 'save' | 'join' | 'create' | 'start' = 'save'): string {
+  const raw = err instanceof Error ? err.message : typeof err === 'string' ? err : ''
+  const lower = raw.toLowerCase()
+  const gone =
+    !raw ||
+    /not found|expired|pgrst116|404|no rows|gone|missing|does not exist|could not find/i.test(lower)
+  if (gone) {
+    return kind === 'join'
+      ? 'That table is gone. It may have expired — ask the host for a new code.'
+      : 'This table is gone. It may have expired — start a new one from the home screen.'
+  }
+  if (/failed to fetch|network|offline|timeout/i.test(lower)) {
+    return 'Could not reach the table. Check your connection and try again.'
+  }
+  if (/function|pgrst202|not enabled/i.test(lower)) {
+    return 'Async tables are not enabled on this project yet.'
+  }
+  return raw || 'Something went wrong with this table.'
+}
+
 export async function fetchAsyncGame(roomCode: string): Promise<AsyncSnapshot | null> {
   const supabase = await loadSupabase()
   if (!supabase) return null

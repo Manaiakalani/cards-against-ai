@@ -5,6 +5,7 @@ import { getSupabase, loadSupabase } from '@/lib/supabase'
 import {
   createAsyncGame,
   fetchAsyncGame,
+  friendlyTableError,
   saveAsyncGame,
 } from '@/lib/asyncGame'
 import {
@@ -132,7 +133,7 @@ export function useAsyncGame(gameEngine: GameEngine) {
           current = result.state
           hydrate(result.state, result.version, playerRef.current)
         } catch (err) {
-          setError(err instanceof Error ? err.message : 'Could not save the game')
+          setError(friendlyTableError(err, 'save'))
           return null
         }
       }
@@ -181,7 +182,7 @@ export function useAsyncGame(gameEngine: GameEngine) {
         roomRef.current = ''
         playerRef.current = ''
         setPlayerId('')
-        setError(err instanceof Error ? err.message : 'Could not create async room')
+        setError(friendlyTableError(err, 'create'))
         resetGame()
       }
     },
@@ -198,7 +199,10 @@ export function useAsyncGame(gameEngine: GameEngine) {
       requestTurnNotifications()
       const code = roomCode.toUpperCase()
       const snap = await fetchAsyncGame(code)
-      if (!snap) return false
+      if (!snap) {
+        setError(friendlyTableError('not found', 'join'))
+        return false
+      }
 
       const existing = getMembership(code)
       const returning = snap.state.players.find(
@@ -259,11 +263,12 @@ export function useAsyncGame(gameEngine: GameEngine) {
   const resumeAsyncGame = useCallback(
     async (roomCode: string) => {
       setError(null)
+      requestTurnNotifications()
       const code = roomCode.toUpperCase()
       const membership = getMembership(code)
       const snap = await fetchAsyncGame(code)
       if (!snap) {
-        setError('Could not find that table. It may have expired.')
+        setError(friendlyTableError('not found', 'join'))
         forgetAsyncGame(code)
         return
       }
@@ -411,7 +416,7 @@ export function useAsyncGame(gameEngine: GameEngine) {
             hydrate(result.state, result.version, playerRef.current)
           }
         } catch (err) {
-          setError(err instanceof Error ? err.message : 'Could not start async game')
+          setError(friendlyTableError(err, 'start'))
         }
       }
     },

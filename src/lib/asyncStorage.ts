@@ -101,7 +101,7 @@ export function inviteUrl(roomCode: string): string {
   return url.toString()
 }
 
-export async function shareInvite(roomCode: string): Promise<'shared' | 'copied' | 'failed'> {
+export async function shareInvite(roomCode: string): Promise<'shared' | 'copied' | 'cancelled' | 'failed'> {
   const url = inviteUrl(roomCode)
   const text = `Join my Cards Against AI table ${roomCode}`
   if (typeof navigator.share === 'function') {
@@ -109,7 +109,7 @@ export async function shareInvite(roomCode: string): Promise<'shared' | 'copied'
       await navigator.share({ title: 'Cards Against AI', text, url })
       return 'shared'
     } catch (err) {
-      if ((err as { name?: string }).name === 'AbortError') return 'failed'
+      if ((err as { name?: string }).name === 'AbortError') return 'cancelled'
     }
   }
   try {
