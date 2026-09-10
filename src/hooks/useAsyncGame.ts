@@ -15,7 +15,8 @@ import {
   saveMembership,
 } from '@/lib/asyncStorage'
 import * as engine from '@/lib/gameEngine'
-import { notifyIfHidden, requestTurnNotifications } from '@/lib/notify'
+import { notifyIfHidden, requestTurnNotifications, requestTurnPush } from '@/lib/notify'
+import { subscribeToPush } from '@/lib/pwa'
 import { isPlayersTurn } from '@/lib/gameEngine'
 import type { useGameState } from '@/hooks/useGameState'
 import type { Card, GameState, PlayerInfo } from '@/types/game'
@@ -124,6 +125,7 @@ export function useAsyncGame(gameEngine: GameEngine) {
             versionRef.current = result.version
             hydrate(next, result.version, playerRef.current)
             ping()
+            void requestTurnPush(code, playerRef.current)
             return next
           }
           current = result.state
@@ -139,6 +141,15 @@ export function useAsyncGame(gameEngine: GameEngine) {
     },
     [hydrate, ping],
   )
+
+  const attachPush = useCallback(async () => {
+    const pid = playerRef.current
+    const code = roomRef.current
+    if (!pid || !code) return
+    const sub = await subscribeToPush()
+    if (!sub) return
+    await persistAction((s) => engine.upsertPushSub(s, pid, sub))
+  }, [persistAction])
 
   const hostAsyncGame = useCallback(
     async (playerInfo: PlayerInfo) => {
@@ -160,7 +171,9 @@ export function useAsyncGame(gameEngine: GameEngine) {
         versionRef.current = snap.version
         saveMembership(roomCode, { playerId: hostId, ...playerInfo })
         rememberAsyncGame(next, hostId)
+        latestRef.current = next
         setupChannel(roomCode)
+        void attachPush()
       } catch (err) {
         setActive(false)
         roomRef.current = ''
@@ -170,7 +183,7 @@ export function useAsyncGame(gameEngine: GameEngine) {
         resetGame()
       }
     },
-    [beginHostedLobby, resetGame, setupChannel],
+    [attachPush, beginHostedLobby, resetGame, setupChannel],
   )
 
   const joinAsyncGame = useCallback(
@@ -199,6 +212,7 @@ export function useAsyncGame(gameEngine: GameEngine) {
         setActive(true)
         setupChannel(code)
         hydrate(snap.state, snap.version, returning.id)
+        void attachPush()
         return true
       }
 
@@ -234,9 +248,10 @@ export function useAsyncGame(gameEngine: GameEngine) {
         teardownChannel()
         return false
       }
+      void attachPush()
       return true
     },
-    [hydrate, persistAction, setFullState, setupChannel, teardownChannel],
+    [attachPush, hydrate, persistAction, setFullState, setupChannel, teardownChannel],
   )
 
   const resumeAsyncGame = useCallback(
@@ -261,8 +276,9 @@ export function useAsyncGame(gameEngine: GameEngine) {
       setActive(true)
       hydrate(snap.state, snap.version, pid)
       setupChannel(code)
+      void attachPush()
     },
-    [hydrate, setupChannel],
+    [attachPush, hydrate, setupChannel],
   )
 
   const seedBackup = useCallback(async (state: GameState) => {
@@ -388,6 +404,7 @@ export function useAsyncGame(gameEngine: GameEngine) {
             versionRef.current = result.version
             rememberAsyncGame(next, playerRef.current)
             ping()
+            void requestTurnPush(roomRef.current, playerRef.current)
           } else {
             hydrate(result.state, result.version, playerRef.current)
           }

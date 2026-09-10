@@ -4,9 +4,19 @@
     "exclude": [
       "/_next/*",
       "/assets/*",
+      "/sw.js",
       "/*.{css,js,ico,png,svg,jpg,woff,woff2,webmanifest,json}"
     ]
   },
+  "routes": [
+    {
+      "route": "/sw.js",
+      "headers": {
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/javascript; charset=utf-8"
+      }
+    }
+  ],
   "mimeTypes": {
     ".ico": "image/x-icon",
     ".png": "image/png",

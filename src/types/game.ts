@@ -78,6 +78,15 @@ export interface GameState {
   roundRedraws: string[]
   /** Player ids who already paid for Reboot this round */
   roundReboots: string[]
+  /** Web Push subscriptions for async turn alerts (this table only). */
+  pushSubs?: PushSub[]
+}
+
+export interface PushSub {
+  playerId?: string
+  endpoint: string
+  p256dh: string
+  auth: string
 }
 
 export interface AsyncGameSummary {

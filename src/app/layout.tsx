@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import { GameProvider } from "@/contexts/GameContext";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Analytics } from "@/components/Analytics";
+import { PwaBoot } from "@/components/PwaBoot";
 import { SITE_URL } from "@/lib/tokens";
 import "./globals.css";
 
@@ -60,6 +61,11 @@ export const metadata: Metadata = {
     ],
   },
   manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    title: "Cards Against AI",
+    statusBarStyle: "black-translucent",
+  },
 };
 
 export const viewport: Viewport = {
@@ -105,6 +111,7 @@ export default function RootLayout({
         <ThemeProvider>
           <ErrorBoundary>
             <GameProvider>
+              <PwaBoot />
               <main id="main-content" tabIndex={-1} className="h-full">
                 {children}
               </main>

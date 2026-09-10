@@ -1,8 +1,12 @@
+import { loadSupabase } from '@/lib/supabase'
+import { registerServiceWorker } from '@/lib/pwa'
+
 export function requestTurnNotifications() {
   if (typeof Notification === 'undefined') return
   if (Notification.permission === 'default') {
     void Notification.requestPermission()
   }
+  void registerServiceWorker()
 }
 
 export function notifyIfHidden(title: string, body: string) {
@@ -14,5 +18,18 @@ export function notifyIfHidden(title: string, body: string) {
     new Notification(title, { body, tag: 'cai-turn' })
   } catch {
     // Some WebViews throw if the document is not focused
+  }
+}
+
+export async function requestTurnPush(roomCode: string, exceptPlayerId: string) {
+  if (!roomCode) return
+  try {
+    const supabase = await loadSupabase()
+    if (!supabase) return
+    await supabase.functions.invoke('notify-turn', {
+      body: { roomCode, exceptPlayerId },
+    })
+  } catch {
+    /* Function may not be deployed yet; in-tab alerts still work. */
   }
 }

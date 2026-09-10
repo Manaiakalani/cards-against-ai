@@ -1,0 +1,87 @@
+import { createClient } from 'npm:@supabase/supabase-js@2'
+import webpush from 'npm:web-push@3.6.7'
+
+const cors = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+}
+
+type GameLike = {
+  phase?: string
+  czarId?: string
+  submissions?: { playerId: string }[]
+  players?: { id: string; isBot?: boolean; isCardCzar?: boolean }[]
+  pushSubs?: { playerId?: string; endpoint: string; p256dh: string; auth: string }[]
+  roomCode?: string
+}
+
+function isPlayersTurn(state: GameLike, playerId: string): boolean {
+  const player = state.players?.find((p) => p.id === playerId)
+  if (!player) return false
+  if (state.phase === 'playing') {
+    return !player.isCardCzar && !(state.submissions ?? []).some((s) => s.playerId === playerId)
+  }
+  if (state.phase === 'judging') return player.id === state.czarId
+  if (state.phase === 'results' || state.phase === 'scoreboard') return true
+  return false
+}
+
+Deno.serve(async (req) => {
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: cors })
+
+  const vapidPublic = Deno.env.get('VAPID_PUBLIC_KEY')
+  const vapidPrivate = Deno.env.get('VAPID_PRIVATE_KEY')
+  const vapidSubject = Deno.env.get('VAPID_SUBJECT') ?? 'mailto:hello@tinyinternet.company'
+  if (!vapidPublic || !vapidPrivate) {
+    return Response.json({ ok: false, error: 'push is not configured' }, { status: 501, headers: cors })
+  }
+
+  let roomCode = ''
+  let exceptPlayerId = ''
+  try {
+    const body = await req.json()
+    roomCode = String(body.roomCode ?? '').toUpperCase()
+    exceptPlayerId = String(body.exceptPlayerId ?? '')
+  } catch {
+    return Response.json({ ok: false }, { status: 400, headers: cors })
+  }
+  if (!roomCode) return Response.json({ ok: false }, { status: 400, headers: cors })
+
+  const supabase = createClient(
+    Deno.env.get('SUPABASE_URL') ?? '',
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+  )
+  const { data, error } = await supabase.rpc('get_async_game', { p_code: roomCode })
+  if (error || !data?.state) {
+    return Response.json({ ok: false, error: 'no table' }, { status: 404, headers: cors })
+  }
+
+  const state = data.state as GameLike
+  webpush.setVapidDetails(vapidSubject, vapidPublic, vapidPrivate)
+
+  const due = (state.pushSubs ?? []).filter((sub) => {
+    if (!sub.playerId || sub.playerId === exceptPlayerId) return false
+    return isPlayersTurn(state, sub.playerId)
+  })
+
+  const url = `https://cards.tinyinternet.company/?room=${encodeURIComponent(roomCode)}`
+  const payload = JSON.stringify({
+    title: 'Your turn',
+    body: 'Cards Against AI — play a card or judge.',
+    url,
+  })
+
+  await Promise.allSettled(
+    due.map((sub) =>
+      webpush.sendNotification(
+        {
+          endpoint: sub.endpoint,
+          keys: { p256dh: sub.p256dh, auth: sub.auth },
+        },
+        payload,
+      ),
+    ),
+  )
+
+  return Response.json({ ok: true, sent: due.length }, { headers: cors })
+})

@@ -35,7 +35,9 @@ yarn-error.log*
 !.env.example
 
 # Local-only database setup — never commit SQL or dumps
-supabase/
+supabase/*
+!supabase/functions/
+!supabase/functions/**
 *.sql
 dump.sql
 *.dump

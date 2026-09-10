@@ -1,4 +1,4 @@
-import type { Card, GameSettings, GameState, Player, PlayMode, Submission } from '@/types/game'
+import type { Card, GameSettings, GameState, Player, PlayMode, PushSub, Submission } from '@/types/game'
 import { drawCards, shuffle } from '@/data/cardUtils'
 
 export const HAND_SIZE = 7
@@ -110,7 +110,13 @@ export function createInitialState(): GameState {
     whiteCardPool: [],
     roundRedraws: [],
     roundReboots: [],
+    pushSubs: [],
   }
+}
+
+export function upsertPushSub(state: GameState, playerId: string, sub: PushSub): GameState {
+  const rest = (state.pushSubs ?? []).filter((s) => s.playerId !== playerId && s.endpoint !== sub.endpoint)
+  return { ...state, pushSubs: [...rest, { ...sub, playerId }] }
 }
 
 function clonePlayer(p: Player): Player {
@@ -172,6 +178,7 @@ export function beginHostedLobby(
     whiteCardPool: [],
     roundRedraws: [],
     roundReboots: [],
+    pushSubs: [],
   }
 }
 

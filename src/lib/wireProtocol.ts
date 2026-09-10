@@ -93,6 +93,17 @@ export const GameStateSchema = z.object({
   whiteCardPool: z.array(CardSchema),
   roundRedraws: z.array(z.string()).default([]),
   roundReboots: z.array(z.string()).default([]),
+  pushSubs: z
+    .array(
+      z.object({
+        playerId: z.string().optional(),
+        endpoint: z.string(),
+        p256dh: z.string(),
+        auth: z.string(),
+      }),
+    )
+    .optional()
+    .default([]),
 })
 
 export const PresencePlayerSchema = z.object({

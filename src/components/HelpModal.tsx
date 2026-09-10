@@ -37,7 +37,7 @@ const RULES = [
   {
     emoji: '⏳',
     title: 'Async tables',
-    body: 'Host an async game and share the code. Friends can join in the lobby or drop in later. Everyone plays a card when they can — nobody has to stay in the tab. Come back when it is YOUR TURN on the home list.',
+    body: 'Host an async game and share the code. Friends can join in the lobby or drop in later. Install the app (Android) or Add to Home Screen (iPhone) and allow alerts so this device can ping when it is YOUR TURN.',
   },
   {
     emoji: '💀',
@@ -250,6 +250,12 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
                   <p style={legalHead}>Visits</p>
                   <p style={legalBody}>
                     We count page views so we know the game is alive. No ads. We don&apos;t sell your data.
+                  </p>
+                </div>
+                <div>
+                  <p style={legalHead}>Turn alerts</p>
+                  <p style={legalBody}>
+                    If you allow notifications, this device can ping when it is your turn. You can turn that off in the browser or system settings.
                   </p>
                 </div>
               </div>

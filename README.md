@@ -38,6 +38,7 @@ One player draws a black prompt card. Everyone else plays their funniest (worst?
 
 - **Real-time multiplayer** via Supabase Realtime (host a room, share the code, ruin friendships)
 - **Async tables** so people can take turns on their own time — play a card, close the tab, come back later
+- **Installable app + turn alerts** so a phone can ping you when it is your seat
 - **Solo mode** with AI bots that have questionable taste
 - **House rules** - Winner's Pick, Reboot the Universe, round timers
 - **Neo-brutalist UI** that looks like a poster from a design school dropout
