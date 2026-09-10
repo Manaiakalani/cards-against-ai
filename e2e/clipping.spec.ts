@@ -139,3 +139,39 @@ test.describe('Top chrome is not clipped', () => {
     await expect(black).toBeVisible()
   })
 })
+
+test.describe('iPhone 15 Pro Max dialogs keep the close control on screen', () => {
+  test.use({ viewport: { width: 430, height: 932 }, isMobile: true, hasTouch: true })
+
+  async function closeIsTappable(page: Page, name: string) {
+    const close = page.getByRole('button', { name })
+    await expect(close).toBeVisible()
+    await expect
+      .poll(async () => (await close.boundingBox())?.height ?? 0)
+      .toBeGreaterThanOrEqual(40)
+    const box = await close.boundingBox()
+    expect(box).toBeTruthy()
+    expect(box!.y).toBeGreaterThanOrEqual(0)
+    expect(box!.x).toBeGreaterThanOrEqual(0)
+    expect(box!.y + box!.height).toBeLessThanOrEqual(932)
+    expect(box!.x + box!.width).toBeLessThanOrEqual(430)
+  }
+
+  test('stats close X is fully on screen', async ({ page }) => {
+    await page.goto('/')
+    await page.getByRole('button', { name: /stats/i }).click()
+    await expect(page.getByRole('dialog', { name: /your stats/i })).toBeVisible()
+    await closeIsTappable(page, 'Close stats')
+    await page.getByRole('button', { name: 'Close stats' }).click()
+    await expect(page.getByRole('dialog', { name: /your stats/i })).toHaveCount(0)
+  })
+
+  test('achievements close X is fully on screen', async ({ page }) => {
+    await page.goto('/')
+    await page.getByRole('button', { name: /achievements/i }).click()
+    await expect(page.getByRole('dialog', { name: /achievements/i })).toBeVisible()
+    await closeIsTappable(page, 'Close achievements')
+    await page.getByRole('button', { name: 'Close achievements' }).click()
+    await expect(page.getByRole('dialog', { name: /achievements/i })).toHaveCount(0)
+  })
+})

@@ -1,9 +1,9 @@
 'use client'
 
-import { memo, useCallback, useEffect, useMemo, useSyncExternalStore } from 'react'
-import { m, AnimatePresence } from 'framer-motion'
+import { memo, useCallback, useMemo, useSyncExternalStore } from 'react'
+import { m } from 'framer-motion'
 import type { RoundResult, Player } from '@/types/game'
-import { useFocusTrap } from '@/hooks/useFocusTrap'
+import { ModalCloseButton, ModalFrame } from '@/components/ModalFrame'
 
 // ─── Favorites localStorage via useSyncExternalStore ─────────────────
 
@@ -225,19 +225,6 @@ export function RoundHistory({
 }: RoundHistoryProps) {
   const { favs, toggle, isFav } = useFavorites()
 
-  const handleEsc = useCallback((e: KeyboardEvent) => {
-    if (e.key === 'Escape') onClose()
-  }, [onClose])
-
-  useEffect(() => {
-    if (open) {
-      document.addEventListener('keydown', handleEsc)
-      return () => document.removeEventListener('keydown', handleEsc)
-    }
-  }, [open, handleEsc])
-
-  const trapRef = useFocusTrap<HTMLDivElement>(open)
-
   const title = favoritesOnly ? 'FAVORITES' : 'ROUND HISTORY'
   const emptyMessage = favoritesOnly
     ? 'No favorites yet - star your best combos!'
@@ -265,43 +252,8 @@ export function RoundHistory({
   }, [favoritesOnly, favs, roundHistory, players])
 
   return (
-    <AnimatePresence>
-      {open && (
-        <>
-          {/* Backdrop */}
-          <m.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="fixed inset-0 z-[200]"
-            style={{ backgroundColor: 'var(--theme-overlay)' }}
-          />
-
-          {/* Modal */}
-          <m.div
-            ref={trapRef}
-            tabIndex={-1}
-            initial={{ opacity: 0, scale: 0.9, y: 30 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 30 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-            className="fixed left-1/2 top-1/2 z-[201] flex w-[calc(100vw-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col shadow-hard-lg"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="round-history-title"
-            style={{
-              maxHeight: 'calc(100vh - 4rem)',
-              backgroundColor: 'var(--theme-bg)',
-              border: '4px solid var(--theme-border)',
-              borderRadius: 24,
-            }}
-          >
-            {/* Header */}
-            <div
-              className="flex flex-shrink-0 items-center justify-between px-6 py-4"
-              style={{ borderBottom: '3px solid var(--theme-border)' }}
-            >
+    <ModalFrame open={open} onClose={onClose} labelledBy="round-history-title">
+            <div className="cai-dialog-header">
               <h2
                 id="round-history-title"
                 style={{
@@ -314,24 +266,10 @@ export function RoundHistory({
               >
                 {title}
               </h2>
-              <button
-                onClick={onClose}
-                aria-label="Close history"
-                className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full"
-                style={{
-                  backgroundColor: 'var(--theme-text)',
-                  color: 'var(--theme-bg)',
-                  border: 'none',
-                  fontFamily: 'var(--font-archivo)',
-                  fontSize: 20,
-                }}
-              >
-                ✕
-              </button>
+              <ModalCloseButton onClick={onClose} label="Close history" />
             </div>
 
-            {/* Scrollable round list */}
-            <div className="flex-1 overflow-y-auto overscroll-contain px-6 py-5">
+            <div className="cai-dialog-body px-6 py-5">
               {entries.length === 0 ? (
                 <div
                   className="flex flex-col items-center justify-center py-12"
@@ -386,9 +324,6 @@ export function RoundHistory({
                   : `${entries.length} round${entries.length !== 1 ? 's' : ''} played`}
               </p>
             </div>
-          </m.div>
-        </>
-      )}
-    </AnimatePresence>
+    </ModalFrame>
   )
 }

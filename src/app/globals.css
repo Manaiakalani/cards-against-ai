@@ -278,6 +278,67 @@ button, a, [role="button"] {
   }
 }
 
+/* Phone-safe dialogs: stay inside the Dynamic Island / home indicator, keep the X visible. */
+.cai-dialog {
+  position: fixed;
+  z-index: 201;
+  left: max(1rem, env(safe-area-inset-left, 0px));
+  right: max(1rem, env(safe-area-inset-right, 0px));
+  top: max(1rem, env(safe-area-inset-top, 0px));
+  bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  width: min(32rem, 100%);
+  max-height: 100%;
+  margin-inline: auto;
+  margin-block: auto;
+  overflow: hidden;
+  overscroll-behavior: contain;
+  background-color: var(--theme-bg);
+  border: 4px solid var(--theme-border);
+  border-radius: 24px;
+  box-shadow: 8px 8px 0 var(--theme-shadow);
+}
+.cai-dialog-wide {
+  width: min(42rem, 100%);
+}
+.cai-dialog-header {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px 12px 20px;
+  border-bottom: 3px solid var(--theme-border);
+  background-color: var(--theme-bg);
+}
+.cai-dialog-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+.cai-dialog-close {
+  box-sizing: border-box;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  cursor: pointer;
+  border: none;
+  border-radius: 999px;
+  background-color: var(--theme-text);
+  color: var(--theme-bg);
+  font-family: var(--font-archivo), Impact, sans-serif;
+  font-size: 20px;
+  line-height: 1;
+}
+
 /* Heading utility */
 .font-archivo {
   font-family: var(--font-archivo), 'Impact', sans-serif;

@@ -1,9 +1,8 @@
 'use client'
 
-import { useEffect, useCallback, useState, type CSSProperties, type ReactNode } from 'react'
-import { m, AnimatePresence } from 'framer-motion'
-import { useFocusTrap } from '@/hooks/useFocusTrap'
+import { useEffect, useState, type CSSProperties, type ReactNode } from 'react'
 import { deckMeta } from '@/data/deckMeta'
+import { ModalCloseButton, ModalFrame } from '@/components/ModalFrame'
 import { LICENSE_URL, SITE_LINKS } from '@/lib/tokens'
 import { useGame } from '@/contexts/GameContext'
 import { alertsMuted, savePushSubscription, setAlertsMuted, subscribeAlertsChange } from '@/lib/pushStore'
@@ -102,60 +101,19 @@ function MenuChip({
 
 export function HelpModal({ open, onClose }: HelpModalProps) {
   const [pane, setPane] = useState<HelpPane>('rules')
-
-  const handleEsc = useCallback((e: KeyboardEvent) => {
-    if (e.key === 'Escape') onClose()
-  }, [onClose])
+  const [bodyEl, setBodyEl] = useState<HTMLDivElement | null>(null)
 
   useEffect(() => {
-    if (open) {
-      setPane('rules')
-      document.addEventListener('keydown', handleEsc)
-      return () => document.removeEventListener('keydown', handleEsc)
-    }
-  }, [open, handleEsc])
-
-  const trapRef = useFocusTrap<HTMLDivElement>(open)
+    if (open) setPane('rules')
+  }, [open])
 
   useEffect(() => {
-    trapRef.current?.scrollTo({ top: 0 })
-  }, [pane])
+    bodyEl?.scrollTo({ top: 0 })
+  }, [pane, bodyEl])
 
   return (
-    <AnimatePresence>
-      {open && (
-        <>
-          <m.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="fixed inset-0 z-[200]"
-            style={{ backgroundColor: 'var(--theme-overlay)' }}
-          />
-
-          <m.div
-            ref={trapRef}
-            tabIndex={-1}
-            initial={{ opacity: 0, scale: 0.9, y: 30 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 30 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-            className="fixed left-1/2 top-1/2 z-[201] w-[calc(100vw-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 overflow-y-auto overscroll-contain shadow-hard-lg"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="help-modal-title"
-            style={{
-              maxHeight: 'calc(100vh - 4rem)',
-              backgroundColor: 'var(--theme-bg)',
-              border: '4px solid var(--theme-border)',
-              borderRadius: 24,
-            }}
-          >
-            <div
-              className="flex items-center justify-between px-6 py-4"
-              style={{ borderBottom: '3px solid var(--theme-border)' }}
-            >
+    <ModalFrame open={open} onClose={onClose} labelledBy="help-modal-title">
+            <div className="cai-dialog-header">
               <div>
                 {pane !== 'rules' && (
                   <button
@@ -185,22 +143,10 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
                   {TITLES[pane]}
                 </h2>
               </div>
-              <button
-                onClick={onClose}
-                aria-label="Close help"
-                className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full"
-                style={{
-                  backgroundColor: 'var(--theme-text)',
-                  color: 'var(--theme-bg)',
-                  border: 'none',
-                  fontFamily: 'var(--font-archivo)',
-                  fontSize: 20,
-                }}
-              >
-                ✕
-              </button>
+              <ModalCloseButton onClick={onClose} label="Close help" />
             </div>
 
+            <div ref={setBodyEl} className="cai-dialog-body">
             {pane === 'rules' && (
               <div className="flex flex-col gap-4 px-6 py-5">
                 {RULES.map((rule, i) => (
@@ -298,9 +244,10 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
                 </a>
               </div>
             )}
+            </div>
 
             <div
-              className="flex flex-col items-center gap-3 px-6 py-4"
+              className="flex flex-shrink-0 flex-col items-center gap-3 px-6 py-4"
               style={{ borderTop: '3px solid var(--theme-border)' }}
             >
               <p
@@ -337,10 +284,7 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
                 </MenuChip>
               </div>
             </div>
-          </m.div>
-        </>
-      )}
-    </AnimatePresence>
+    </ModalFrame>
   )
 }
 
