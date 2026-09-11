@@ -119,16 +119,17 @@ export function useAsyncGame(gameEngine: GameEngine) {
       let current = latestRef.current
       for (let attempt = 0; attempt < 6; attempt++) {
         const next = action(current)
-        if (next === current) return current
+        const toSave = next.pushSubs?.length ? { ...next, pushSubs: [] } : next
+        if (toSave === current) return current
 
         try {
-          const result = await saveAsyncGame(code, versionRef.current, next)
+          const result = await saveAsyncGame(code, versionRef.current, toSave)
           if (result.ok) {
             versionRef.current = result.version
-            hydrate(next, result.version, playerRef.current)
+            hydrate(toSave, result.version, playerRef.current)
             ping()
             void requestTurnPush(code, playerRef.current)
-            return next
+            return toSave
           }
           current = result.state
           hydrate(result.state, result.version, playerRef.current)
@@ -150,9 +151,8 @@ export function useAsyncGame(gameEngine: GameEngine) {
     if (!pid || !code) return
     const sub = await subscribeToPush()
     if (!sub) return
-    const stored = await savePushSubscription(code, pid, sub)
-    if (!stored) await persistAction((s) => engine.upsertPushSub(s, pid, sub))
-  }, [persistAction])
+    await savePushSubscription(code, pid, sub)
+  }, [])
 
   const hostAsyncGame = useCallback(
     async (playerInfo: PlayerInfo) => {
@@ -405,11 +405,12 @@ export function useAsyncGame(gameEngine: GameEngine) {
     async (playerName: string, botCount?: number) => {
       const next = await startEngineGame(playerName, botCount)
       if (active && next) {
+        const toSave = next.pushSubs?.length ? { ...next, pushSubs: [] } : next
         try {
-          const result = await saveAsyncGame(roomRef.current, versionRef.current, next)
+          const result = await saveAsyncGame(roomRef.current, versionRef.current, toSave)
           if (result.ok) {
             versionRef.current = result.version
-            rememberAsyncGame(next, playerRef.current)
+            rememberAsyncGame(toSave, playerRef.current)
             ping()
             void requestTurnPush(roomRef.current, playerRef.current)
           } else {
