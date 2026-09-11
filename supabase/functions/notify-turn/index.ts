@@ -24,7 +24,6 @@ type GameLike = {
   czarId?: string
   submissions?: { playerId: string }[]
   players?: { id: string; isBot?: boolean; isCardCzar?: boolean }[]
-  pushSubs?: { playerId?: string; endpoint: string; p256dh: string; auth: string }[]
   roomCode?: string
 }
 
@@ -83,18 +82,10 @@ Deno.serve(async (req) => {
     .eq('room_code', roomCode)
 
   const fromTable: SubRow[] = rows ?? []
-  const fromState: SubRow[] = (state.pushSubs ?? [])
-    .filter((s) => s.playerId && s.endpoint)
-    .map((s) => ({
-      player_id: s.playerId as string,
-      endpoint: s.endpoint,
-      p256dh: s.p256dh,
-      auth: s.auth,
-    }))
 
   const seen = new Set<string>()
   const due: SubRow[] = []
-  for (const sub of [...fromTable, ...fromState]) {
+  for (const sub of fromTable) {
     if (seen.has(sub.endpoint)) continue
     seen.add(sub.endpoint)
     if (!sub.player_id || sub.player_id === exceptPlayerId) continue

@@ -19,7 +19,7 @@ import * as engine from '@/lib/gameEngine'
 import { notifyIfHidden, requestTurnNotifications, requestTurnPush } from '@/lib/notify'
 import { subscribeToPush } from '@/lib/pwa'
 import { savePushSubscription } from '@/lib/pushStore'
-import { isPlayersTurn } from '@/lib/gameEngine'
+import { isTurnAlertDue } from '@/lib/gameEngine'
 import type { useGameState } from '@/hooks/useGameState'
 import type { Card, GameState, PlayerInfo } from '@/types/game'
 import type { RealtimeChannel } from '@supabase/supabase-js'
@@ -78,9 +78,9 @@ export function useAsyncGame(gameEngine: GameEngine) {
     const snap = await fetchAsyncGame(code)
     if (!snap) return
     if (snap.version <= versionRef.current) return
-    const wasTurn = isPlayersTurn(latestRef.current, playerRef.current)
+    const wasTurn = isTurnAlertDue(latestRef.current, playerRef.current)
     hydrate(snap.state, snap.version, playerRef.current)
-    if (!wasTurn && isPlayersTurn(snap.state, playerRef.current)) {
+    if (!wasTurn && isTurnAlertDue(snap.state, playerRef.current)) {
       notifyIfHidden('Your turn', 'Cards Against AI — play a card or judge.')
     }
   }, [hydrate])

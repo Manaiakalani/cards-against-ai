@@ -522,3 +522,9 @@ export function isPlayersTurn(state: GameState, playerId: string): boolean {
   if (state.phase === 'results' || state.phase === 'scoreboard') return true
   return false
 }
+
+/** In-tab and push alerts: play or judge only, not results/scoreboard. */
+export function isTurnAlertDue(state: GameState, playerId: string): boolean {
+  if (state.phase !== 'playing' && state.phase !== 'judging') return false
+  return isPlayersTurn(state, playerId)
+}
