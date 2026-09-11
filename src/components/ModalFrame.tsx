@@ -4,6 +4,7 @@ import { useEffect, useCallback, useState, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { m, AnimatePresence } from 'framer-motion'
 import { useFocusTrap } from '@/hooks/useFocusTrap'
+import { lockModalOpen } from '@/lib/modalOpen'
 
 export function ModalCloseButton({
   onClick,
@@ -53,6 +54,11 @@ export function ModalFrame({
   const trapRef = useFocusTrap<HTMLDivElement>(open)
   const [mounted, setMounted] = useState(false)
   useEffect(() => setMounted(true), [])
+  useEffect(() => {
+    if (!open) return
+    lockModalOpen(true)
+    return () => lockModalOpen(false)
+  }, [open])
 
   if (!mounted) return null
 

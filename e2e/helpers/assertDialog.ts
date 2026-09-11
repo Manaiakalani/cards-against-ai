@@ -51,6 +51,7 @@ export async function assertCenteredDialog(
   expect(metrics!.closeOnTop).toBe(true)
   expect(metrics!.w).toBeLessThan(metrics!.vw - minGap * 2)
   expect(metrics!.h).toBeLessThan(metrics!.vh - minGap * 2)
+  await expect(page.getByRole('button', { name: 'How to play' })).toHaveCount(0)
 
   if (shot) {
     await page.screenshot({

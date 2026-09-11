@@ -272,7 +272,7 @@ export function RoundHistory({
             <div className="cai-dialog-body px-6 py-5">
               {entries.length === 0 ? (
                 <div
-                  className="flex flex-col items-center justify-center py-12"
+                  className="flex min-h-[10rem] flex-col items-center justify-center px-2 py-10"
                   style={{ color: 'var(--theme-text-muted)' }}
                 >
                   <span className="mb-3 text-4xl">

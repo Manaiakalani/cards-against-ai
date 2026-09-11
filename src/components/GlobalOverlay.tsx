@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useSyncExternalStore } from 'react'
 import { m, AnimatePresence } from 'framer-motion'
 import { Sun, Moon, Volume2, VolumeX } from 'lucide-react'
 import { useGame } from '@/contexts/GameContext'
@@ -8,6 +8,7 @@ import { useTheme } from '@/contexts/ThemeContext'
 import { useSound } from '@/hooks/useSound'
 import { useFocusTrap } from '@/hooks/useFocusTrap'
 import dynamic from 'next/dynamic'
+import { getModalOpen, getModalOpenServer, subscribeModalOpen } from '@/lib/modalOpen'
 
 const HelpModal = dynamic(
   () => import('@/components/HelpModal').then((mod) => mod.HelpModal),
@@ -39,6 +40,7 @@ export function GlobalOverlay() {
 
   const quitTrapRef = useFocusTrap<HTMLDivElement>(confirmQuit)
 
+  const chromeHidden = useSyncExternalStore(subscribeModalOpen, getModalOpen, getModalOpenServer)
   const isInGame = !['menu', 'lobby'].includes(gameState.phase)
 
   // Always 44px for WCAG touch-target minimum. Sit below the safe area so
@@ -50,6 +52,8 @@ export function GlobalOverlay() {
 
   return (
     <>
+      {!chromeHidden && (
+      <>
       {/* Sound mute toggle */}
       <m.button
         onClick={toggleMute}
@@ -120,6 +124,8 @@ export function GlobalOverlay() {
       >
         ?
       </m.button>
+      </>
+      )}
 
       {/* Quit button — only during active game, inside HUD bar. Stays
           mounted (never unmounts) while the confirm dialog is open, driving

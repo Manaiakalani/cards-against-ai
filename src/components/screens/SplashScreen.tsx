@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect, useCallback, useMemo, type CSSProperties, type ReactNode } from 'react'
-import { m, AnimatePresence } from 'framer-motion'
+import { useState, useEffect, useMemo, type CSSProperties, type ReactNode } from 'react'
+import { m } from 'framer-motion'
 import { useGame } from '@/contexts/GameContext'
 import { deckMeta } from '@/data/deckMeta'
 import { CardIcon } from '@/components/CardIcon'
@@ -10,7 +10,7 @@ import { preloadPlayChunks, scheduleIdle } from '@/lib/preload'
 import { requestTurnNotifications } from '@/lib/notify'
 import { SITE_VERSION } from '@/lib/tokens'
 import { getMembership } from '@/lib/asyncStorage'
-import { useFocusTrap } from '@/hooks/useFocusTrap'
+import { ModalCloseButton, ModalFrame } from '@/components/ModalFrame'
 import { YourGames } from '@/components/YourGames'
 import { ScreenShell } from '@/components/ScreenShell'
 import { SplashDeckFloaters } from '@/components/SplashDeckFloaters'
@@ -112,17 +112,6 @@ export default function SplashScreen() {
     []
   )
 
-  const handleEsc = useCallback((e: KeyboardEvent) => {
-    if (e.key === 'Escape' && showJoin) setShowJoin(false)
-  }, [showJoin])
-
-  useEffect(() => {
-    if (showJoin) {
-      document.addEventListener('keydown', handleEsc)
-      return () => document.removeEventListener('keydown', handleEsc)
-    }
-  }, [showJoin, handleEsc])
-
   useEffect(() => {
     const room = readRoomParam()
     if (room.length !== 6) return
@@ -145,8 +134,6 @@ export default function SplashScreen() {
   // when an error is present, without needing setState in an effect.
   const joinError = mpState.error || asyncError
   const effectivelyJoining = joining && !joinError
-
-  const joinTrapRef = useFocusTrap<HTMLDivElement>(showJoin)
 
   useEffect(() => scheduleIdle(preloadPlayChunks), [])
 
@@ -478,50 +465,15 @@ export default function SplashScreen() {
         favoritesOnly
       />
 
-      {/* Join Game Modal */}
-      <AnimatePresence>
-        {showJoin && (
-          <m.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[200] flex items-center justify-center p-4"
-            style={{ backgroundColor: 'rgba(0,0,0,0.6)' }}
-            onClick={() => { if (!effectivelyJoining) setShowJoin(false) }}
-          >
-            <m.div
-              ref={joinTrapRef}
-              tabIndex={-1}
-              initial={{ scale: 0.85, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.85, opacity: 0, y: 20 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-              onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-md rounded-lg p-8 shadow-hard"
-              role="dialog"
-              aria-modal="true"
-              aria-label="Join game"
-              style={{
-                backgroundColor: 'var(--theme-bg)',
-                border: '4px solid var(--theme-border)',
-              }}
-            >
-              <button
-                onClick={() => { if (!effectivelyJoining) setShowJoin(false) }}
-                aria-label="Close join dialog"
-                className="absolute top-2 right-2 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full"
-                style={{
-                  backgroundColor: 'var(--theme-text)',
-                  color: 'var(--theme-bg)',
-                  border: '2px solid var(--theme-border)',
-                  fontSize: 14,
-                }}
-              >
-                ✕
-              </button>
-
+      <ModalFrame
+        open={showJoin}
+        onClose={() => { if (!effectivelyJoining) setShowJoin(false) }}
+        labelledBy="join-game-title"
+      >
+            <div className="cai-dialog-header">
               <h2
-                className="mb-2 text-center uppercase"
+                id="join-game-title"
+                className="uppercase"
                 style={{
                   fontFamily: 'var(--font-archivo)',
                   fontSize: 28,
@@ -531,8 +483,14 @@ export default function SplashScreen() {
               >
                 JOIN GAME
               </h2>
+              <ModalCloseButton
+                onClick={() => { if (!effectivelyJoining) setShowJoin(false) }}
+                label="Close join dialog"
+              />
+            </div>
+            <div className="cai-dialog-body px-6 py-5">
               <p
-                className="mb-6 text-center"
+                className="mb-5 text-center"
                 style={{
                   fontFamily: 'var(--font-inter)',
                   fontSize: 14,
@@ -629,10 +587,8 @@ export default function SplashScreen() {
               >
                 {effectivelyJoining ? '⏳ Connecting…' : '🔗 JOIN'}
               </button>
-            </m.div>
-          </m.div>
-        )}
-      </AnimatePresence>
+            </div>
+      </ModalFrame>
     </ScreenShell>
   )
 }

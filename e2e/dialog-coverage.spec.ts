@@ -43,7 +43,23 @@ for (const device of DEVICES) {
         )
         await page.getByRole('button', { name: dialog.close }).click()
         await expect(page.getByRole('dialog', { name: dialog.name })).toHaveCount(0)
+        await expect(page.getByRole('button', { name: 'How to play' })).toBeVisible()
       })
     }
+
+    test('join is a centered card with a tappable X', async ({ page }) => {
+      await page.goto('/?room=ABCDEF')
+      await assertCenteredDialog(
+        page,
+        /join game/i,
+        'Close join dialog',
+        device.name === 'iphone-15-pro-max' || device.name === 'iphone-landscape' || device.name === 'desktop'
+          ? `${device.name}-join`
+          : undefined,
+      )
+      await page.getByRole('button', { name: 'Close join dialog' }).click()
+      await expect(page.getByRole('dialog', { name: /join game/i })).toHaveCount(0)
+      await expect(page.getByRole('button', { name: 'How to play' })).toBeVisible()
+    })
   })
 }
