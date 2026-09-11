@@ -37,7 +37,6 @@ function isPlayersTurn(state: GameLike, playerId: string): boolean {
     return !player.isCardCzar && !(state.submissions ?? []).some((s) => s.playerId === playerId)
   }
   if (state.phase === 'judging') return player.id === state.czarId
-  if (state.phase === 'results' || state.phase === 'scoreboard') return true
   return false
 }
 
@@ -111,17 +110,27 @@ Deno.serve(async (req) => {
     url,
   })
 
-  await Promise.allSettled(
-    due.map((sub) =>
-      webpush.sendNotification(
-        {
-          endpoint: sub.endpoint,
-          keys: { p256dh: sub.p256dh, auth: sub.auth },
-        },
-        payload,
-      ),
-    ),
+  const dead: string[] = []
+  await Promise.all(
+    due.map(async (sub) => {
+      try {
+        await webpush.sendNotification(
+          {
+            endpoint: sub.endpoint,
+            keys: { p256dh: sub.p256dh, auth: sub.auth },
+          },
+          payload,
+        )
+      } catch (err) {
+        const status = Number((err as { statusCode?: number }).statusCode ?? 0)
+        if (status === 404 || status === 410) dead.push(sub.endpoint)
+      }
+    }),
   )
 
-  return Response.json({ ok: true, sent: due.length }, { headers: cors })
+  if (dead.length) {
+    await supabase.from('push_subscriptions').delete().in('endpoint', dead)
+  }
+
+  return Response.json({ ok: true, sent: due.length - dead.length, pruned: dead.length }, { headers: cors })
 })

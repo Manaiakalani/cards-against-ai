@@ -1,13 +1,13 @@
 'use client'
 
-import { useState, useEffect, useCallback, useSyncExternalStore } from 'react'
-import { m, AnimatePresence } from 'framer-motion'
+import { useState, useSyncExternalStore } from 'react'
+import { m } from 'framer-motion'
 import { Sun, Moon, Volume2, VolumeX } from 'lucide-react'
 import { useGame } from '@/contexts/GameContext'
 import { useTheme } from '@/contexts/ThemeContext'
 import { useSound } from '@/hooks/useSound'
-import { useFocusTrap } from '@/hooks/useFocusTrap'
 import dynamic from 'next/dynamic'
+import { ModalCloseButton, ModalFrame } from '@/components/ModalFrame'
 import { getModalOpen, getModalOpenServer, subscribeModalOpen } from '@/lib/modalOpen'
 
 const HelpModal = dynamic(
@@ -25,20 +25,6 @@ export function GlobalOverlay() {
   const { isMuted, toggleMute } = useSound()
   const [helpOpen, setHelpOpen] = useState(false)
   const [confirmQuit, setConfirmQuit] = useState(false)
-
-  // Escape key closes quit confirmation
-  const handleEsc = useCallback((e: KeyboardEvent) => {
-    if (e.key === 'Escape' && confirmQuit) setConfirmQuit(false)
-  }, [confirmQuit])
-
-  useEffect(() => {
-    if (confirmQuit) {
-      document.addEventListener('keydown', handleEsc)
-      return () => document.removeEventListener('keydown', handleEsc)
-    }
-  }, [confirmQuit, handleEsc])
-
-  const quitTrapRef = useFocusTrap<HTMLDivElement>(confirmQuit)
 
   const chromeHidden = useSyncExternalStore(subscribeModalOpen, getModalOpen, getModalOpenServer)
   const isInGame = !['menu', 'lobby'].includes(gameState.phase)
@@ -160,102 +146,75 @@ export function GlobalOverlay() {
         </m.button>
       )}
 
-      {/* Quit confirmation */}
-      <AnimatePresence>
-        {confirmQuit && (
-          <>
-            <m.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+      <ModalFrame
+        open={confirmQuit}
+        onClose={() => setConfirmQuit(false)}
+        labelledBy="quit-confirm-title"
+      >
+        <div className="cai-dialog-header">
+          <h2
+            id="quit-confirm-title"
+            className="uppercase"
+            style={{
+              fontFamily: 'var(--font-archivo)',
+              fontSize: 24,
+              color: 'var(--theme-text)',
+            }}
+          >
+            Quit Game?
+          </h2>
+          <ModalCloseButton onClick={() => setConfirmQuit(false)} label="Close quit dialog" />
+        </div>
+        <div className="cai-dialog-body px-7 py-6 text-center">
+          <span style={{ fontSize: 48, display: 'block', marginBottom: 12 }}>🚪</span>
+          <p
+            style={{
+              fontFamily: 'var(--font-inter)',
+              fontSize: 14,
+              color: 'var(--theme-text-secondary)',
+              marginBottom: 24,
+              lineHeight: 1.5,
+            }}
+          >
+            {gameState.playMode === 'async'
+              ? 'You can rejoin later with the room code. This table stays put.'
+              : 'Your progress will be lost. No take-backs, bestie.'}
+          </p>
+          <div className="flex gap-3">
+            <button
               onClick={() => setConfirmQuit(false)}
-              className="fixed inset-0 z-[200]"
-              style={{ backgroundColor: 'var(--theme-overlay)' }}
-            />
-            <m.div
-              ref={quitTrapRef}
-              tabIndex={-1}
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-              className="fixed left-1/2 top-1/2 z-[201] -translate-x-1/2 -translate-y-1/2"
-              role="dialog"
-              aria-modal="true"
-              aria-label="Quit game confirmation"
+              className="flex-1 cursor-pointer rounded-full py-3 shadow-hard-sm"
               style={{
-                width: 'calc(100vw - 3rem)',
-                maxWidth: 340,
-                backgroundColor: 'var(--theme-bg)',
-                border: '4px solid var(--theme-border)',
-                borderRadius: 24,
-                boxShadow: '10px 10px 0px var(--theme-shadow)',
-                padding: '32px 28px',
-                textAlign: 'center',
+                fontFamily: 'var(--font-archivo)',
+                fontSize: 16,
+                textTransform: 'uppercase',
+                backgroundColor: 'var(--theme-surface)',
+                color: 'var(--theme-text)',
+                border: '3px solid var(--theme-border)',
               }}
             >
-              <span style={{ fontSize: 48, display: 'block', marginBottom: 12 }}>🚪</span>
-              <h3
-                style={{
-                  fontFamily: 'var(--font-archivo)',
-                  fontSize: 24,
-                  color: 'var(--theme-text)',
-                  marginBottom: 8,
-                  textTransform: 'uppercase',
-                }}
-              >
-                Quit Game?
-              </h3>
-              <p
-                style={{
-                  fontFamily: 'var(--font-inter)',
-                  fontSize: 14,
-                  color: 'var(--theme-text-secondary)',
-                  marginBottom: 24,
-                  lineHeight: 1.5,
-                }}
-              >
-                {gameState.playMode === 'async'
-                  ? 'You can rejoin later with the room code. This table stays put.'
-                  : 'Your progress will be lost. No take-backs, bestie.'}
-              </p>
-              <div className="flex gap-3">
-                <button
-                  onClick={() => setConfirmQuit(false)}
-                  className="flex-1 cursor-pointer rounded-full py-3 shadow-hard-sm"
-                  style={{
-                    fontFamily: 'var(--font-archivo)',
-                    fontSize: 16,
-                    textTransform: 'uppercase',
-                    backgroundColor: 'var(--theme-surface)',
-                    color: 'var(--theme-text)',
-                    border: '3px solid var(--theme-border)',
-                  }}
-                >
-                  Stay
-                </button>
-                <button
-                  onClick={() => {
-                    setConfirmQuit(false)
-                    newGame()
-                  }}
-                  className="flex-1 cursor-pointer rounded-full py-3 shadow-hard-sm"
-                  style={{
-                    fontFamily: 'var(--font-archivo)',
-                    fontSize: 16,
-                    textTransform: 'uppercase',
-                    backgroundColor: 'var(--theme-danger)',
-                    color: '#fff',
-                    border: '3px solid var(--theme-border)',
-                  }}
-                >
-                  Quit
-                </button>
-              </div>
-            </m.div>
-          </>
-        )}
-      </AnimatePresence>
+              Stay
+            </button>
+            <button
+              onClick={() => {
+                setConfirmQuit(false)
+                newGame()
+              }}
+              className="flex-1 cursor-pointer rounded-full py-3 shadow-hard-sm"
+              style={{
+                fontFamily: 'var(--font-archivo)',
+                fontSize: 16,
+                textTransform: 'uppercase',
+                backgroundColor: 'var(--theme-danger)',
+                color: '#fff',
+                border: '3px solid var(--theme-border)',
+              }}
+            >
+              Quit
+            </button>
+          </div>
+        </div>
+      </ModalFrame>
 
       {/* Help modal */}
       <HelpModal open={helpOpen} onClose={() => setHelpOpen(false)} />

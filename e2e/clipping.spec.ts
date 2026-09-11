@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test'
+import { assertCenteredDialog } from './helpers/assertDialog'
 
 async function overlayClearance(page: Page) {
   return page.evaluate(() => {
@@ -79,6 +80,14 @@ test.describe('Top chrome is not clipped', () => {
     await page.goto('/')
     await page.getByRole('button', { name: /HOST GAME/i }).click()
     await headingNotClipped(page, /pregame/i)
+  })
+
+  test('quit confirm is a centered card', async ({ page }) => {
+    await goPlaying(page)
+    await page.getByRole('button', { name: 'Quit game' }).click()
+    await assertCenteredDialog(page, /quit game/i, 'Close quit dialog', 'quit-confirm')
+    await page.getByRole('button', { name: 'Stay' }).click()
+    await expect(page.getByRole('dialog', { name: /quit game/i })).toHaveCount(0)
   })
 
   test('playing HUD room code and avatars sit fully in the viewport', async ({ page }) => {
