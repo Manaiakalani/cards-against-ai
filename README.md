@@ -13,6 +13,8 @@ Fill-in-the-blank prompts about AI slop, Slack, startups, and 3am pages. Play in
   <img src="public/icon.svg" alt="Cards Against AI icon — stacked black and white cards" width="96" height="96">
 </p>
 
+![Cards Against AI lobby, with a black prompt card and a white response card](docs/screenshot.png)
+
 ## What
 
 Cards Against AI is a **Cards Against Humanity-style** party game built for people who spend too much time on the internet, in Slack, and arguing about whether that alert is actually a Sev 2.
