@@ -2,7 +2,7 @@
 
 **An open-source party card game for chronically online people.**
 
-Fill-in-the-blank prompts about AI slop, Slack, startups, and 3am pages. Play in the browser — no account, no install. Host a live room, deal async when friends can't stay online, or go solo against bots.
+Fill-in-the-blank prompts about AI slop, Slack, startups, and 3am pages. Play in the browser: no account, no install. Host a live room, deal async when friends can't stay online, or go solo against bots.
 
 [![Deploy to GitHub Pages](https://github.com/Manaiakalani/cards-against-ai/actions/workflows/deploy.yml/badge.svg)](https://github.com/Manaiakalani/cards-against-ai/actions/workflows/deploy.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -10,7 +10,7 @@ Fill-in-the-blank prompts about AI slop, Slack, startups, and 3am pages. Play in
 **[Play now](https://cards.tinyinternet.company/)** · **[GitHub Pages](https://manaiakalani.github.io/cards-against-ai/)** · **[Submit a deck](https://github.com/Manaiakalani/cards-against-ai/issues/new)**
 
 <p align="center">
-  <img src="public/icon.svg" alt="Cards Against AI icon — stacked black and white cards" width="96" height="96">
+  <img src="public/icon.svg" alt="Cards Against AI icon: stacked black and white cards" width="96" height="96">
 </p>
 
 ![Cards Against AI lobby, with a black prompt card and a white response card](docs/screenshot.png)
@@ -28,7 +28,7 @@ Ten themed decks and **357 cards** roasting AI culture, startup life, crypto, In
 ## Try it
 
 1. **Play in the browser** at [cards.tinyinternet.company](https://cards.tinyinternet.company/) (or the [GitHub Pages](https://manaiakalani.github.io/cards-against-ai/) mirror).
-2. **Host a room** and share the code — or click **Play Async** and let friends take turns on their own time.
+2. **Host a room** and share the code: or click **Play Async** and let friends take turns on their own time.
 3. **Run it locally** if you want to hack on decks or the Next.js app:
 
 ```bash
@@ -40,7 +40,7 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000). Solo play against bots works with no extra config.
 
-![Cards Against AI — the party game for chronically online people](.github/social-preview.png)
+![Cards Against AI: the party game for chronically online people](.github/social-preview.png)
 
 ---
 
@@ -63,16 +63,16 @@ Open [http://localhost:3000](http://localhost:3000). Solo play against bots work
 
 ## Features
 
-- **Real-time multiplayer** via Supabase Realtime — host a room, share the code, ruin friendships
-- **Async tables** so people can take turns on their own time — play a card, close the tab, come back later
+- **Real-time multiplayer** via Supabase Realtime: host a room, share the code, ruin friendships
+- **Async tables** so people can take turns on their own time: play a card, close the tab, come back later
 - **Installable app + turn alerts** so a phone can ping you when it is your seat
 - **Solo mode** with AI bots that have questionable taste
-- **House rules** — Winner's Pick, Reboot the Universe, round timers
+- **House rules**: Winner's Pick, Reboot the Universe, round timers
 - **Neo-brutalist UI** that looks like a poster from a design school dropout
 - **Dark mode** for gaming at 2am like a responsible adult
 - **Stats & achievements** because we all need external validation
-- **Favorites** — star your best combos for posterity (or blackmail)
-- **Fully responsive** — phone, laptop, or the browser on whatever is nearby
+- **Favorites**: star your best combos for posterity (or blackmail)
+- **Fully responsive**: phone, laptop, or the browser on whatever is nearby
 
 ## Run locally
 
@@ -96,7 +96,7 @@ cp .env.example .env.local
 # Fill in NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY
 ```
 
-Without those env vars the game runs in single-player mode with bots. URL and keys stay in GitHub Actions secrets / `.env.local` — never in the repo.
+Without those env vars the game runs in single-player mode with bots. URL and keys stay in GitHub Actions secrets / `.env.local`: never in the repo.
 
 `NEXT_PUBLIC_VAPID_PUBLIC_KEY` is optional and only needed if you want local turn-alert push testing.
 
@@ -133,7 +133,7 @@ Got a deck idea? A card that made you ugly-laugh? We want it.
 
 ## License
 
-[MIT](./LICENSE) — do whatever you want, just don't blame us when HR gets involved.
+[MIT](./LICENSE): do whatever you want, just don't blame us when HR gets involved.
 
 ---
 
