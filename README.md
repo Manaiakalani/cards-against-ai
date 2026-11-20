@@ -1,19 +1,26 @@
-# Cards Against AI
-
-**An open-source party card game for chronically online people.**
+<div align="center">
+  <img src="public/icon.svg" alt="Cards Against AI logo: stacked black and white cards" width="96" />
+  <h1>Cards Against AI</h1>
+  <p><strong>An open-source party card game for chronically online people.</strong></p>
+  <p>
+    <a href="https://github.com/Manaiakalani/cards-against-ai/actions/workflows/deploy.yml"><img src="https://github.com/Manaiakalani/cards-against-ai/actions/workflows/deploy.yml/badge.svg" alt="Deploy to GitHub Pages" /></a>
+    <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" /></a>
+  </p>
+  <p>
+    <a href="https://cards.tinyinternet.company/">Play now</a>
+    ·
+    <a href="https://manaiakalani.github.io/cards-against-ai/">GitHub Pages</a>
+    ·
+    <a href="https://github.com/Manaiakalani/cards-against-ai/issues/new">Submit a deck</a>
+    ·
+    <a href="#features">Features</a>
+    ·
+    <a href="#try-it">Try it</a>
+  </p>
+  <img src="docs/screenshot.png" alt="Cards Against AI lobby, with a black prompt card and a white response card" width="800" />
+</div>
 
 Fill-in-the-blank prompts about AI slop, Slack, startups, and 3am pages. Play in the browser: no account, no install. Host a live room, deal async when friends can't stay online, or go solo against bots.
-
-[![Deploy to GitHub Pages](https://github.com/Manaiakalani/cards-against-ai/actions/workflows/deploy.yml/badge.svg)](https://github.com/Manaiakalani/cards-against-ai/actions/workflows/deploy.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-**[Play now](https://cards.tinyinternet.company/)** · **[GitHub Pages](https://manaiakalani.github.io/cards-against-ai/)** · **[Submit a deck](https://github.com/Manaiakalani/cards-against-ai/issues/new)**
-
-<p align="center">
-  <img src="public/icon.svg" alt="Cards Against AI icon: stacked black and white cards" width="96" height="96">
-</p>
-
-![Cards Against AI lobby, with a black prompt card and a white response card](docs/screenshot.png)
 
 ## What
 
