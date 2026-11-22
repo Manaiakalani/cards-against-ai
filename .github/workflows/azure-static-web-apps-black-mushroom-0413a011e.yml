@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   build_and_deploy_job:
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+    if: github.actor != 'dependabot[bot]' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.action != 'closed'))
     runs-on: ubuntu-latest
     name: Build and Deploy
     permissions:
@@ -53,7 +53,7 @@ jobs:
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
 
   close_pull_request_job:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    if: github.actor != 'dependabot[bot]' && github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
     name: Close Pull Request
     steps:

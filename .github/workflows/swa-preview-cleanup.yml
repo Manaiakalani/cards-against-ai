@@ -1,0 +1,55 @@
+name: Cleanup Azure preview environments
+
+# Close leftover Static Web Apps pull request previews. Dependabot PRs
+# cannot read the deploy token, so their close jobs never ran and staging
+# slots filled up. This workflow closes previews for PRs closed in the
+# last 6 months. It is not a pull_request event, so the close action is
+# pointed at each environment with deployment_environment set to the
+# pull request number.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 16 * * 1"
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  list-closed-prs:
+    name: List closed pull requests
+    runs-on: ubuntu-latest
+    outputs:
+      prs: ${{ steps.list.outputs.prs }}
+    steps:
+      - name: List PRs closed in the last 6 months
+        id: list
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          since="$(date -u -d '6 months ago' +%Y-%m-%d)"
+          prs="$(gh pr list --repo "${{ github.repository }}" --state closed \
+            --search "closed:>=${since}" --limit 100 \
+            --json number --jq 'map(.number)')"
+          echo "Closed PRs since ${since}: ${prs}"
+          echo "prs=${prs}" >> "$GITHUB_OUTPUT"
+
+  close-previews:
+    name: Close preview ${{ matrix.pr }}
+    needs: list-closed-prs
+    if: needs.list-closed-prs.outputs.prs != '[]' && needs.list-closed-prs.outputs.prs != ''
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        pr: ${{ fromJSON(needs.list-closed-prs.outputs.prs) }}
+    steps:
+      - name: Close Static Web Apps preview
+        continue-on-error: true
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_BLACK_MUSHROOM_0413A011E }}
+          action: close
+          deployment_environment: "${{ matrix.pr }}"
+          app_location: "/"
