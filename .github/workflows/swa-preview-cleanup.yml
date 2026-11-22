@@ -47,7 +47,7 @@ jobs:
     steps:
       - name: Close Static Web Apps preview
         continue-on-error: true
-        uses: Azure/static-web-apps-deploy@v1
+        uses: Azure/static-web-apps-deploy@4d27395796ac319302594769cfe812bd207490b1 # v1 branch (tag v1 is older and lacks deployment_environment)
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_BLACK_MUSHROOM_0413A011E }}
           action: close
