@@ -10,6 +10,10 @@ updates:
     ignore:
       - dependency-name: "typescript"
         update-types: ["version-update:semver-major"]
+      # Keep @types/node on the runtime Node major. Ignore majors so
+      # Dependabot does not bump typings past the Node version we run.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
     groups:
       npm-deps:
         patterns:
