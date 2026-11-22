@@ -6,6 +6,7 @@ name: Cleanup Azure preview environments
 # last 6 months. It is not a pull_request event, so the close action is
 # pointed at each environment with deployment_environment set to the
 # pull request number.
+# Triggered once after merge to drain leftover staging slots.
 on:
   workflow_dispatch:
   schedule:
